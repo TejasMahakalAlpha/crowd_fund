@@ -1,0 +1,43 @@
+/* src/admin/ManageVolunteers.css */
+
+.manage-volunteers {
+  padding: 20px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.manage-volunteers h2 {
+  font-size: 1.5rem;
+  color: #004d40;
+  margin-bottom: 20px;
+}
+
+/* Table Layout */
+.volunteer-table {
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.volunteer-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 2fr;
+  padding: 15px 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.volunteer-row.header {
+  background: #004d40;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.volunteer-row:last-child {
+  border-bottom: none;
+}
+
+.volunteer-row div {
+  font-size: 0.95rem;
+}

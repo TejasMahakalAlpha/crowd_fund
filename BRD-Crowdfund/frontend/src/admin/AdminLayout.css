@@ -1,0 +1,61 @@
+/* src/admin/AdminLayout.css */
+
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+  font-family: 'Poppins', sans-serif;
+}
+
+.admin-sidebar {
+  width: 250px;
+  background-color: #004d40;
+  color: white;
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.admin-sidebar .logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.admin-nav a {
+  color: white;
+  text-decoration: none;
+  font-size: 1rem;
+  padding: 10px;
+  border-radius: 6px;
+  display: block;
+  transition: background 0.2s;
+}
+
+.admin-nav a:hover,
+.admin-nav .active {
+  background: #00796b;
+}
+
+.admin-main {
+  flex-grow: 1;
+  background: #f9f9f9;
+  padding: 20px;
+}
+
+.admin-topbar {
+  padding: 10px 0;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 20px;
+}
+
+.admin-topbar h1 {
+  font-size: 1.2rem;
+  color: #004d40;
+  text-transform: capitalize;
+}
+
+.admin-content {
+  padding: 10px 0;
+}

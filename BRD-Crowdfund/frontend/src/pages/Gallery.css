@@ -1,0 +1,48 @@
+/* src/pages/Gallery.css */
+.gallery-page {
+  font-family: 'Poppins', sans-serif;
+}
+
+.gallery-hero {
+  background: #004d40;
+  color: white;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.gallery-hero h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+.gallery-hero p {
+  font-size: 1.1rem;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 60px 20px;
+  background: #f0fdfa;
+}
+
+.gallery-item {
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease;
+}
+
+.gallery-item img {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.gallery-item:hover img {
+  transform: scale(1.05);
+}

@@ -1,0 +1,73 @@
+/* src/components/CausesSection.css */
+.causes-section {
+  background: #f0fdfa;
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.section-title {
+  font-size: 2.5rem;
+  color: #004d40;
+  margin-bottom: 40px;
+}
+
+.causes-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+}
+
+.cause-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 25px;
+  width: 300px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease;
+}
+
+.cause-card:hover {
+  transform: translateY(-5px);
+}
+
+.cause-card h3 {
+  font-size: 1.3rem;
+  color: #00796b;
+  margin-bottom: 15px;
+}
+
+.progress-bar {
+  background: #cfd8dc;
+  border-radius: 10px;
+  height: 12px;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  background: #26a69a;
+  height: 100%;
+  transition: width 0.5s ease-in-out;
+}
+
+.donation-info {
+  font-size: 0.95rem;
+  color: #444;
+  margin-bottom: 15px;
+}
+
+.donate-btn {
+  background-color: #26a69a;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.donate-btn:hover {
+  background-color: #00796b;
+}

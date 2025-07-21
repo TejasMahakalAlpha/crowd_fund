@@ -1,0 +1,43 @@
+/* src/admin/ManageDonations.css */
+
+.manage-donations {
+  padding: 20px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.manage-donations h2 {
+  font-size: 1.5rem;
+  color: #004d40;
+  margin-bottom: 20px;
+}
+
+/* Table Styles */
+.donation-table {
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.donation-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  padding: 15px 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.donation-row.header {
+  background: #004d40;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.donation-row:last-child {
+  border-bottom: none;
+}
+
+.donation-row div {
+  font-size: 0.95rem;
+}

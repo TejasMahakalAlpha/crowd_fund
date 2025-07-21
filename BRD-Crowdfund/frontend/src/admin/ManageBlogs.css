@@ -1,0 +1,89 @@
+/* src/admin/ManageBlogs.css */
+
+.manage-blogs {
+  padding: 20px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.manage-blogs h2 {
+  font-size: 1.5rem;
+  color: #004d40;
+  margin-bottom: 20px;
+}
+
+/* Form Styling */
+.blog-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 40px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.blog-form input,
+.blog-form textarea {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.blog-form button {
+  padding: 10px 15px;
+  background: #004d40;
+  color: white;
+  border: none;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.blog-form button:hover {
+  background: #00796b;
+}
+
+/* Blog List */
+.blog-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.blog-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #ffffff;
+  padding: 15px 20px;
+  border-radius: 10px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+}
+
+.blog-item h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.blog-item p {
+  margin: 4px 0 0;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.blog-item button {
+  background: #c62828;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.blog-item button:hover {
+  background: #b71c1c;
+}

@@ -1,0 +1,39 @@
+/* src/components/StatsSection.css */
+.stats-section {
+  background: #004d40;
+  color: white;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 30px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.stat-card {
+  background: #00695c;
+  padding: 30px 20px;
+  border-radius: 12px;
+  transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: scale(1.05);
+  background: #00796b;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.stat-label {
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+  color: #c8e6c9;
+}

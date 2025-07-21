@@ -1,0 +1,79 @@
+/* src/pages/Contact.css */
+.contact-page {
+  font-family: 'Poppins', sans-serif;
+}
+
+.contact-hero {
+  background: #004d40;
+  color: white;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.contact-hero h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+.contact-hero p {
+  font-size: 1.1rem;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.contact-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  justify-content: center;
+  padding: 60px 20px;
+  background: #f0fdfa;
+}
+
+.contact-form,
+.contact-info {
+  flex: 1 1 350px;
+  max-width: 500px;
+}
+
+.contact-form h2,
+.contact-info h2 {
+  color: #004d40;
+  margin-bottom: 20px;
+}
+
+.contact-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.contact-form input,
+.contact-form textarea {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  outline: none;
+}
+
+.contact-form button {
+  background: #26a69a;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.contact-form button:hover {
+  background: #00796b;
+}
+
+.contact-info p {
+  font-size: 1rem;
+  color: #444;
+  margin-bottom: 12px;
+}

@@ -1,0 +1,67 @@
+/* src/pages/VolunteerForm.css */
+.volunteer-page {
+  font-family: 'Poppins', sans-serif;
+}
+
+.volunteer-hero {
+  background: #004d40;
+  color: white;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.volunteer-hero h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+.volunteer-hero p {
+  font-size: 1.1rem;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.volunteer-container {
+  background: #f0fdfa;
+  padding: 60px 20px;
+  max-width: 700px;
+  margin: 0 auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.volunteer-container h2 {
+  text-align: center;
+  color: #004d40;
+  margin-bottom: 30px;
+}
+
+.volunteer-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.volunteer-container input,
+.volunteer-container textarea {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  outline: none;
+}
+
+.volunteer-container button {
+  background-color: #26a69a;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.volunteer-container button:hover {
+  background-color: #00796b;
+}
