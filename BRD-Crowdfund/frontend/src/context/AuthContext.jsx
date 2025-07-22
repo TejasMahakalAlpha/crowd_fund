@@ -1,5 +1,5 @@
 // src/context/AuthContext.jsx
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState } from "react";
 
 export const AuthContext = createContext();
 
@@ -16,13 +16,8 @@ const AuthProvider = ({ children }) => {
     setToken(null);
   };
 
-  useEffect(() => {
-    const storedToken = localStorage.getItem("adminToken");
-    if (storedToken) setToken(storedToken);
-  }, []);
-
   return (
-    <AuthContext.Provider value={{ token, login, logout }}>
+    <AuthContext.Provider value={{ token, login, logout, isAuthenticated: !!token }}>
       {children}
     </AuthContext.Provider>
   );

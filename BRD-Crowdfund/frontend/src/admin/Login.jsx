@@ -39,18 +39,25 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    try {
-      const res = await API.post(`admin/login`, formData);
 
-      // ✅ Save token
-      localStorage.setItem("adminToken", res.data.token);
-      login(res.data.token);
+    try {
+      const token = btoa(`${formData.username}:${formData.password}`); // Base64 encode
+      const res = await API.get("/admin/events", {
+        headers: {
+          Authorization: `Basic ${token}`,
+        },
+      });
+
+      localStorage.setItem("adminToken", token);
+      login(token);
 
       navigate("/admin/dashboard");
     } catch (err) {
-      setError(err.response?.data?.message || "Login failed");
+      console.error("Login error:", err);
+      setError("Invalid credentials or server error");
     }
   };
+
 
 
   return (

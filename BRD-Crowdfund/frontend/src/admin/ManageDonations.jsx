@@ -36,10 +36,11 @@ const ManageDonations = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${BASE_URL}/api/donations`, {
-        ...formData,
-        amount: parseFloat(formData.amount),
-      });
+      // await axios.post(`${BASE_URL}/api/donations`, {
+      //   ...formData,
+      //   amount: parseFloat(formData.amount),
+      // });
+      await AdminApi.getAllDonations();
 
       setFormData({ donorName: "", email: "", amount: "", message: "" });
       fetchDonations();

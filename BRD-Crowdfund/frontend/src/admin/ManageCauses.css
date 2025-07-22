@@ -24,7 +24,8 @@
 }
 
 .cause-form input,
-.cause-form textarea {
+.cause-form textarea,
+.cause-form option {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 8px;

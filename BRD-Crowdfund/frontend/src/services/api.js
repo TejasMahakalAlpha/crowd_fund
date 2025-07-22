@@ -6,10 +6,18 @@ const API = axios.create({
 });
 
 // ✅ Automatically attach token to all requests
+// API.interceptors.request.use((config) => {
+//   const token = localStorage.getItem("adminToken");
+//   if (token) {
+//     config.headers.Authorization = `Basic ${token}`; // Important: prefix with "Basic "
+//   }
+//   return config;
+// });.
+
 API.interceptors.request.use((config) => {
-  const token = localStorage.getItem('adminToken');
+  const token = localStorage.getItem("adminToken");
   if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+    config.headers.Authorization = `Basic ${token}`; // Important: prefix with "Basic "
   }
   return config;
 });
@@ -35,12 +43,12 @@ export const AdminApi = {
   updateCauses: (id, data) => API.put(`admin/causes/${id}`, data),
   deleteCauses: (id) => API.delete(`admin/causes/${id}`),
   getAllEvents: () => API.get(`admin/events`),
-  createEvents: (data) => API.get(`admin/events`, data),
+  createEvents: (data) => API.post(`admin/events`, data),
   getAllCauses: () => API.get(`admin/causes`),
   createCauses: (data) => API.post(`admin/causes`, data),
   getAllVolunteer: () => API.get(`admin/volunteers`),
   getAllBlogs: () => API.get(`admin/blogs`),
-  getAllDonations: () => API.get(`admin/donations`),
+  getAllDonations: () => API.get(`donations`),
   getAllContacts: () => API.get(`admin/contacts`),
 
 }
