@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import API from "../services/api"; // ✅ Correct path to your configured Axios instance
+import API, { AdminApi } from "../services/api"; // ✅ Correct path to your configured Axios instance
 import "./ManageBlogs.css"; // Reusing styles
 
 const ManageCauses = () => {
@@ -17,7 +17,8 @@ const ManageCauses = () => {
 
   const fetchCauses = async () => {
     try {
-      const res = await API.get("/causes"); // ✅ Uses baseURL + /causes
+      // const res = await API.get("/causes"); // ✅ Uses baseURL + /causes
+      const res = await AdminApi.getAllCauses();
       if (Array.isArray(res.data)) {
         setCauses(res.data);
       } else {
@@ -37,10 +38,11 @@ const ManageCauses = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await API.post("/causes", {
-        ...formData,
-        goalAmount: parseFloat(formData.goalAmount),
-      });
+      // await API.post("/causes", {
+      //   ...formData,
+      //   goalAmount: parseFloat(formData.goalAmount),
+      // });
+      await AdminApi.createCauses(formData, 'goalAmount: parseFloat(formData.goalAmount)');
       setFormData({ title: "", description: "", goalAmount: "", imageUrl: "" });
       fetchCauses();
     } catch (err) {
@@ -50,7 +52,8 @@ const ManageCauses = () => {
 
   const handleDelete = async (id) => {
     try {
-      await API.delete(`/causes/${id}`);
+      // await API.delete(`/causes/${id}`);
+      await AdminApi.deleteCauses(id);
       fetchCauses();
     } catch (err) {
       console.error("❌ Error deleting cause", err);

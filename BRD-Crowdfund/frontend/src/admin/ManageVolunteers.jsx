@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./ManageBlogs.css"; // reuse styling
+import { AdminApi } from "../services/api";
 
 const ManageVolunteers = () => {
   const [volunteers, setVolunteers] = useState([]);
@@ -11,7 +12,7 @@ const ManageVolunteers = () => {
     message: ""
   });
 
-  const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+  // const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
   const token = localStorage.getItem("token"); // ✅ Get the admin token
 
   const [success, setSuccess] = useState("");
@@ -23,11 +24,12 @@ const ManageVolunteers = () => {
 
   const fetchVolunteers = async () => {
     try {
-      const res = await axios.get(`${BASE_URL}/api/volunteers`, {
-        headers: {
-          Authorization: `Bearer ${token}`, // ✅ Include token
-        },
-      });
+      // const res = await axios.get(`${BASE_URL}/api/volunteers`, {
+      //   headers: {
+      //     Authorization: `Bearer ${token}`, // ✅ Include token
+      //   },
+      // });
+      const res = await AdminApi.getAllVolunteer();
       setVolunteers(res.data);
     } catch (err) {
       console.error("Error fetching volunteers", err);

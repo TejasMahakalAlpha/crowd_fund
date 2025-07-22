@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import API from "../services/api";
+import API, { AdminApi } from "../services/api";
 import "./ManageBlogs.css";
 
 const ManageEvents = () => {
@@ -18,7 +18,8 @@ const ManageEvents = () => {
 
   const fetchEvents = async () => {
     try {
-      const res = await API.get("/events");
+      // const res = await API.get("/events");
+      const res = await AdminApi.getAllEvents();
       setEvents(res.data || []);
     } catch (err) {
       console.error("Failed to fetch events", err);

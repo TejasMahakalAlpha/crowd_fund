@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./ManageBlogs.css"; // or create ManageContacts.css for custom styling
+import { AdminApi } from "../services/api";
 
 const ManageContacts = () => {
   const [contacts, setContacts] = useState([]);
   const [error, setError] = useState("");
 
-  const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+  // const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
   const token = localStorage.getItem("token"); // ✅ get admin token
 
   useEffect(() => {
@@ -15,11 +16,12 @@ const ManageContacts = () => {
 
   const fetchContacts = async () => {
     try {
-      const res = await axios.get(`${BASE_URL}/api/contacts`, {
-        headers: {
-          Authorization: `Bearer ${token}`, // ✅ attach token
-        },
-      });
+      // const res = await axios.get(`${BASE_URL}/api/contacts`, {
+      //   headers: {
+      //     Authorization: `Bearer ${token}`, // ✅ attach token
+      //   },
+      // });
+      const res = await AdminApi.getAllContacts();
       setContacts(res.data);
     } catch (err) {
       setError("Failed to fetch contacts");
@@ -34,6 +36,7 @@ const ManageContacts = () => {
           Authorization: `Bearer ${token}`, // ✅ attach token
         },
       });
+
       fetchContacts();
     } catch (err) {
       setError("Failed to delete contact");

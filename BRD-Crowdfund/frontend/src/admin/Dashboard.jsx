@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { AdminApi } from "../services/api";
 import "./Dashboard.css";
 import { AuthContext } from "../context/AuthContext";
 
@@ -31,12 +31,12 @@ const Dashboard = () => {
         eventsRes,
         contactsRes,
       ] = await Promise.all([
-        axios.get("/api/blogs"),
-        axios.get("/api/causes"),
-        axios.get("/api/donations"),
-        axios.get("/api/volunteers"),
-        axios.get("/api/events"),
-        axios.get("/api/contacts"),
+        AdminApi.getAllBlogs(),
+        AdminApi.getAllCauses(),
+        AdminApi.getAllDonations(),
+        AdminApi.getAllVolunteer(),
+        AdminApi.getAllEvents(),
+        AdminApi.getAllContacts(),
       ]);
 
       setSummary({
@@ -51,6 +51,7 @@ const Dashboard = () => {
       console.error("Error fetching dashboard data", error);
     }
   };
+
 
   const handleLogout = () => {
     logout(); // remove token from context and localStorage

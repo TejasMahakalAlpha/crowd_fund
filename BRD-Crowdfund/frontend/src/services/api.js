@@ -27,4 +27,22 @@ export const PublicApi = {
   getCausesById: (id) => API.get(`causes/${id}`)
 }
 
+export const AdminApi = {
+  getevents: (id) => API.get(`admin/events/${id}`),
+  updateEvents: (id, data) => API.put(`admin/events/${id}`, data),
+  deleteEvents: (id) => API.delete(`admin/events/${id}`),
+  getCauses: (id) => API.get(`admin/causes/${id}`),
+  updateCauses: (id, data) => API.put(`admin/causes/${id}`, data),
+  deleteCauses: (id) => API.delete(`admin/causes/${id}`),
+  getAllEvents: () => API.get(`admin/events`),
+  createEvents: (data) => API.get(`admin/events`, data),
+  getAllCauses: () => API.get(`admin/causes`),
+  createCauses: (data) => API.post(`admin/causes`, data),
+  getAllVolunteer: () => API.get(`admin/volunteers`),
+  getAllBlogs: () => API.get(`admin/blogs`),
+  getAllDonations: () => API.get(`admin/donations`),
+  getAllContacts: () => API.get(`admin/contacts`),
+
+}
+
 export default API;

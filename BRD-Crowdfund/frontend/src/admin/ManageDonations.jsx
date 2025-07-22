@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./ManageBlogs.css"; // Reuse styles
+import { AdminApi } from "../services/api";
 
 const ManageDonations = () => {
   const [donations, setDonations] = useState([]);
@@ -12,7 +13,7 @@ const ManageDonations = () => {
     message: "",
   });
 
-  const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+  // const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
   useEffect(() => {
     fetchDonations();
@@ -20,7 +21,8 @@ const ManageDonations = () => {
 
   const fetchDonations = async () => {
     try {
-      const res = await axios.get(`${BASE_URL}/api/donations`);
+      // const res = await axios.get(`${BASE_URL}/api/donations`);
+      const res = AdminApi.getAllDonations()
       setDonations(res.data);
     } catch (err) {
       console.error("Error fetching donations", err);
@@ -38,6 +40,7 @@ const ManageDonations = () => {
         ...formData,
         amount: parseFloat(formData.amount),
       });
+
       setFormData({ donorName: "", email: "", amount: "", message: "" });
       fetchDonations();
     } catch (err) {

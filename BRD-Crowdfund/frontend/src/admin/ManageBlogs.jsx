@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './ManageBlogs.css';
+import { AdminApi } from '../services/api';
 
 const ManageBlogs = () => {
   const [blogs, setBlogs] = useState([]);
@@ -11,7 +12,7 @@ const ManageBlogs = () => {
   });
   const [editingBlogId, setEditingBlogId] = useState(null);
 
-  const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+  // const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
   useEffect(() => {
     fetchBlogs();
@@ -19,7 +20,8 @@ const ManageBlogs = () => {
 
   const fetchBlogs = async () => {
     try {
-      const res = await axios.get(`${BASE_URL}/api/blogs`);
+      // const res = await axios.get(`${BASE_URL}/api/blogs`);
+      const res = AdminApi.getAllBlogs();
       setBlogs(res.data);
     } catch (error) {
       console.error("Error fetching blogs:", error);
