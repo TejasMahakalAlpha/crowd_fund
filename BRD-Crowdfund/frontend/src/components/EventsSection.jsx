@@ -1,7 +1,8 @@
 // src/components/EventsSection.jsx
 import React, { useEffect, useState } from "react";
-import API from "../services/api";
+
 import "./EventsSection.css";
+import { PublicApi } from "../services/api";
 
 const EventsSection = () => {
   const [events, setEvents] = useState([]);
@@ -9,7 +10,7 @@ const EventsSection = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const res = await API.get("/events");
+        const res = await PublicApi.getEvents();
         if (Array.isArray(res.data)) {
           // Show latest 3 events
           setEvents(res.data.slice(0, 3));

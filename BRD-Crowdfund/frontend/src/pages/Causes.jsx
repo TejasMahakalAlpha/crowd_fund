@@ -1,7 +1,7 @@
 // src/pages/Causes.jsx
 import React, { useEffect, useState } from "react";
 import "./Causes.css";
-import API from "../services/api"; // Adjust path as needed
+import { PublicApi } from "../services/api"; // Adjust path as needed
 
 const Causes = () => {
   const [causes, setCauses] = useState([]);
@@ -9,7 +9,8 @@ const Causes = () => {
   useEffect(() => {
     const fetchCauses = async () => {
       try {
-        const res = await API.get("/causes");
+        const res = await PublicApi.getCauses();
+        console.log(res)
         setCauses(res.data);
       } catch (err) {
         console.error("Failed to load causes", err);
@@ -17,6 +18,34 @@ const Causes = () => {
     };
     fetchCauses();
   }, []);
+
+  const handleDonate = async (causeId) => {
+    const { value: amount } = await Swal.fire({
+      title: "Enter donation amount",
+      input: "number",
+      inputAttributes: {
+        min: 1,
+        step: 1,
+      },
+      inputValidator: (value) => {
+        if (!value || value <= 0) {
+          return "Please enter a valid amount";
+        }
+      },
+      showCancelButton: true,
+      confirmButtonText: "Donate",
+    });
+
+    if (amount) {
+      try {
+        await PublicApi.donateToCause(causeId, Number(amount));
+        Swal.fire("Thank you!", "Your donation was successful.", "success");
+      } catch (err) {
+        Swal.fire("Oops!", "Donation failed. Please try again.", "error");
+        console.error("Donation error:", err);
+      }
+    }
+  };
 
   return (
     <div className="causes-page">
@@ -48,7 +77,7 @@ const Causes = () => {
                 ₹{raised.toLocaleString()} raised of ₹{cause.goalAmount.toLocaleString()} goal
               </p>
               <p>{cause.description}</p>
-              <button className="donate-btn">Donate Now</button>
+              <button className="donate-btn" onClick={() => handleDonate(cause._id)}>Donate Now</button>
             </div>
           );
         })}

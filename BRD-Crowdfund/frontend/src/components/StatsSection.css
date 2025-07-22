@@ -4,6 +4,8 @@
   color: white;
   padding: 60px 20px;
   text-align: center;
+  overflow-y: auto;
+
 }
 
 .stats-grid {
@@ -36,4 +38,8 @@
   font-size: 1rem;
   letter-spacing: 0.5px;
   color: #c8e6c9;
+}
+
+::-webkit-scrollbar {
+  display: none;
 }

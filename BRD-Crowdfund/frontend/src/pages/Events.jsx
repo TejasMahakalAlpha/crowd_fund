@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import API from "../services/api";
+import API, { PublicApi } from "../services/api";
 import "./Events.css";
 
 const Events = () => {
@@ -10,7 +10,7 @@ const Events = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const res = await API.get("/events");
+        const res = await PublicApi.getEvents();
         if (Array.isArray(res.data)) {
           setEvents(res.data);
         } else {

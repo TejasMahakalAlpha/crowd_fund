@@ -1,16 +1,20 @@
 import React, { useState } from "react";
-import axios from "axios";
 import "./VolunteerForm.css";
+import { PublicApi } from "../services/api";
+import Swal from 'sweetalert2';
 
 const VolunteerForm = () => {
   const [formData, setFormData] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
     email: "",
     phone: "",
-    message: "",
+    address: "",
+    skills: "",
+    availability: "",
+    experience: "",
+    motivation: "",
   });
-
-  const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -19,13 +23,22 @@ const VolunteerForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${BASE_URL}/api/volunteers`, formData);
-      alert("Thank you for volunteering!");
+      await PublicApi.registerVolunteer(formData);
+      Swal.fire({
+        icon: 'success',
+        title: 'Application Submitted!',
+        text: 'Thank you for volunteering!',
+      });
       setFormData({
-        name: "",
+        firstName: "",
+        lastName: "",
         email: "",
         phone: "",
-        message: "",
+        address: "",
+        skills: "",
+        availability: "",
+        experience: "",
+        motivation: "",
       });
     } catch (err) {
       console.error("Volunteer form error:", err);
@@ -45,16 +58,24 @@ const VolunteerForm = () => {
         <form onSubmit={handleSubmit}>
           <input
             type="text"
-            name="name"
-            placeholder="Your Full Name"
-            value={formData.name}
+            name="firstName"
+            placeholder="First Name"
+            value={formData.firstName}
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="text"
+            name="lastName"
+            placeholder="Last Name"
+            value={formData.lastName}
             onChange={handleChange}
             required
           />
           <input
             type="email"
             name="email"
-            placeholder="Your Email Address"
+            placeholder="Email Address"
             value={formData.email}
             onChange={handleChange}
             required
@@ -62,17 +83,46 @@ const VolunteerForm = () => {
           <input
             type="tel"
             name="phone"
-            placeholder="Your Phone Number"
+            placeholder="Phone Number"
             value={formData.phone}
             onChange={handleChange}
             required
           />
-          <textarea
-            name="message"
-            rows="6"
-            placeholder="Tell us why you want to volunteer"
-            value={formData.message}
+          <input
+            type="text"
+            name="address"
+            placeholder="Address"
+            value={formData.address}
             onChange={handleChange}
+          />
+          <input
+            type="text"
+            name="skills"
+            placeholder="Skills (e.g., Teaching, Event Management)"
+            value={formData.skills}
+            onChange={handleChange}
+          />
+          <input
+            type="text"
+            name="availability"
+            placeholder="Availability (e.g., Weekends)"
+            value={formData.availability}
+            onChange={handleChange}
+          />
+          <textarea
+            name="experience"
+            rows="3"
+            placeholder="Experience (e.g., 2 years at local shelter)"
+            value={formData.experience}
+            onChange={handleChange}
+          ></textarea>
+          <textarea
+            name="motivation"
+            rows="4"
+            placeholder="Why do you want to volunteer?"
+            value={formData.motivation}
+            onChange={handleChange}
+            required
           ></textarea>
           <button type="submit">Submit Application</button>
         </form>

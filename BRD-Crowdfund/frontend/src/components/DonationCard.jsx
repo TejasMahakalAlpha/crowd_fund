@@ -2,10 +2,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./DonationCard.css";
+import { PublicApi } from "../services/api";
 
 const DonationCard = () => {
   const [totalAmount, setTotalAmount] = useState(0);
-  const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+  // const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
   const donationTypes = [
     {
@@ -28,7 +29,9 @@ const DonationCard = () => {
 
   const fetchTotalDonation = async () => {
     try {
-      const res = await axios.get(`${BASE_URL}/api/donations`);
+      // const res = await axios.get(`${BASE_URL}/api/donations`);
+      const res = await PublicApi.getDonation();
+      console.log(res)
       const total = res.data.reduce((sum, d) => sum + parseFloat(d.amount || 0), 0);
       setTotalAmount(total);
     } catch (err) {

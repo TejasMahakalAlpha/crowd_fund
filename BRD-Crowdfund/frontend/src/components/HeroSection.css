@@ -1,9 +1,15 @@
 /* src/components/HeroSection.css */
 .hero-section {
-  background: linear-gradient(135deg, #004d40, #00251a);
+  background: 
+    linear-gradient(135deg, rgba(0, 77, 64, 0.5), rgba(0, 37, 26, 0.5)), 
+    url('https://www.cumanagement.com/sites/default/files/2019-07/donate-coin-jar.jpg'); /* Replace with your actual image path */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   color: #fff;
   padding: 80px 20px;
   text-align: center;
+  position: relative;
 }
 
 .hero-content h1 {

@@ -2,15 +2,18 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './Contact.css';
+import API, { PublicApi } from '../services/api';
+import Swal from 'sweetalert2';
 
 const Contact = () => {
-  const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+  // const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     subject: '',
-    message: '',
+    phone: '',
+    content: '',
   });
 
   const [success, setSuccess] = useState('');
@@ -22,17 +25,25 @@ const Contact = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSuccess('');
-    setError('');
     try {
-      await axios.post(`${BASE_URL}/api/contacts`, formData);
-      setSuccess('Message sent successfully!');
-      setFormData({ name: '', email: '', subject: '', message: '' });
+      Swal.fire({
+        title: 'Sending...',
+        allowOutsideClick: false,
+        didOpen: () => Swal.showLoading(),
+      });
+      await PublicApi.contactMessage(formData);
+      Swal.fire({ icon: 'success', title: 'Message Sent!', text: 'Thank you for reaching out to us.' });
+      setFormData({ name: '', email: '', subject: '', content: '', phone: '' });
     } catch (err) {
       console.error('Contact form error:', err);
-      setError('Failed to send message');
+      Swal.fire({
+        icon: 'error',
+        title: 'Failed to Send',
+        text: 'Something went wrong. Please try again later.',
+      });
     }
   };
+
 
   return (
     <div className="contact-page">
@@ -47,11 +58,10 @@ const Contact = () => {
           <form onSubmit={handleSubmit}>
             <input type="text" name="name" placeholder="Your Name" value={formData.name} onChange={handleChange} required />
             <input type="email" name="email" placeholder="Your Email Address" value={formData.email} onChange={handleChange} required />
+            <input type="number" name="phone" placeholder="Your phone number" value={formData.phone} onChange={handleChange} required />
             <input type="text" name="subject" placeholder="Subject" value={formData.subject} onChange={handleChange} />
-            <textarea name="message" rows="6" placeholder="Your Message" value={formData.message} onChange={handleChange} required />
+            <textarea name="content" rows="6" placeholder="Your Message" value={formData.content} onChange={handleChange} required />
             <button type="submit">Submit</button>
-            {success && <p style={{ color: 'green' }}>{success}</p>}
-            {error && <p style={{ color: 'red' }}>{error}</p>}
           </form>
         </div>
 
