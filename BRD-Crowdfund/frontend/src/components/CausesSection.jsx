@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import API from "../services/api"; // Make sure path is correct
+import API, { PublicApi } from "../services/api"; // Make sure path is correct
 import "./CausesSection.css";
 
 const CausesSection = () => {
@@ -9,7 +9,7 @@ const CausesSection = () => {
   useEffect(() => {
     const fetchCauses = async () => {
       try {
-        const res = await API.get("/causes");
+        const res = await PublicApi.getCauses();
         if (Array.isArray(res.data)) {
           setCauses(res.data);
         } else {
@@ -34,8 +34,8 @@ const CausesSection = () => {
       ) : (
         <div className="causes-grid">
           {causes.map((cause, index) => {
-            const raised = cause.raisedAmount || 0; // fallback if not present
-            const goal = cause.goalAmount;
+            const raised = cause.targetAmount || 0; // fallback if not present
+            const goal = cause.targetAmount;
             const percentage = Math.round((raised / goal) * 100);
 
             return (
@@ -48,7 +48,9 @@ const CausesSection = () => {
                   ></div>
                 </div>
                 <p className="donation-info">
-                  ₹{raised.toLocaleString()} donated of ₹{goal.toLocaleString()} goal
+                  ₹{typeof raised === "number" ? raised.toLocaleString() : 0} donated of  ₹
+                  {typeof cause.targetAmount === "number" ? cause.targetAmount.toLocaleString() : 0} goal
+
                 </p>
                 <p className="description">{cause.description}</p>
                 <button className="donate-btn">Donate Now</button>

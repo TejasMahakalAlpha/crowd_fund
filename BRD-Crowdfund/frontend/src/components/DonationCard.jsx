@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./DonationCard.css";
 import { PublicApi } from "../services/api";
+import Swal from "sweetalert2";
 
 const DonationCard = () => {
   const [totalAmount, setTotalAmount] = useState(0);
@@ -42,17 +43,29 @@ const DonationCard = () => {
   const loadRazorpay = (amount) => {
     const script = document.createElement("script");
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
+
     script.onload = () => {
+      console.log("Razorpay script loaded");
+      if (!window.Razorpay) {
+        Swal.fire("Error", "Razorpay SDK not available", "error");
+        return;
+      }
+
       const options = {
-        key: "rzp_test_YourKeyHere", // ✅ Replace with your Razorpay key
-        amount: amount,
+        key: "rzp_test_xxxxxx", // ✅ use your real test/live key
+        amount: amount, // already in paise (₹500 = 50000)
         currency: "INR",
         name: "Alphaseam Foundation",
         description: "Donation Payment",
-        image: "/logo.png", // optional logo path
+        image: "/logo.png",
         handler: function (response) {
-          alert("Donation successful. Payment ID: " + response.razorpay_payment_id);
-          fetchTotalDonation(); // Refresh total
+          Swal.fire({
+            title: "🎉 Donation Successful!",
+            html: `Payment ID: <b>${response.razorpay_payment_id}</b>`,
+            icon: "success",
+            confirmButtonColor: "#0f172a",
+          });
+          fetchTotalDonation();
         },
         prefill: {
           name: "Donor",
@@ -66,15 +79,17 @@ const DonationCard = () => {
           color: "#0f172a",
         },
       };
+
       const rzp = new window.Razorpay(options);
       rzp.open();
     };
+
     script.onerror = () => {
-      alert("Failed to load Razorpay SDK. Check internet connection.");
+      Swal.fire("Error", "Failed to load Razorpay SDK. Check internet connection.", "error");
     };
+
     document.body.appendChild(script);
   };
-
   return (
     <section className="donation-section" id="donation">
       <h2 className="donation-title">Ways You Can Support</h2>

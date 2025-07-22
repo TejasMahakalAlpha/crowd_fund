@@ -52,7 +52,6 @@ const Dashboard = () => {
     }
   };
 
-
   const handleLogout = () => {
     logout(); // remove token from context and localStorage
     navigate("/admin/login");

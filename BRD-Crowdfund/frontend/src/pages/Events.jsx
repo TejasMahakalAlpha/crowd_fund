@@ -39,46 +39,52 @@ const Events = () => {
       {error && <p style={{ color: "red" }}>{error}</p>}
 
       <div className="events-list">
-        {events.map((event, index) => {
-          const dateObj = new Date(event.date);
-          const day = dateObj.getDate();
-          const month = dateObj.toLocaleString("default", { month: "short" });
-          const year = dateObj.getFullYear();
+        {!loading && events.length === 0 ? (
+          <p style={{ textAlign: "center", marginTop: "20px" }}>
+            Currently, there are no events available.
+          </p>
+        ) : (
+          events.map((event, index) => {
+            const dateObj = new Date(event.date);
+            const day = dateObj.getDate();
+            const month = dateObj.toLocaleString("default", { month: "short" });
+            const year = dateObj.getFullYear();
 
-          return (
-            <div className="event-card" key={event._id || index}>
-              <div className="event-date">
-                <span className="day">{day}</span>
-                <span className="month">{month}</span>
-                <span className="year">{year}</span>
+            return (
+              <div className="event-card" key={event._id || index}>
+                <div className="event-date">
+                  <span className="day">{day}</span>
+                  <span className="month">{month}</span>
+                  <span className="year">{year}</span>
+                </div>
+                <div className="event-info">
+                  <h3>{event.title}</h3>
+                  <p className="time">{event.time || "12:00PM - 4:00PM"}</p>
+                  <p className="description">{event.description}</p>
+                  <p className="location">{event.location}</p>
+
+                  {event.imageUrl && (
+                    <img
+                      src={`http://localhost:5000${event.imageUrl}`}
+                      alt={event.title}
+                      className="event-image"
+                      style={{
+                        width: "100%",
+                        maxHeight: "250px",
+                        objectFit: "cover",
+                        marginTop: "10px",
+                        borderRadius: "8px",
+                      }}
+                    />
+                  )}
+
+                  <button className="join-btn">Join Event</button>
+                </div>
               </div>
-              <div className="event-info">
-                <h3>{event.title}</h3>
-                <p className="time">{event.time || "12:00PM - 4:00PM"}</p>
-                <p className="description">{event.description}</p>
-                <p className="location">{event.location}</p>
+            );
+          })
+        )}
 
-                {/* ✅ Fixed image path */}
-                {event.imageUrl && (
-                  <img
-                    src={`http://localhost:5000${event.imageUrl}`}
-                    alt={event.title}
-                    className="event-image"
-                    style={{
-                      width: "100%",
-                      maxHeight: "250px",
-                      objectFit: "cover",
-                      marginTop: "10px",
-                      borderRadius: "8px",
-                    }}
-                  />
-                )}
-
-                <button className="join-btn">Join Event</button>
-              </div>
-            </div>
-          );
-        })}
       </div>
     </div>
   );

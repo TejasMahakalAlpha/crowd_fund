@@ -10,7 +10,6 @@ const Causes = () => {
     const fetchCauses = async () => {
       try {
         const res = await PublicApi.getCauses();
-        console.log(res)
         setCauses(res.data);
       } catch (err) {
         console.error("Failed to load causes", err);
@@ -56,9 +55,8 @@ const Causes = () => {
 
       <div className="causes-grid">
         {causes.map((cause, index) => {
-          const raised = Math.floor(Math.random() * (cause.goalAmount * 0.7));
-          const percent = Math.round((raised / cause.goalAmount) * 100);
-
+          const raised = Math.floor(Math.random() * (cause.targetAmount * 0.7));
+          const percent = Math.round((raised / cause.targetAmount) * 100);
           return (
             <div className="cause-box" key={cause._id || index}>
               {cause.image && (
@@ -74,10 +72,11 @@ const Causes = () => {
                 <div className="progress" style={{ width: `${percent}%` }}></div>
               </div>
               <p className="donation-amount">
-                ₹{raised.toLocaleString()} raised of ₹{cause.goalAmount.toLocaleString()} goal
+                ₹{typeof raised === "number" ? raised.toLocaleString() : 0} raised of ₹
+                {typeof cause.targetAmount === "number" ? cause.targetAmount.toLocaleString() : 0} goal
               </p>
               <p>{cause.description}</p>
-              <button className="donate-btn" onClick={() => handleDonate(cause._id)}>Donate Now</button>
+              <button className="donate-btn" onClick={() => handleDonate(cause.id)}>Donate Now</button>
             </div>
           );
         })}
