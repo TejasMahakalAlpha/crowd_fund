@@ -16,7 +16,7 @@ const EventsSection = () => {
         date: "2025-08-05T10:00:00",
         time: "10:00 AM - 2:00 PM",
         location: "Community Center, Pune",
-        imageUrl: "/uploads/events/health-camp.jpg"
+        imageUrl: "healthcamp.jpeg"
       },
       {
         id: 2,
@@ -25,7 +25,7 @@ const EventsSection = () => {
         date: "2025-08-10T08:30:00",
         time: "8:30 AM - 12:00 PM",
         location: "Outskirts of Nagpur",
-        imageUrl: "/uploads/events/tree-plantation.jpg"
+        imageUrl: "treeplantation.jpeg"
       },
       {
         id: 3,
@@ -34,7 +34,7 @@ const EventsSection = () => {
         date: "2025-08-15T09:00:00",
         time: "9:00 AM - 1:00 PM",
         location: "Red Cross Hall, Mumbai",
-        imageUrl: "/uploads/events/blood-donation.jpg"
+        imageUrl: "blooddonation.jpeg"
       },
       {
         id: 4,
@@ -43,37 +43,28 @@ const EventsSection = () => {
         date: "2025-08-20T14:00:00",
         time: "2:00 PM - 5:00 PM",
         location: "Govt School, Nashik",
-        imageUrl: "/uploads/events/skills-workshop.jpg"
+        imageUrl: "skills-workshop.jpeg"
       },
-      {
-        id: 5,
-        title: "Food Distribution Drive",
-        description: "Distributing meals and water to homeless individuals across city streets.",
-        date: "2025-08-25T17:00:00",
-        time: "5:00 PM - 8:00 PM",
-        location: "Central Bus Stand, Aurangabad",
-        imageUrl: "/uploads/events/food-drive.jpg"
-      }
     ];
 
     setEvents(staticEvents);
   }, []);
 
-  // useEffect(() => {
-  //   const fetchEvents = async () => {
-  //     try {
-  //       const res = await PublicApi.getEvents();
-  //       if (Array.isArray(res.data)) {
-  //         // Show latest 3 events
-  //         setEvents(res.data.slice(0, 3));
-  //       }
-  //     } catch (err) {
-  //       console.error("Error fetching events in EventsSection", err);
-  //     }
-  //   };
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const res = await PublicApi.getEvents();
+        if (Array.isArray(res.data)) {
+          // Show latest 3 events
+          setEvents(res.data.slice(0, 3));
+        }
+      } catch (err) {
+        console.error("Error fetching events in EventsSection", err);
+      }
+    };
 
-  //   fetchEvents();
-  // }, []);
+    fetchEvents();
+  }, []);
 
   return (
     <section className="events-section" id="events">
@@ -100,7 +91,7 @@ const EventsSection = () => {
 
                 {event.imageUrl && (
                   <img
-                    src={`http://localhost:5000${event.imageUrl}`}
+                    src={`${event.imageUrl}`}
                     alt={event.title}
                     className="event-image"
                     style={{

@@ -17,7 +17,7 @@ const Blog = () => {
         createdAt: "2025-07-01T10:00:00Z",
         content:
           "We recently launched an initiative to educate and empower rural women in Maharashtra by providing digital literacy training and essential life skills...",
-        imageUrl: "/uploads/blogs/rural-women.jpg",
+        imageUrl: "/rulardevelopement.jpeg",
       },
       {
         _id: "2",
@@ -25,7 +25,7 @@ const Blog = () => {
         createdAt: "2025-06-28T14:30:00Z",
         content:
           "Our volunteers distributed over 10,000 food packets to families affected by the recent floods in Assam. Here's a behind-the-scenes look at the effort...",
-        imageUrl: "/uploads/blogs/flood-relief.jpg",
+        imageUrl: "/foodvitam.jpeg",
       },
       {
         _id: "3",
@@ -33,7 +33,7 @@ const Blog = () => {
         createdAt: "2025-06-20T08:15:00Z",
         content:
           "We wrapped up Eco Awareness Week with tree plantations, school campaigns, and city clean-up drives across 12 districts in India...",
-        imageUrl: "/uploads/blogs/eco-week.jpg",
+        imageUrl: "/eco-week.jpeg",
       },
       {
         _id: "4",
@@ -41,7 +41,7 @@ const Blog = () => {
         createdAt: "2025-06-10T12:45:00Z",
         content:
           "In collaboration with local hospitals, our health camp in Nagpur served over 800 individuals, offering free checkups and medicines...",
-        imageUrl: "/uploads/blogs/health-camp.jpg",
+        imageUrl: "/healthcamp.jpeg",
       },
       {
         _id: "5",
@@ -49,7 +49,7 @@ const Blog = () => {
         createdAt: "2025-06-01T09:00:00Z",
         content:
           "We officially launched our Youth Volunteer Program, which aims to engage students in local community development projects during summer...",
-        imageUrl: "/uploads/blogs/youth-program.jpg",
+        imageUrl: "/youthvoluneteer.jpeg",
       },
     ];
 
@@ -80,7 +80,7 @@ const Blog = () => {
           <div className="blog-card" key={post._id}>
             {post.imageUrl && (
               <img
-                src={`${BASE_URL}${post.imageUrl}`}
+                src={`${post.imageUrl}`}
                 alt={post.title}
                 style={{
                   width: "100%",

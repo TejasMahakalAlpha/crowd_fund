@@ -7,27 +7,27 @@ const Events = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // useEffect(() => {
-  //   const fetchEvents = async () => {
-  //     try {
-  //       const res = await PublicApi.getEvents();
-  //       console.log(res)
-  //       if (Array.isArray(res.data)) {
-  //         setEvents(res.data);
-  //       } else {
-  //         console.warn("Unexpected response:", res.data);
-  //         setError("Unexpected response format");
-  //       }
-  //     } catch (err) {
-  //       console.error("Failed to fetch events", err);
-  //       setError("Failed to fetch events");
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const res = await PublicApi.getEvents();
+        console.log(res)
+        if (Array.isArray(res.data)) {
+          setEvents(res.data);
+        } else {
+          console.warn("Unexpected response:", res.data);
+          setError("Unexpected response format");
+        }
+      } catch (err) {
+        console.error("Failed to fetch events", err);
+        setError("Failed to fetch events");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  //   fetchEvents();
-  // }, []);
+    fetchEvents();
+  }, []);
   useEffect(() => {
     // Static event data
     const staticEvents = [
@@ -38,7 +38,7 @@ const Events = () => {
         date: "2025-08-05T10:00:00",
         time: "10:00 AM - 2:00 PM",
         location: "Community Center, Pune",
-        imageUrl: "/uploads/events/health-camp.jpg"
+        imageUrl: "healthcamp.jpeg"
       },
       {
         id: 2,
@@ -47,7 +47,7 @@ const Events = () => {
         date: "2025-08-10T08:30:00",
         time: "8:30 AM - 12:00 PM",
         location: "Outskirts of Nagpur",
-        imageUrl: "/uploads/events/tree-plantation.jpg"
+        imageUrl: "treeplantation.jpeg"
       },
       {
         id: 3,
@@ -56,7 +56,7 @@ const Events = () => {
         date: "2025-08-15T09:00:00",
         time: "9:00 AM - 1:00 PM",
         location: "Red Cross Hall, Mumbai",
-        imageUrl: "/uploads/events/blood-donation.jpg"
+        imageUrl: "blooddonation.jpeg"
       },
       {
         id: 4,
@@ -65,17 +65,8 @@ const Events = () => {
         date: "2025-08-20T14:00:00",
         time: "2:00 PM - 5:00 PM",
         location: "Govt School, Nashik",
-        imageUrl: "/uploads/events/skills-workshop.jpg"
+        imageUrl: "skills-workshop.jpeg"
       },
-      {
-        id: 5,
-        title: "Food Distribution Drive",
-        description: "Distributing meals and water to homeless individuals across city streets.",
-        date: "2025-08-25T17:00:00",
-        time: "5:00 PM - 8:00 PM",
-        location: "Central Bus Stand, Aurangabad",
-        imageUrl: "/uploads/events/food-drive.jpg"
-      }
     ];
 
     setEvents(staticEvents);
@@ -122,7 +113,7 @@ const Events = () => {
 
                   {event.imageUrl && (
                     <img
-                      src={`http://localhost:5000${event.imageUrl}`}
+                      src={`${event.imageUrl}`}
                       alt={event.title}
                       className="event-image"
                       style={{
