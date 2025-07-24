@@ -1,38 +1,35 @@
-// src/components/DonationCard.jsx
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import "./DonationCard.css";
-import { PublicApi } from "../services/api";
 import Swal from "sweetalert2";
+import { PublicApi } from "../services/api";
+import "./DonationCard.css";
 
 const DonationCard = () => {
   const [totalAmount, setTotalAmount] = useState(0);
-  // const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+  const [isScriptLoaded, setIsScriptLoaded] = useState(false);
 
   const donationTypes = [
     {
       title: "ONE-TIME GIFT",
       description:
         "Make a one-time donation and help us take a step forward in our mission to support critical causes.",
-      amount: 50000, // ₹500
+      amount: 50000,
     },
     {
       title: "LIVING LEGACY",
       description:
         "Leave a legacy of hope and kindness that lasts for generations by contributing in memory or will.",
-      amount: 100000, // ₹1000
+      amount: 100000,
     },
   ];
 
   useEffect(() => {
     fetchTotalDonation();
+    loadRazorpayScript();
   }, []);
 
   const fetchTotalDonation = async () => {
     try {
-      // const res = await axios.get(`${BASE_URL}/api/donations`);
-      const res = await PublicApi.getDonation();
-      console.log(res)
+      const res = await PublicApi.getAllDonations();
       const total = res.data.reduce((sum, d) => sum + parseFloat(d.amount || 0), 0);
       setTotalAmount(total);
     } catch (err) {
@@ -40,24 +37,40 @@ const DonationCard = () => {
     }
   };
 
-  const loadRazorpay = (amount) => {
-    const script = document.createElement("script");
-    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+  const loadRazorpayScript = () => {
+    if (document.querySelector("#razorpay-script")) {
+      setIsScriptLoaded(true);
+      return;
+    }
 
-    script.onload = () => {
-      console.log("Razorpay script loaded");
-      if (!window.Razorpay) {
-        Swal.fire("Error", "Razorpay SDK not available", "error");
-        return;
-      }
+    const script = document.createElement("script");
+    script.id = "razorpay-script";
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.onload = () => setIsScriptLoaded(true);
+    script.onerror = () => Swal.fire("Error", "Failed to load Razorpay SDK", "error");
+    document.body.appendChild(script);
+  };
+
+  const startPayment = async (amount) => {
+    if (!isScriptLoaded) {
+      Swal.fire("Please wait", "Loading payment gateway...", "info");
+      return;
+    }
+
+    try {
+      Swal.fire({ title: "Processing...", allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+      const res = await PublicApi.makeDonation({ amount });
+      const { orderId, currency } = res.data;
 
       const options = {
-        key: "rzp_test_xxxxxx", // ✅ use your real test/live key
-        amount: amount, // already in paise (₹500 = 50000)
-        currency: "INR",
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID || "rzp_live_xxxxxxxxxxxxxx", // ✅ Set in .env
+        amount: amount,
+        currency: currency || "INR",
         name: "Alphaseam Foundation",
         description: "Donation Payment",
         image: "/logo.png",
+        order_id: orderId,
         handler: function (response) {
           Swal.fire({
             title: "🎉 Donation Successful!",
@@ -82,28 +95,22 @@ const DonationCard = () => {
 
       const rzp = new window.Razorpay(options);
       rzp.open();
-    };
-
-    script.onerror = () => {
-      Swal.fire("Error", "Failed to load Razorpay SDK. Check internet connection.", "error");
-    };
-
-    document.body.appendChild(script);
+      Swal.close();
+    } catch (error) {
+      console.error("Error initiating payment:", error);
+      Swal.fire("Error", "Unable to start payment", "error");
+    }
   };
+
   return (
     <section className="donation-section" id="donation">
       <h2 className="donation-title">Ways You Can Support</h2>
-      {/* <p className="donation-total">Total Donations Raised: ₹{totalAmount.toLocaleString()}</p> */}
-
       <div className="donation-card-container">
         {donationTypes.map((type, index) => (
           <div className="donation-card" key={index}>
             <h3>{type.title}</h3>
             <p>{type.description}</p>
-            <button
-              className="donate-btn"
-              onClick={() => loadRazorpay(type.amount)}
-            >
+            <button className="donate-btn" onClick={() => startPayment(type.amount)}>
               Donate Now
             </button>
           </div>
