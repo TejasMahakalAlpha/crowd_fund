@@ -3,14 +3,14 @@ import React from 'react';
 import './Gallery.css';
 
 const images = [
-  '/assets/images/gallery1.jpg',
-  '/assets/images/gallery2.jpg',
-  '/assets/images/gallery3.jpg',
-  '/assets/images/gallery4.jpg',
-  '/assets/images/gallery5.jpg',
-  '/assets/images/gallery6.jpg',
-  '/assets/images/gallery7.jpg',
-  '/assets/images/gallery8.jpg',
+  'blooddonation.jpeg',
+  'communitycleaning.jpeg',
+  'eco-week.jpeg',
+  'freemedicalcamp.jpeg',
+  'student.jpg',
+  'treeplantation.jpeg',
+  'womanempower.jpg',
+  'youthvoluneteer.jpeg',
 ];
 
 const Gallery = () => {
