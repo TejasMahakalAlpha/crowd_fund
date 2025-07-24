@@ -9,6 +9,54 @@ const Blog = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Static blog data
+    const staticBlogs = [
+      {
+        _id: "1",
+        title: "Empowering Rural Women Through Education",
+        createdAt: "2025-07-01T10:00:00Z",
+        content:
+          "We recently launched an initiative to educate and empower rural women in Maharashtra by providing digital literacy training and essential life skills...",
+        imageUrl: "/uploads/blogs/rural-women.jpg",
+      },
+      {
+        _id: "2",
+        title: "Food Drive for Flood Victims",
+        createdAt: "2025-06-28T14:30:00Z",
+        content:
+          "Our volunteers distributed over 10,000 food packets to families affected by the recent floods in Assam. Here's a behind-the-scenes look at the effort...",
+        imageUrl: "/uploads/blogs/flood-relief.jpg",
+      },
+      {
+        _id: "3",
+        title: "Eco Awareness Week Wrap-up",
+        createdAt: "2025-06-20T08:15:00Z",
+        content:
+          "We wrapped up Eco Awareness Week with tree plantations, school campaigns, and city clean-up drives across 12 districts in India...",
+        imageUrl: "/uploads/blogs/eco-week.jpg",
+      },
+      {
+        _id: "4",
+        title: "Health Camp Benefits 800+ Patients",
+        createdAt: "2025-06-10T12:45:00Z",
+        content:
+          "In collaboration with local hospitals, our health camp in Nagpur served over 800 individuals, offering free checkups and medicines...",
+        imageUrl: "/uploads/blogs/health-camp.jpg",
+      },
+      {
+        _id: "5",
+        title: "Youth Volunteer Program Kicks Off",
+        createdAt: "2025-06-01T09:00:00Z",
+        content:
+          "We officially launched our Youth Volunteer Program, which aims to engage students in local community development projects during summer...",
+        imageUrl: "/uploads/blogs/youth-program.jpg",
+      },
+    ];
+
+    setBlogs(staticBlogs);
+  }, []);
+
+  useEffect(() => {
     const fetchBlogs = async () => {
       try {
         const res = await API.get("/blogs");

@@ -76,7 +76,7 @@ const ManageCauses = () => {
         category: causeToEdit.category || "",
         location: causeToEdit.location || "",
         targetAmount: causeToEdit.targetAmount || "",
-        currentAmount: causeToEdit.currentAmount || 0,
+        currentAmount: causeToEdit.currentAmount || "",
         endDate: causeToEdit.endDate ? causeToEdit.endDate.slice(0, 10) : "", // format YYYY-MM-DD
         imageUrl: causeToEdit.imageUrl || "",
         status: causeToEdit.status || "ACTIVE",

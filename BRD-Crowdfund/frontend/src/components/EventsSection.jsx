@@ -6,22 +6,74 @@ import { PublicApi } from "../services/api";
 
 const EventsSection = () => {
   const [events, setEvents] = useState([]);
-
   useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const res = await PublicApi.getEvents();
-        if (Array.isArray(res.data)) {
-          // Show latest 3 events
-          setEvents(res.data.slice(0, 3));
-        }
-      } catch (err) {
-        console.error("Error fetching events in EventsSection", err);
+    // Static event data
+    const staticEvents = [
+      {
+        id: 1,
+        title: "Health Check-up Camp",
+        description: "Free general health check-up and consultations by certified doctors.",
+        date: "2025-08-05T10:00:00",
+        time: "10:00 AM - 2:00 PM",
+        location: "Community Center, Pune",
+        imageUrl: "/uploads/events/health-camp.jpg"
+      },
+      {
+        id: 2,
+        title: "Tree Plantation Drive",
+        description: "Join us to plant 500+ trees in the city outskirts to promote greenery.",
+        date: "2025-08-10T08:30:00",
+        time: "8:30 AM - 12:00 PM",
+        location: "Outskirts of Nagpur",
+        imageUrl: "/uploads/events/tree-plantation.jpg"
+      },
+      {
+        id: 3,
+        title: "Blood Donation Drive",
+        description: "Donate blood and save lives. A small act of kindness goes a long way.",
+        date: "2025-08-15T09:00:00",
+        time: "9:00 AM - 1:00 PM",
+        location: "Red Cross Hall, Mumbai",
+        imageUrl: "/uploads/events/blood-donation.jpg"
+      },
+      {
+        id: 4,
+        title: "Skill Development Workshop",
+        description: "Free training on basic computer skills for underprivileged youth.",
+        date: "2025-08-20T14:00:00",
+        time: "2:00 PM - 5:00 PM",
+        location: "Govt School, Nashik",
+        imageUrl: "/uploads/events/skills-workshop.jpg"
+      },
+      {
+        id: 5,
+        title: "Food Distribution Drive",
+        description: "Distributing meals and water to homeless individuals across city streets.",
+        date: "2025-08-25T17:00:00",
+        time: "5:00 PM - 8:00 PM",
+        location: "Central Bus Stand, Aurangabad",
+        imageUrl: "/uploads/events/food-drive.jpg"
       }
-    };
+    ];
 
-    fetchEvents();
+    setEvents(staticEvents);
   }, []);
+
+  // useEffect(() => {
+  //   const fetchEvents = async () => {
+  //     try {
+  //       const res = await PublicApi.getEvents();
+  //       if (Array.isArray(res.data)) {
+  //         // Show latest 3 events
+  //         setEvents(res.data.slice(0, 3));
+  //       }
+  //     } catch (err) {
+  //       console.error("Error fetching events in EventsSection", err);
+  //     }
+  //   };
+
+  //   fetchEvents();
+  // }, []);
 
   return (
     <section className="events-section" id="events">
