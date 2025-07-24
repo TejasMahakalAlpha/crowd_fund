@@ -5,8 +5,6 @@
 }
 
 .about-hero {
-  background: url('/assets/images/about-banner.jpg') center/cover no-repeat;
-  height: 300px;
   position: relative;
   display: flex;
   align-items: center;
@@ -14,7 +12,7 @@
 }
 
 .about-hero .overlay {
-  background: rgba(0, 77, 64, 0.7);
+  background: #004d40;
   color: white;
   padding: 40px;
   text-align: center;

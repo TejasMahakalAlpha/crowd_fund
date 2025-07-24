@@ -30,37 +30,53 @@
   font-weight: 500;
 }
 
+/* EVENTS GRID CONTAINER */
 .events-list {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 30px;
   padding: 60px 20px;
   background: #f0fdfa;
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
+/* CARD STYLE */
 .event-card {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   background: white;
   border-radius: 12px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
   overflow: hidden;
   transition: transform 0.3s ease;
+  height: 100%; /* NEW: ensures card grows to fit container */
 }
+
+@media (min-width: 768px) {
+  .event-card {
+    flex-direction: row;
+    align-items: stretch; /* Ensures both children match height */
+  }
+}
+
 
 .event-card:hover {
   transform: translateY(-5px);
 }
 
+/* DATE BOX */
 .event-date {
   background: #00796b;
   color: white;
   padding: 20px;
-  min-width: 100px;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
+
 
 .event-date .day {
   font-size: 2rem;
@@ -72,11 +88,15 @@
   font-size: 0.9rem;
 }
 
+/* EVENT CONTENT */
 .event-info {
   padding: 20px;
   flex: 1;
-  overflow-x: scroll;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
+
 
 .event-info h3 {
   font-size: 1.3rem;
@@ -105,12 +125,13 @@
 
 .event-image {
   width: 100%;
-  max-height: 250px;
+  max-height: 220px;
   object-fit: cover;
   border-radius: 8px;
   margin-top: 10px;
 }
 
+/* BUTTON */
 .join-btn {
   background-color: #26a69a;
   color: #fff;
@@ -125,4 +146,28 @@
 
 .join-btn:hover {
   background-color: #00796b;
+}
+
+/* RESPONSIVE: Row layout on wide screens */
+@media (min-width: 768px) {
+  .event-card {
+    flex-direction: row;
+  }
+
+  .event-date {
+    min-width: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .event-info {
+    flex: 1;
+  }
+
+  .event-image {
+    margin-top: 20px;
+    border-radius: 8px;
+    max-height: 200px;
+  }
 }

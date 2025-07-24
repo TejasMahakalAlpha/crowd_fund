@@ -34,10 +34,10 @@ export const PublicApi = {
 
 export const AdminApi = {
   getevents: (id) => API.get(`admin/events/${id}`),
-  updateEvents: (id, data) => API.put(`admin/events/${id}`, data),
+  updateEvents: (id, data) => API.put(`admin/events/${id}`, data, { headers: { "Content-Type": "multipart/form-data" } }),
   deleteEvents: (id) => API.delete(`admin/events/${id}`),
   getCauses: (id) => API.get(`admin/causes/${id}`),
-  updateCauses: (id, data) => API.put(`admin/causes/${id}`, data),
+  updateCauses: (id, data) => API.put(`admin/causes/${id}`, data, { headers: { "Content-Type": "multipart/form-data" } }),
   deleteCauses: (id) => API.delete(`admin/causes/${id}`),
   getAllEvents: () => API.get(`admin/events`),
   // createEvents: (data) => API.post(`admin/events`, data),

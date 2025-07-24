@@ -17,7 +17,6 @@ import Contact from '../pages/Contact';
 import Events from '../pages/Events';
 import Gallery from '../pages/Gallery';
 import Blog from '../pages/Blog';
-import BlogDetail from '../pages/BlogDetail';
 import VolunteerForm from '../pages/VolunteerForm';
 
 // Admin Pages
@@ -29,7 +28,6 @@ import ManageDonations from '../admin/ManageDonations';
 import ManageVolunteers from '../admin/ManageVolunteers';
 import ManageEvents from '../admin/ManageEvents';
 import ManageContacts from "../admin/ManageContacts";
-import CauseDetails from '../components/CausesDetails';
 
 const AppRoutes = () => {
   const location = useLocation();
@@ -51,12 +49,11 @@ const AppRoutes = () => {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/causes" element={<Causes />} />
-        <Route path="/causes/:id" element={<CauseDetails />} />
+        <Route path="/causes/:id" element={<ManageCauses />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/events" element={<Events />} />
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/blog" element={<Blog />} />
-        <Route path="/blog/:id" element={<BlogDetail />} />
         <Route path="/volunteer" element={<VolunteerForm />} />
 
         {/* 🔒 Admin Routes */}

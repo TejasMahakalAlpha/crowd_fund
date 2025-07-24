@@ -1,29 +1,63 @@
-/* src/components/AboutSection.css */
 .about-section {
   padding: 80px 20px;
-  background: #f5f5f5;
+  background: #e0f2f1; /* softer greenish tint */
   text-align: center;
+  display: flex;
+  justify-content: center;
 }
 
 .about-section .container {
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-.section-title {
-  font-size: 2.5rem;
-  margin-bottom: 30px;
+  max-width: 700px;
+  background: white;
+  padding: 40px 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 77, 64, 0.15);
   color: #004d40;
 }
 
+.section-title {
+  font-size: 2.8rem;
+  margin-bottom: 25px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+}
+
 .about-text {
-  font-size: 1.2rem;
-  line-height: 1.7;
-  color: #333;
+  font-size: 1.25rem;
+  line-height: 1.8;
   margin-bottom: 20px;
+  color: #2e2e2e;
 }
 
 .about-subtext {
-  font-size: 1rem;
-  color: #666;
+  font-size: 1.05rem;
+  color: #5f6a66;
+  font-style: italic;
+}
+
+@media (max-width: 600px) {
+  .about-section {
+    padding: 60px 10px;
+  }
+  .about-section .container {
+    padding: 30px 20px;
+  }
+  .section-title {
+    font-size: 2rem;
+  }
+  .about-text {
+    font-size: 1.1rem;
+  }
+  .about-subtext {
+    font-size: 1rem;
+  }
+}
+.about-section .container {
+  max-width: 700px;
+  background: white;
+  padding: 40px 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 77, 64, 0.15);
+  color: #004d40;
+  text-align: justify; /* Justify text */
 }

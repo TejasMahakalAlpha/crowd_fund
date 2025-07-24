@@ -52,6 +52,11 @@ const Events = () => {
             const day = dateObj.getDate();
             const month = dateObj.toLocaleString("default", { month: "short" });
             const year = dateObj.getFullYear();
+            const time = dateObj.toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: true, // Set to false if you want 24-hour format
+            });
 
             return (
               <div className="event-card" key={event.id || event._id || index}>
@@ -65,7 +70,7 @@ const Events = () => {
 
                 <div className="event-info">
                   <h3>{event.title}</h3>
-                  <p className="time">{event.time || "Time not specified"}</p>
+                  <p className="time">{time || "Time not specified"}</p>
                   <p className="description">{event.description}</p>
                   <p className="location">{event.location}</p>
 

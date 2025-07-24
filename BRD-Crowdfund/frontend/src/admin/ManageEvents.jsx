@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { AdminApi } from "../services/api";
+import API, { AdminApi } from "../services/api";
 // import "./ManageEvents.css";
 import Swal from "sweetalert2";
 import { Navigate, useNavigate } from "react-router-dom";
@@ -320,7 +320,7 @@ const ManageEvents = () => {
                   src={
                     event.imageUrl.startsWith("http")
                       ? event.imageUrl
-                      : `http://localhost:8080/uploads/${event.imageUrl}`
+                      : `${API}/${event.imageUrl}`
                   }
                   alt="Event"
                   style={{ width: "100%", maxWidth: "300px", marginTop: "10px" }}

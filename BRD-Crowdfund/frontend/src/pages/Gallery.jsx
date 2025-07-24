@@ -7,7 +7,6 @@ const images = [
   'communitycleaning.jpeg',
   'eco-week.jpeg',
   'freemedicalcamp.jpeg',
-  'student.jpg',
   'treeplantation.jpeg',
   'womanempower.jpg',
   'youthvoluneteer.jpeg',

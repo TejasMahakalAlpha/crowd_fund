@@ -61,7 +61,6 @@ const Causes = () => {
     const fetchCauses = async () => {
       try {
         const res = await PublicApi.getCauses();
-        console.log(res)
         setCauses(res.data);
       } catch (err) {
         console.error("Failed to load causes", err);
