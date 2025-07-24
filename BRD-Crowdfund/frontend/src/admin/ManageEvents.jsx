@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { AdminApi } from "../services/api";
 import "./ManageBlogs.css";
 import Swal from "sweetalert2";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const ManageEvents = () => {
   const [events, setEvents] = useState([]);
@@ -18,6 +19,9 @@ const ManageEvents = () => {
   });
 
   const [errors, setErrors] = useState({});
+  const [isEditing, setIsEditing] = useState(false);
+  const [editId, setEditId] = useState(null);
+  const navigate = useNavigate()
 
   // Validate fields and set errors state
   const validateForm = () => {
@@ -72,17 +76,46 @@ const ManageEvents = () => {
     setFormData({ ...formData, [name]: value });
     setErrors({ ...errors, [name]: "" });
   };
+  const handleEdit = (id) => {
+    const eventToEdit = events.find((e) => e.id === id);
+    if (!eventToEdit) return;
+
+    setFormData({
+      title: eventToEdit.title || "",
+      shortDescription: eventToEdit.shortDescription || "",
+      description: eventToEdit.description || "",
+      eventDate: eventToEdit.eventDate ? eventToEdit.eventDate.slice(0, 16) : "", // keep "YYYY-MM-DDTHH:mm"
+      location: eventToEdit.location || "",
+      status: eventToEdit.status || "UPCOMING",
+      maxParticipants: eventToEdit.maxParticipants?.toString() || "",
+      currentParticipants: eventToEdit.currentParticipants || 0,
+      imageUrl: eventToEdit.imageUrl || "",
+    });
+
+    setEditId(id);
+    setIsEditing(true);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!validateForm()) return;
 
     try {
-      // Convert maxParticipants to number before sending
-      const payload = { ...formData, maxParticipants: Number(formData.maxParticipants) };
-      await AdminApi.createEvents(payload);
-      Swal.fire("Success", "Event created successfully", "success");
+      const payload = {
+        ...formData,
+        maxParticipants: Number(formData.maxParticipants),
+      };
+
+      if (isEditing) {
+        await AdminApi.updateEvents(editId, payload);
+        Swal.fire("Success", "Event updated successfully", "success");
+      } else {
+        await AdminApi.createEvents(payload);
+        Swal.fire("Success", "Event created successfully", "success");
+      }
+
       setFormData({
         title: "",
         shortDescription: "",
@@ -94,13 +127,16 @@ const ManageEvents = () => {
         currentParticipants: 0,
         imageUrl: "",
       });
+      setIsEditing(false);
+      setEditId(null);
       setErrors({});
       fetchEvents();
     } catch (err) {
-      console.error("❌ Error creating event", err);
-      Swal.fire("Error", "Failed to create event", "error");
+      console.error("❌ Error submitting event", err);
+      Swal.fire("Error", isEditing ? "Failed to update event" : "Failed to create event", "error");
     }
   };
+
 
   const handleDelete = async (id) => {
     const result = await Swal.fire({
@@ -127,6 +163,10 @@ const ManageEvents = () => {
 
   return (
     <div className="manage-blogs">
+      <button onClick={() => navigate(-1)} className="back-button">
+        ← Back
+      </button>
+
       <h2>Manage Events</h2>
 
       <form className="blog-form" onSubmit={handleSubmit} noValidate>
@@ -204,7 +244,8 @@ const ManageEvents = () => {
           <p style={{ color: "red" }}>{errors.maxParticipants}</p>
         )}
 
-        <button type="submit">Add Event</button>
+        <button type="submit">{isEditing ? "Update Event" : "Add Event"}</button>
+
       </form>
 
       <div className="blog-list">
@@ -239,6 +280,8 @@ const ManageEvents = () => {
                 />
               )}
               <button onClick={() => handleDelete(event.id)}>Delete</button>
+              <button onClick={() => handleEdit(event.id)}>Edit</button>
+
             </div>
           ))
         ) : (

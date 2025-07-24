@@ -87,3 +87,31 @@
 .blog-item button:hover {
   background: #b71c1c;
 }
+
+.blog-item .edit-button {
+  background-color: #1565c0 !important; /* Blue */
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.blog-item .edit-button:hover {
+  background-color: #0d47a1 !important;
+}
+
+.back-button {
+  background-color: #004d40;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  margin-bottom: 16px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+.back-button:hover {
+  background-color: #00695c;
+}

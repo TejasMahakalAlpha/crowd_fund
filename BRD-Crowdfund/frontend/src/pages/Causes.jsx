@@ -55,28 +55,39 @@ const Causes = () => {
 
       <div className="causes-grid">
         {causes.map((cause, index) => {
-          const raised = Math.floor(Math.random() * (cause.targetAmount * 0.7));
-          const percent = Math.round((raised / cause.targetAmount) * 100);
+          const raised = Number(cause.currentAmount) || 0;
+          const goal = Number(cause.targetAmount) || 1;
+          const percentage = Math.min(100, Math.round((raised / goal) * 100));
+
           return (
-            <div className="cause-box" key={cause._id || index}>
-              {cause.image && (
-                <img
-                  src={`http://localhost:5000/uploads/causes/${cause.image}`}
-                  alt={cause.title}
-                  className="cause-image"
-                  style={{ width: "100%", borderRadius: "8px", objectFit: "cover", maxHeight: "200px" }}
-                />
-              )}
-              <h3>{cause.title}</h3>
+            <div className="cause-card" key={cause._id || index}>
+              <h3
+                className="cause-title"
+                onClick={() => navigate(`/cause/${cause.id}`)} // FR-CAU-002
+                style={{ cursor: "pointer", color: "#004d40" }}
+              >
+                {cause.title.toUpperCase()}
+              </h3>
+
               <div className="progress-bar">
-                <div className="progress" style={{ width: `${percent}%` }}></div>
+                <div
+                  className="progress-fill"
+                  style={{ width: `${percentage}%` }}
+                ></div>
               </div>
-              <p className="donation-amount">
-                ₹{typeof raised === "number" ? raised.toLocaleString() : 0} raised of ₹
-                {typeof cause.targetAmount === "number" ? cause.targetAmount.toLocaleString() : 0} goal
+
+              <p className="donation-info">
+                ₹{raised.toLocaleString()} donated of ₹{goal.toLocaleString()} goal
               </p>
-              <p>{cause.description}</p>
-              <button className="donate-btn" onClick={() => handleDonate(cause.id)}>Donate Now</button>
+
+              <p className="description">{cause.description}</p>
+
+              <button
+                className="donate-btn"
+                onClick={() => handleDonate(cause._id)}
+              >
+                Donate Now
+              </button>
             </div>
           );
         })}

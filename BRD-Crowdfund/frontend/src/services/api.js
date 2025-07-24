@@ -2,17 +2,10 @@
 import axios from 'axios';
 
 const API = axios.create({
-  baseURL: 'http://localhost:8080/', // 🔁 Replace with your backend URL
+  baseURL: import.meta.env.VITE_API_BASE_URL, // 🔁 Replace with your backend URL
 });
 
 // ✅ Automatically attach token to all requests
-// API.interceptors.request.use((config) => {
-//   const token = localStorage.getItem("adminToken");
-//   if (token) {
-//     config.headers.Authorization = `Basic ${token}`; // Important: prefix with "Basic "
-//   }
-//   return config;
-// });.
 
 API.interceptors.request.use((config) => {
   const token = localStorage.getItem("adminToken");
@@ -49,7 +42,7 @@ export const AdminApi = {
   getAllVolunteer: () => API.get(`admin/volunteers`),
   getAllBlogs: () => API.get(`admin/blogs`),
   getAllDonations: () => API.get(`donations`),
-  getAllContacts: () => API.get(`admin/contacts`),
+  // getAllContacts: () => API.get(`admin/contacts`),
 
 }
 

@@ -64,7 +64,7 @@ const VolunteerForm = () => {
       setErrors({});
     } catch (err) {
       console.error("Volunteer form error:", err);
-      alert("Something went wrong. Please try again.");
+      Swal.fire("Error", "Something went wrong. Please try again.", "error");
     }
   };
 

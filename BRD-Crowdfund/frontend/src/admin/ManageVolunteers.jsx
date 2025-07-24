@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { AdminApi, PublicApi } from "../services/api";
 import Swal from "sweetalert2";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const ManageVolunteers = () => {
   const [volunteers, setVolunteers] = useState([]);
@@ -20,6 +21,7 @@ const ManageVolunteers = () => {
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
   const [alreadyExists, setAlreadyExists] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchVolunteers();
@@ -149,6 +151,10 @@ const ManageVolunteers = () => {
 
   return (
     <div className="manage-blogs">
+      <button onClick={() => navigate(-1)} className="back-button">
+        ← Back
+      </button>
+
       <h2>Manage Volunteers</h2>
 
       <form className="blog-form" onSubmit={handleSubmit} noValidate>

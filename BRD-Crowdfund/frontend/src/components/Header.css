@@ -15,6 +15,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .logo a {
@@ -24,16 +25,36 @@
   text-decoration: none;
 }
 
+/* Phone Number */
+.header-contact {
+  margin-left: auto;
+  margin-right: 20px;
+}
+
+.phone-number {
+  color: white;
+  font-weight: 500;
+  text-decoration: none;
+  font-size: 1rem;
+}
+
+.phone-number:hover {
+  color: #26a69a;
+}
+
+/* Navigation Links */
 .nav-links {
   display: flex;
   gap: 25px;
+  align-items: center;
 }
 
-.nav-links a {
+.nav-links a, p {
   color: white;
   text-decoration: none;
-  font-weight: 500;
+  font-weight: 5000;
   transition: color 0.3s;
+  
 }
 
 .nav-links a:hover,
@@ -41,15 +62,69 @@
   color: #26a69a;
 }
 
+/* Mega Menu */
+.mega-menu {
+  position: relative;
+}
+
+.mega-menu-content {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #ffffff;
+  box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+  min-width: 200px;
+  z-index: 999;
+}
+
+.mega-menu:hover .mega-menu-content {
+  display: block;
+}
+
+.mega-menu-content a {
+  display: block;
+  padding: 10px 15px;
+  color: #004d40;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.mega-menu-content a:hover {
+  background-color: #f1f1f1;
+}
+
 /* Mobile Responsive */
 @media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .header-contact {
+    margin: 10px 0;
+  }
+
   .nav-links {
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: flex-start;
+    gap: 15px;
     margin-top: 10px;
   }
 
-  .container {
-    flex-direction: column;
+  .mega-menu-content {
+    position: static;
+    box-shadow: none;
+    background-color: transparent;
+  }
+
+  .mega-menu-content a {
+    padding: 8px 10px;
+    color: white;
+  }
+
+  .mega-menu-content a:hover {
+    background-color: #26a69a;
+    color: white;
   }
 }

@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
-import API, { PublicApi } from "../services/api"; // Make sure path is correct
+import { useNavigate } from "react-router-dom";
+import API, { PublicApi } from "../services/api";
 import "./CausesSection.css";
+import Swal from "sweetalert2";
 
 const CausesSection = () => {
   const [causes, setCauses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCauses = async () => {
@@ -25,6 +28,40 @@ const CausesSection = () => {
     fetchCauses();
   }, []);
 
+  const handleDonate = async (causeId) => {
+    const { value: amount } = await Swal.fire({
+      title: "Enter donation amount",
+      input: "number",
+      inputAttributes: {
+        min: 1,
+        step: 1,
+      },
+      inputValidator: (value) => {
+        if (!value || value <= 0) {
+          return "Please enter a valid amount";
+        }
+      },
+      showCancelButton: true,
+      confirmButtonText: "Donate",
+    });
+
+    if (amount) {
+      try {
+        await PublicApi.donate({
+          causeId,
+          amount: Number(amount),
+          donorName: "Anonymous", // or collect via modal
+          currency: "INR",
+          paymentMethod: "card",
+        });
+        Swal.fire("Thank you!", "Your donation was successful.", "success");
+      } catch (err) {
+        Swal.fire("Oops!", "Donation failed. Please try again.", "error");
+        console.error("Donation error:", err);
+      }
+    }
+  };
+
   return (
     <section className="causes-section" id="causes">
       <h2 className="section-title">Causes That Need Your Urgent Attention</h2>
@@ -34,26 +71,39 @@ const CausesSection = () => {
       ) : (
         <div className="causes-grid">
           {causes.map((cause, index) => {
-            const raised = cause.targetAmount || 0; // fallback if not present
-            const goal = cause.targetAmount;
-            const percentage = Math.round((raised / goal) * 100);
+            const raised = Number(cause.currentAmount) || 0;
+            const goal = Number(cause.targetAmount) || 1;
+            const percentage = Math.min(100, Math.round((raised / goal) * 100));
 
             return (
               <div className="cause-card" key={cause._id || index}>
-                <h3>{cause.title}</h3>
+                <h3
+                  className="cause-title"
+                  onClick={() => navigate(`/cause/${cause._id}`)} // FR-CAU-002
+                  style={{ cursor: "pointer", color: "#004d40" }}
+                >
+                  {cause.title}
+                </h3>
+
                 <div className="progress-bar">
                   <div
                     className="progress-fill"
                     style={{ width: `${percentage}%` }}
                   ></div>
                 </div>
-                <p className="donation-info">
-                  ₹{typeof raised === "number" ? raised.toLocaleString() : 0} donated of  ₹
-                  {typeof cause.targetAmount === "number" ? cause.targetAmount.toLocaleString() : 0} goal
 
+                <p className="donation-info">
+                  ₹{raised.toLocaleString()} donated of ₹{goal.toLocaleString()} goal
                 </p>
+
                 <p className="description">{cause.description}</p>
-                <button className="donate-btn">Donate Now</button>
+
+                <button
+                  className="donate-btn"
+                  onClick={() => handleDonate(cause._id)}
+                >
+                  Donate Now
+                </button>
               </div>
             );
           })}

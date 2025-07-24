@@ -1,19 +1,25 @@
 // src/admin/ManageDonations.jsx
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import "./ManageBlogs.css"; // Reuse styles
-import { AdminApi } from "../services/api";
+import "./ManageBlogs.css"; // Reusing styles
+import { AdminApi, PublicApi } from "../services/api"; // Adjust as needed
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+
 
 const ManageDonations = () => {
   const [donations, setDonations] = useState([]);
   const [formData, setFormData] = useState({
     donorName: "",
-    email: "",
+    donorEmail: "",
+    donorPhone: "",
     amount: "",
     message: "",
+    causeId: "",
+    currency: "", // or "USD"
+    paymentMethod: "",
   });
+  const navigate = useNavigate();
 
-  // const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
   useEffect(() => {
     fetchDonations();
@@ -21,11 +27,11 @@ const ManageDonations = () => {
 
   const fetchDonations = async () => {
     try {
-      // const res = await axios.get(`${BASE_URL}/api/donations`);
-      const res = AdminApi.getAllDonations()
-      setDonations(res.data);
+      const res = await AdminApi.getAllDonations();
+      setDonations(res.data || []);
     } catch (err) {
       console.error("Error fetching donations", err);
+      toast.error("Failed to fetch donations");
     }
   };
 
@@ -36,30 +42,55 @@ const ManageDonations = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // await axios.post(`${BASE_URL}/api/donations`, {
-      //   ...formData,
-      //   amount: parseFloat(formData.amount),
-      // });
-      await AdminApi.getAllDonations();
+      const payload = {
+        donorName: formData.donorName,
+        donorEmail: formData.donorEmail,
+        donorPhone: formData.donorPhone,
+        amount: parseFloat(formData.amount),
+        message: formData.message,
+        causeId: parseInt(formData.causeId || "1"), // default causeId = 1
+        currency: formData.currency,
+        paymentMethod: formData.paymentMethod,
+      };
 
-      setFormData({ donorName: "", email: "", amount: "", message: "" });
+      await PublicApi.donate(payload);
+      toast.success("Donation added successfully");
+
+      setFormData({
+        donorName: "",
+        donorEmail: "",
+        donorPhone: "",
+        amount: "",
+        message: "",
+        causeId: "",
+        currency: "",
+        paymentMethod: "",
+      });
+
       fetchDonations();
     } catch (err) {
       console.error("Error creating donation", err);
+      toast.error("Failed to create donation");
     }
   };
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${BASE_URL}/api/donations/${id}`);
+      await AdminApi.deleteDonation(id);
+      toast.success("Donation deleted");
       fetchDonations();
     } catch (err) {
       console.error("Error deleting donation", err);
+      toast.error("Failed to delete donation");
     }
   };
 
   return (
     <div className="manage-blogs">
+      <button onClick={() => navigate(-1)} className="back-button">
+        ← Back
+      </button>
+
       <h2>Manage Donations</h2>
 
       <form className="blog-form" onSubmit={handleSubmit}>
@@ -73,9 +104,16 @@ const ManageDonations = () => {
         />
         <input
           type="email"
-          name="email"
-          placeholder="Email (optional)"
-          value={formData.email}
+          name="donorEmail"
+          placeholder="Email "
+          value={formData.donorEmail}
+          onChange={handleChange}
+        />
+        <input
+          type="text"
+          name="donorPhone"
+          placeholder="Phone"
+          value={formData.donorPhone}
           onChange={handleChange}
         />
         <input
@@ -85,6 +123,27 @@ const ManageDonations = () => {
           value={formData.amount}
           onChange={handleChange}
           required
+        />
+        <input
+          type="number"
+          name="causeId"
+          placeholder="Cause ID"
+          value={formData.causeId}
+          onChange={handleChange}
+        />
+        <input
+          type="text"
+          name="currency"
+          placeholder="Currency (e.g., INR)"
+          value={formData.currency}
+          onChange={handleChange}
+        />
+        <input
+          type="text"
+          name="paymentMethod"
+          placeholder="Payment Method"
+          value={formData.paymentMethod}
+          onChange={handleChange}
         />
         <textarea
           name="message"
@@ -97,13 +156,15 @@ const ManageDonations = () => {
       </form>
 
       <div className="blog-list">
-        {donations.map((d) => (
+        {Array.isArray(donations) && donations.map((d) => (
           <div className="blog-item" key={d._id}>
             <div>
               <h3>{d.donorName}</h3>
               <p>₹{d.amount}</p>
-              {d.email && <p>{d.email}</p>}
+              {d.donorEmail && <p>{d.donorEmail}</p>}
               {d.message && <p>{d.message}</p>}
+              {d.currency && <p>Currency: {d.currency}</p>}
+              {d.paymentMethod && <p>Method: {d.paymentMethod}</p>}
             </div>
             <button onClick={() => handleDelete(d._id)}>Delete</button>
           </div>

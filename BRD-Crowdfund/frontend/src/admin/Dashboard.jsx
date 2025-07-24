@@ -24,28 +24,28 @@ const Dashboard = () => {
   const fetchSummary = async () => {
     try {
       const [
-        blogsRes,
+        // blogsRes,
         causesRes,
         donationsRes,
         volunteersRes,
         eventsRes,
-        contactsRes,
+        // contactsRes,
       ] = await Promise.all([
-        AdminApi.getAllBlogs(),
+        // AdminApi.getAllBlogs(),
         AdminApi.getAllCauses(),
         AdminApi.getAllDonations(),
         AdminApi.getAllVolunteer(),
         AdminApi.getAllEvents(),
-        AdminApi.getAllContacts(),
+        // AdminApi.getAllContacts(),
       ]);
 
       setSummary({
-        blogs: blogsRes.data.length,
+        // blogs: blogsRes.data.length,
         causes: causesRes.data.length,
         donations: donationsRes.data.length,
         volunteers: volunteersRes.data.length,
         events: eventsRes.data.length,
-        contacts: contactsRes.data.length,
+        // contacts: contactsRes.data.length,
       });
     } catch (error) {
       console.error("Error fetching dashboard data", error);
@@ -71,10 +71,10 @@ const Dashboard = () => {
       </div>
       <h2>Admin Dashboard Summary</h2>
       <div className="dashboard-cards">
-        <div className="card" onClick={() => navigate("/admin/manage-blogs")}>
+        {/* <div className="card" onClick={() => navigate("/admin/manage-blogs")}>
           <h3>Blogs</h3>
           <p>{summary.blogs}</p>
-        </div>
+        </div> */}
         <div className="card" onClick={() => navigate("/admin/manage-causes")}>
           <h3>Causes</h3>
           <p>{summary.causes}</p>
@@ -91,10 +91,10 @@ const Dashboard = () => {
           <h3>Events</h3>
           <p>{summary.events}</p>
         </div>
-        <div className="card" onClick={() => navigate("/admin/manage-contacts")}>
+        {/* <div className="card" onClick={() => navigate("/admin/manage-contacts")}>
           <h3>Contacts</h3>
           <p>{summary.contacts}</p>
-        </div>
+        </div> */}
       </div>
     </div>
   );

@@ -19,20 +19,22 @@
   background: #ffffff;
   padding: 20px;
   border-radius: 10px;
-  margin-bottom: 40px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  margin-bottom: 30px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .event-form input,
-.event-form textarea {
-  padding: 10px;
+.event-form textarea,
+.event-form select {
+  padding: 10px 12px;
   border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 1rem;
+  outline: none;
 }
 
 .event-form button {
-  padding: 10px 15px;
+  padding: 12px 16px;
   background: #004d40;
   color: white;
   border: none;
@@ -46,44 +48,69 @@
   background: #00796b;
 }
 
-/* Event List */
-.event-list {
+/* Table Layout for Events */
+.event-table {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-}
-
-.event-item {
   background: #ffffff;
-  padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 1px 6px rgba(0,0,0,0.05);
-  display: flex;
-  justify-content: space-between;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.event-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 2fr 1fr;
   align-items: center;
-}
-
-.event-item h3 {
-  margin: 0 0 5px;
-  color: #004d40;
-}
-
-.event-item span {
-  font-weight: bold;
-  color: #00796b;
+  padding: 15px 20px;
+  border-bottom: 1px solid #eee;
   font-size: 0.95rem;
 }
 
-.event-item button {
-  background: #c62828;
-  color: white;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.3s;
+.event-row.header {
+  background: #004d40;
+  color: #ffffff;
+  font-weight: bold;
 }
 
-.event-item button:hover {
+.event-row:last-child {
+  border-bottom: none;
+}
+
+.event-row img {
+  max-width: 100px;
+  border-radius: 6px;
+}
+
+/* Actions (Edit/Delete) */
+.event-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.event-actions button {
+  padding: 6px 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+
+.event-actions .edit-btn {
+  background: #00796b;
+  color: white;
+}
+
+.event-actions .edit-btn:hover {
+  background: #004d40;
+}
+
+.event-actions .delete-btn {
+  background: #c62828;
+  color: white;
+}
+
+.event-actions .delete-btn:hover {
   background: #b71c1c;
 }

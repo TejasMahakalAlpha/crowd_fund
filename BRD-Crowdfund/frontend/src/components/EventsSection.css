@@ -3,6 +3,7 @@
   background: #fafafa;
   padding: 80px 20px;
   text-align: center;
+  
 }
 
 .section-title {
@@ -16,16 +17,22 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 30px;
+  align-items: stretch;
 }
 
 .event-card {
   display: flex;
+  flex: 1 1 300px;
   background: white;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
   border-radius: 12px;
   overflow: hidden;
   max-width: 500px;
   transition: transform 0.3s ease;
+  max-width: 500px;
+  min-height: 220px; /* set a base height */
+  height: 100%;
+  box-sizing: border-box;
 }
 
 .event-card:hover {
@@ -56,6 +63,9 @@
 .event-info {
   padding: 20px;
   text-align: left;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .event-info h3 {

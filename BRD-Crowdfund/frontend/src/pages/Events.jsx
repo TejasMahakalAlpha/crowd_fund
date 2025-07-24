@@ -11,6 +11,7 @@ const Events = () => {
     const fetchEvents = async () => {
       try {
         const res = await PublicApi.getEvents();
+        console.log(res)
         if (Array.isArray(res.data)) {
           setEvents(res.data);
         } else {
@@ -59,7 +60,11 @@ const Events = () => {
                 </div>
                 <div className="event-info">
                   <h3>{event.title}</h3>
-                  <p className="time">{event.time || "12:00PM - 4:00PM"}</p>
+                  <p className="time">{typeof event.eventDatedate === "number" ? event.eventDatedate.toLocaleDateString("en-IN", {
+                    day: "2-digit",
+                    month: "long",
+                    year: "numeric",
+                  }) : "12:00PM - 4:00PM"}</p>
                   <p className="description">{event.description}</p>
                   <p className="location">{event.location}</p>
 
