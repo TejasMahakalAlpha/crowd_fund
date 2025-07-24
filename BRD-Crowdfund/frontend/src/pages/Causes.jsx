@@ -5,9 +5,7 @@ import { PublicApi } from "../services/api"; // Adjust path as needed
 
 const Causes = () => {
   const [causes, setCauses] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-
+  const [loading, setLoading] = useState(true)
   useEffect(() => {
     // Static demo data
     const staticCauses = [
@@ -55,7 +53,6 @@ const Causes = () => {
     setLoading(false)
     setCauses(staticCauses);
   }, []);
-
   useEffect(() => {
     const fetchCauses = async () => {
       try {
@@ -105,79 +102,30 @@ const Causes = () => {
 
       <div className="causes-grid">
         {causes.map((cause, index) => {
-          const raised = Number(cause.currentAmount) || 0;
-          const goal = Number(cause.targetAmount) || 1;
-          const percentage = Math.min(100, Math.round((raised / goal) * 100));
-
+          const raised = Math.floor(Math.random() * (cause.targetAmount * 0.7));
+          const percent = Math.round((raised / cause.targetAmount) * 100);
           return (
-            <section className="causes-section" id="causes">
-              <h2 className="section-title">Causes That Need Your Urgent Attention</h2>
-
-              {loading ? (
-                <p>Loading causes...</p>
-              ) : (
-                <div className="causes-grid">
-                  {causes.map((cause, index) => {
-                    const raised = Number(cause.currentAmount) || 0;
-                    const goal = Number(cause.targetAmount) || 1;
-                    const percentage = Math.min(100, Math.round((raised / goal) * 100));
-
-                    return (
-                      <div className="cause-card" key={cause._id || index}>
-                        {/* ✅ Cause Image */}
-                        {cause.imageUrl && (
-                          <img
-                            src={`${cause.imageUrl}`}
-                            alt={cause.title}
-                            className="cause-image"
-                            style={{
-                              width: "100%",
-                              height: "180px",
-                              objectFit: "cover",
-                              borderTopLeftRadius: "8px",
-                              borderTopRightRadius: "8px",
-                              marginBottom: "10px"
-                            }}
-                          />
-                        )}
-
-                        {/* Title */}
-                        <h3
-                          className="cause-title"
-                          onClick={() => navigate(`/cause/${cause._id}`)}
-                          style={{ cursor: "pointer", color: "#004d40" }}
-                        >
-                          {cause.title}
-                        </h3>
-
-                        {/* Progress Bar */}
-                        <div className="progress-bar">
-                          <div
-                            className="progress-fill"
-                            style={{ width: `${percentage}%` }}
-                          ></div>
-                        </div>
-
-                        <p className="donation-info">
-                          ₹{raised.toLocaleString()} donated of ₹{goal.toLocaleString()} goal
-                        </p>
-
-                        <p className="description">{cause.description}</p>
-
-                        <button
-                          className="donate-btn"
-                          onClick={() => handleDonate(cause._id)}
-                        >
-                          Donate Now
-                        </button>
-                      </div>
-                    );
-                  })}
-                </div>
+            <div className="cause-box" key={cause._id || index}>
+              {cause.imageUrl && (
+                <img
+                  src={`${cause.imageUrl}`}
+                  alt={cause.title}
+                  className="cause-image"
+                  style={{ width: "100%", borderRadius: "8px", objectFit: "cover", maxHeight: "200px" }}
+                />
               )}
-            </section>
+              <h3>{cause.title}</h3>
+              <div className="progress-bar">
+                <div className="progress" style={{ width: `${percent}%` }}></div>
+              </div>
+              <p className="donation-amount">
+                ₹{typeof raised === "number" ? raised.toLocaleString() : 0} raised of ₹
+                {typeof cause.targetAmount === "number" ? cause.targetAmount.toLocaleString() : 0} goal
+              </p>
+              <p>{cause.description}</p>
+              <button className="donate-btn" onClick={() => handleDonate(cause.id)}>Donate Now</button>
+            </div>
           );
-
         })}
       </div>
     </div>
