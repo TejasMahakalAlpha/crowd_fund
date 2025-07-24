@@ -114,3 +114,86 @@
 .event-actions .delete-btn:hover {
   background: #b71c1c;
 }
+.event-actions .edit-btn {
+  background: #1e88e5; /* Changed to blue */
+  color: white;
+}
+
+.event-actions .edit-btn:hover {
+  background: #1565c0;
+}
+@media (max-width: 768px) {
+  .event-table {
+    display: block;
+  }
+
+  .event-row {
+    display: block;
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .event-row.header {
+    display: none; /* Hide header on mobile */
+  }
+
+  .event-row img {
+    max-width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .event-actions {
+    justify-content: center;
+    margin-top: 10px;
+  }
+}
+@media (max-width: 768px) {
+  .event-form {
+    padding: 15px;
+  }
+
+  .event-form input,
+  .event-form textarea,
+  .event-form select {
+    font-size: 0.95rem;
+  }
+}
+/* Responsive restructure */
+@media (max-width: 768px) {
+  .event-table {
+    display: block;
+  }
+
+  .event-row {
+    display: block;
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .event-row.header {
+    display: none;
+  }
+
+  .event-row img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+  }
+
+  .event-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    margin-top: 10px;
+  }
+}
+
+/* Button color change */
+.event-actions .edit-btn {
+  background: #1e88e5; /* Blue */
+  color: white;
+}
+
+.event-actions .edit-btn:hover {
+  background: #1565c0;
+}

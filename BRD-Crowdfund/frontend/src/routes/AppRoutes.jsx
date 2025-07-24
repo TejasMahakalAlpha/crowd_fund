@@ -29,6 +29,7 @@ import ManageDonations from '../admin/ManageDonations';
 import ManageVolunteers from '../admin/ManageVolunteers';
 import ManageEvents from '../admin/ManageEvents';
 import ManageContacts from "../admin/ManageContacts";
+import CauseDetails from '../components/CausesDetails';
 
 const AppRoutes = () => {
   const location = useLocation();
@@ -50,6 +51,7 @@ const AppRoutes = () => {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/causes" element={<Causes />} />
+        <Route path="/causes/:id" element={<CauseDetails />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/events" element={<Events />} />
         <Route path="/gallery" element={<Gallery />} />

@@ -1,11 +1,15 @@
 // src/pages/Causes.jsx
 import React, { useEffect, useState } from "react";
 import "./Causes.css";
-import { PublicApi } from "../services/api"; // Adjust path as needed
+import API, { PublicApi } from "../services/api"; // Adjust path as needed
 
 const Causes = () => {
   const [causes, setCauses] = useState([]);
   const [loading, setLoading] = useState(true)
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedCause, setSelectedCause] = useState(null);
+
+  const url = API;
   useEffect(() => {
     // Static demo data
     const staticCauses = [
@@ -57,11 +61,13 @@ const Causes = () => {
     const fetchCauses = async () => {
       try {
         const res = await PublicApi.getCauses();
+        console.log(res)
         setCauses(res.data);
       } catch (err) {
         console.error("Failed to load causes", err);
       }
     };
+
     fetchCauses();
   }, []);
 
@@ -102,32 +108,62 @@ const Causes = () => {
 
       <div className="causes-grid">
         {causes.map((cause, index) => {
-          const raised = Math.floor(Math.random() * (cause.targetAmount * 0.7));
-          const percent = Math.round((raised / cause.targetAmount) * 100);
+          const raised = Number(cause.currentAmount) || 0;
+          const goal = Number(cause.targetAmount) || 1;
+          const percentage = Math.min(100, Math.round((raised / goal) * 100));
           return (
             <div className="cause-box" key={cause._id || index}>
-              {cause.imageUrl && (
-                <img
-                  src={`${cause.imageUrl}`}
-                  alt={cause.title}
-                  className="cause-image"
-                  style={{ width: "100%", borderRadius: "8px", objectFit: "cover", maxHeight: "200px" }}
-                />
-              )}
-              <h3>{cause.title}</h3>
-              <div className="progress-bar">
-                <div className="progress" style={{ width: `${percent}%` }}></div>
+              <div onClick={() => { setSelectedCause(cause); setModalOpen(true); }} style={{ cursor: 'pointer' }}>
+                {cause.imageUrl && (
+                  <img
+                    src={cause.imageUrl}
+                    alt={cause.title}
+                    className="cause-image"
+                    style={{ width: "100%", borderRadius: "8px", objectFit: "cover", maxHeight: "200px" }}
+                  />
+                )}
+                <h3>{cause.title}</h3>
+                <div className="progress-bar">
+                  <div className="progress" style={{ width: `${percentage}%` }}></div>
+                </div>
+                <p className="donation-amount">
+                  ₹{raised.toLocaleString()} raised of ₹{goal.toLocaleString()} goal
+                </p>
+                <p>{cause.shortDescription}</p>
               </div>
-              <p className="donation-amount">
-                ₹{typeof raised === "number" ? raised.toLocaleString() : 0} raised of ₹
-                {typeof cause.targetAmount === "number" ? cause.targetAmount.toLocaleString() : 0} goal
-              </p>
-              <p>{cause.description}</p>
+
               <button className="donate-btn" onClick={() => handleDonate(cause.id)}>Donate Now</button>
             </div>
+
           );
         })}
       </div>
+      {modalOpen && selectedCause && (
+        <div className="modal-overlay" onClick={() => setModalOpen(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <button className="close-btn" onClick={() => setModalOpen(false)}>×</button>
+            <h2 className="modal-title">{selectedCause.title}</h2>
+
+            {selectedCause.imageUrl && (
+              <img
+                src={selectedCause.imageUrl}
+                alt={selectedCause.title}
+                className="modal-image"
+              />
+            )}
+
+            <div className="modal-details">
+              <p><strong>Description:</strong> {selectedCause.description}</p>
+              <p><strong>Category:</strong> {selectedCause.category}</p>
+              <p><strong>Location:</strong> {selectedCause.location}</p>
+              <p><strong>Status:</strong> {selectedCause.status}</p>
+              <p><strong>End Date:</strong> {selectedCause.endDate ? new Date(selectedCause.endDate).toLocaleDateString() : "N/A"}</p>
+              <p><strong>Raised:</strong> ₹{Number(selectedCause.currentAmount).toLocaleString()} of ₹{Number(selectedCause.targetAmount).toLocaleString()}</p>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };

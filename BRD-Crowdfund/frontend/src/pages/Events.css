@@ -1,4 +1,5 @@
 /* src/pages/Events.css */
+
 .events-page {
   font-family: 'Poppins', sans-serif;
 }
@@ -21,6 +22,14 @@
   margin: 0 auto;
 }
 
+.loading-text,
+.error-text,
+.no-events-text {
+  text-align: center;
+  margin-top: 20px;
+  font-weight: 500;
+}
+
 .events-list {
   display: flex;
   flex-direction: column;
@@ -33,6 +42,7 @@
 
 .event-card {
   display: flex;
+  flex-direction: row;
   background: white;
   border-radius: 12px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
@@ -65,6 +75,7 @@
 .event-info {
   padding: 20px;
   flex: 1;
+  overflow-x: scroll;
 }
 
 .event-info h3 {
@@ -83,7 +94,21 @@
   color: #555;
   font-size: 1rem;
   line-height: 1.5;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
+}
+
+.event-info .location {
+  color: #777;
+  font-size: 0.95rem;
+  margin-bottom: 10px;
+}
+
+.event-image {
+  width: 100%;
+  max-height: 250px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-top: 10px;
 }
 
 .join-btn {
@@ -95,6 +120,7 @@
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  margin-top: 15px;
 }
 
 .join-btn:hover {

@@ -18,14 +18,15 @@ const ManageCauses = () => {
     targetAmount: "",
     currentAmount: "",
     endDate: "",
-    imageUrl: "",
     status: "ACTIVE",
   });
-  const navigate = useNavigate();
 
 
-
+  const [imagePreview, setImagePreview] = useState(null); // for showing selected image
   const [errors, setErrors] = useState({});
+  const [imageFile, setImageFile] = useState(null);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchCauses();
@@ -78,8 +79,10 @@ const ManageCauses = () => {
         targetAmount: causeToEdit.targetAmount || "",
         currentAmount: causeToEdit.currentAmount || "",
         endDate: causeToEdit.endDate ? causeToEdit.endDate.slice(0, 10) : "", // format YYYY-MM-DD
-        imageUrl: causeToEdit.imageUrl || "",
         status: causeToEdit.status || "ACTIVE",
+        if(imageFile) {
+          form.append("image", imageFile); // ⚠️ key must match @RequestParam("image") in controller
+        }
       });
       setEditId(id);
       setIsEditing(true);
@@ -101,24 +104,31 @@ const ManageCauses = () => {
 
     if (!validateForm()) return;
 
+    const form = new FormData();
+    form.append("title", formData.title);
+    form.append("shortDescription", formData.shortDescription);
+    form.append("description", formData.description);
+    form.append("category", formData.category);
+    form.append("location", formData.location);
+    form.append("targetAmount", formData.targetAmount);
+    form.append("currentAmount", formData.currentAmount);
+    form.append("endDate", formData.endDate ? `${formData.endDate}T00:00:00` : "");
+    form.append("status", formData.status);
+
+    if (imageFile) {
+      form.append("image", imageFile); // must match @RequestParam("image") on backend
+    }
+
     try {
-
-      const payload = {
-        ...formData,
-        targetAmount: Number(formData.targetAmount),
-        currentAmount: Number(formData.currentAmount),
-        endDate: formData.endDate ? `${formData.endDate}T00:00:00` : null,
-      };
-
       if (isEditing) {
-        await AdminApi.updateCauses(editId, payload);
+        await AdminApi.updateCauses(editId, form); // <-- adjust this method
         Swal.fire("Updated", "Cause updated successfully", "success");
       } else {
-        await AdminApi.createCauses(payload);
+        await AdminApi.createCauses(form); // <-- adjust this method
         Swal.fire("Success", "Cause created successfully", "success");
       }
 
-      Swal.fire("Success", "Cause created successfully", "success");
+      // Reset form
       setFormData({
         title: "",
         shortDescription: "",
@@ -128,18 +138,27 @@ const ManageCauses = () => {
         targetAmount: "",
         currentAmount: "",
         endDate: "",
-        imageUrl: "",
         status: "ACTIVE",
       });
-      setErrors({});
+      setImageFile(null);
+      setImagePreview(null);
       setIsEditing(false);
       setEditId(null);
       fetchCauses();
     } catch (err) {
-      console.error("Error creating cause", err);
-      Swal.fire("Error", "Failed to create cause", "error");
+      console.error("Error submitting cause", err);
+      Swal.fire("Error", "Failed to submit cause", "error");
     }
   };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageFile(file);
+      setImagePreview(URL.createObjectURL(file));
+    }
+  };
+
 
   const handleDelete = async (id) => {
     const result = await Swal.fire({
@@ -163,7 +182,6 @@ const ManageCauses = () => {
       }
     }
   };
-
 
   return (
     <div className="manage-blogs">
@@ -244,13 +262,15 @@ const ManageCauses = () => {
           onChange={handleChange}
         />
 
-        <input
-          type="text"
-          name="imageUrl"
-          placeholder="Image URL"
-          value={formData.imageUrl}
-          onChange={handleChange}
-        />
+        <input type="file" accept="image/*" onChange={handleImageChange} />
+        {imagePreview && (
+          <img
+            src={imagePreview}
+            alt="Preview"
+            style={{ width: "200px", marginTop: "10px", borderRadius: "8px" }}
+          />
+        )}
+
 
 
         <button type="submit">{isEditing ? "Update Cause" : "Add Cause"}</button>

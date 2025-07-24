@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { AdminApi } from "../services/api";
-import "./ManageBlogs.css";
+// import "./ManageEvents.css";
 import Swal from "sweetalert2";
 import { Navigate, useNavigate } from "react-router-dom";
 
 const ManageEvents = () => {
   const [events, setEvents] = useState([]);
+  const [imageFile, setImageFile] = useState(null);
   const [formData, setFormData] = useState({
     title: "",
     shortDescription: "",
@@ -14,7 +15,7 @@ const ManageEvents = () => {
     location: "",
     status: "UPCOMING",
     maxParticipants: "",
-    currentParticipants: 0,
+    currentParticipants: "",
     imageUrl: "",
   });
 
@@ -33,6 +34,7 @@ const ManageEvents = () => {
       location,
       status,
       maxParticipants,
+      currentParticipants,
     } = formData;
 
     const newErrors = {};
@@ -50,6 +52,17 @@ const ManageEvents = () => {
     } else if (isNaN(maxParticipants) || Number(maxParticipants) <= 0) {
       newErrors.maxParticipants = "Max Participants must be a positive number";
     }
+
+    if (formData.currentParticipants === "") {
+      newErrors.currentParticipants = "Current Participants is required";
+    } else if (
+      isNaN(formData.currentParticipants) ||
+      Number(formData.currentParticipants) < 0
+    ) {
+      newErrors.currentParticipants =
+        "Current Participants must be a non-negative number";
+    }
+
 
     setErrors(newErrors);
 
@@ -88,7 +101,7 @@ const ManageEvents = () => {
       location: eventToEdit.location || "",
       status: eventToEdit.status || "UPCOMING",
       maxParticipants: eventToEdit.maxParticipants?.toString() || "",
-      currentParticipants: eventToEdit.currentParticipants || 0,
+      currentParticipants: eventToEdit.currentParticipants || "",
       imageUrl: eventToEdit.imageUrl || "",
     });
 
@@ -103,19 +116,29 @@ const ManageEvents = () => {
     if (!validateForm()) return;
 
     try {
-      const payload = {
-        ...formData,
-        maxParticipants: Number(formData.maxParticipants),
-      };
+      const form = new FormData();
+      form.append("title", formData.title);
+      form.append("shortDescription", formData.shortDescription);
+      form.append("description", formData.description);
+      form.append("eventDate", formData.eventDate);
+      form.append("location", formData.location);
+      form.append("status", formData.status);
+      form.append("maxParticipants", formData.maxParticipants);
+      form.append("currentParticipants", formData.currentParticipants);
+
+      if (imageFile) {
+        form.append("image", imageFile); // 🔥 include image file
+      }
 
       if (isEditing) {
-        await AdminApi.updateEvents(editId, payload);
+        await AdminApi.updateEvents(editId, form); // You’ll need to handle multipart PUT in backend
         Swal.fire("Success", "Event updated successfully", "success");
       } else {
-        await AdminApi.createEvents(payload);
+        await AdminApi.createEvents(form); // Multipart POST request
         Swal.fire("Success", "Event created successfully", "success");
       }
 
+      // Reset state
       setFormData({
         title: "",
         shortDescription: "",
@@ -124,9 +147,10 @@ const ManageEvents = () => {
         location: "",
         status: "UPCOMING",
         maxParticipants: "",
-        currentParticipants: 0,
+        currentParticipants: "",
         imageUrl: "",
       });
+      setImageFile(null);
       setIsEditing(false);
       setEditId(null);
       setErrors({});
@@ -136,6 +160,7 @@ const ManageEvents = () => {
       Swal.fire("Error", isEditing ? "Failed to update event" : "Failed to create event", "error");
     }
   };
+
 
 
   const handleDelete = async (id) => {
@@ -215,14 +240,24 @@ const ManageEvents = () => {
           onChange={handleChange}
         />
         {errors.location && <p style={{ color: "red" }}>{errors.location}</p>}
-
         <input
-          type="text"
-          name="imageUrl"
-          placeholder="Image URL (optional)"
-          value={formData.imageUrl}
-          onChange={handleChange}
+          type="file"
+          name="image"
+          accept=".png,.jpg,.jpeg,.gif,.webp"
+          onChange={(e) => {
+            const file = e.target.files[0];
+            const allowedTypes = ["image/png", "image/jpeg", "image/jpg", "image/gif", "image/webp"];
+
+            if (file && !allowedTypes.includes(file.type)) {
+              Swal.fire("Invalid File", "Only PNG, JPEG, JPG, GIF, and WEBP formats are allowed.", "error");
+              e.target.value = null;
+              setImageFile(null);
+            } else {
+              setImageFile(file);
+            }
+          }}
         />
+
 
         <select name="status" value={formData.status} onChange={handleChange}>
           <option value="">Select Status</option>
@@ -243,6 +278,18 @@ const ManageEvents = () => {
         {errors.maxParticipants && (
           <p style={{ color: "red" }}>{errors.maxParticipants}</p>
         )}
+
+        <input
+          type="number"
+          name="currentParticipants"
+          placeholder="Current Participants"
+          value={formData.currentParticipants}
+          onChange={handleChange}
+        />
+        {errors.currentParticipants && (
+          <p style={{ color: "red" }}>{errors.currentParticipants}</p>
+        )}
+
 
         <button type="submit">{isEditing ? "Update Event" : "Add Event"}</button>
 

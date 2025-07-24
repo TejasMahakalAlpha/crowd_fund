@@ -7,6 +7,8 @@ import Swal from "sweetalert2";
 const CausesSection = () => {
   const [causes, setCauses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedCause, setSelectedCause] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -144,11 +146,15 @@ const CausesSection = () => {
                 {/* Title */}
                 <h3
                   className="cause-title"
-                  onClick={() => navigate(`/cause/${cause._id}`)}
+                  onClick={() => {
+                    setSelectedCause(cause);
+                    setModalOpen(true);
+                  }}
                   style={{ cursor: "pointer", color: "#004d40" }}
                 >
                   {cause.title}
                 </h3>
+
 
                 {/* Progress Bar */}
                 <div className="progress-bar">
@@ -175,6 +181,33 @@ const CausesSection = () => {
           })}
         </div>
       )}
+      {modalOpen && selectedCause && (
+        <div className="modal-overlay" onClick={() => setModalOpen(false)}>
+          <div className="modal-content" onClick={e => e.stopPropagation()}>
+            <button className="close-btn" onClick={() => setModalOpen(false)}>×</button>
+            <h2 className="modal-title">{selectedCause.title?.toUpperCase()}</h2>
+
+            {selectedCause.imageUrl && (
+              <img
+                src={selectedCause.imageUrl}
+                alt={selectedCause.title}
+                className="modal-image"
+              />
+            )}
+
+            <div className="modal-details">
+              <p><strong>Category:</strong> {selectedCause.category}</p>
+              <p><strong>Location:</strong> {selectedCause.location}</p>
+              <p><strong>Description:</strong> {selectedCause.description}</p>
+              <p><strong>Raised:</strong> ₹{Number(selectedCause.currentAmount).toLocaleString()} of ₹{Number(selectedCause.targetAmount).toLocaleString()}</p>
+              <p><strong>Status:</strong> {selectedCause.status}</p>
+              <p><strong>End Date:</strong> {selectedCause.endDate ? new Date(selectedCause.endDate).toLocaleDateString() : "N/A"}</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+
     </section>
   );
 };

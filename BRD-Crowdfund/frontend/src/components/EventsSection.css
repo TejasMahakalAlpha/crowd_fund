@@ -1,9 +1,7 @@
-/* src/components/EventsSection.css */
 .events-section {
   background: #fafafa;
   padding: 80px 20px;
   text-align: center;
-  
 }
 
 .section-title {
@@ -17,22 +15,18 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 30px;
-  align-items: stretch;
 }
 
 .event-card {
   display: flex;
   flex: 1 1 300px;
+  max-width: 500px;
   background: white;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
   border-radius: 12px;
   overflow: hidden;
-  max-width: 500px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
   transition: transform 0.3s ease;
-  max-width: 500px;
-  min-height: 220px; /* set a base height */
-  height: 100%;
-  box-sizing: border-box;
+  cursor: pointer;
 }
 
 .event-card:hover {
@@ -41,7 +35,7 @@
 
 .event-date {
   background: #004d40;
-  color: white;
+  color: #fff;
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -65,23 +59,105 @@
   text-align: left;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  gap: 8px;
+  flex-grow: 1;
 }
 
 .event-info h3 {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   color: #00796b;
-  margin-bottom: 10px;
 }
 
-.event-info .time {
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 10px;
+.event-info .time,
+.event-info .location {
+  font-weight: 500;
+  color: #222;
 }
 
 .event-info .description {
   color: #555;
   font-size: 0.95rem;
-  line-height: 1.5;
+}
+
+.event-image {
+  width: 100%;
+  max-height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal-box {
+  background: #fff;
+  width: 90%;
+  max-width: 700px;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  animation: fadeIn 0.3s ease-in-out;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+}
+
+.modal-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: #ff4d4f;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.modal-header img {
+  width: 100%;
+  max-height: 300px;
+  object-fit: cover;
+}
+
+.modal-body {
+  padding: 20px 25px;
+}
+
+.modal-body h2 {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+  color: #004d40;
+}
+
+.modal-description {
+  font-size: 1rem;
+  color: #444;
+  margin-bottom: 15px;
+}
+
+.modal-details p {
+  font-size: 0.95rem;
+  margin: 5px 0;
+  color: #333;
+}
+
+@keyframes fadeIn {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }

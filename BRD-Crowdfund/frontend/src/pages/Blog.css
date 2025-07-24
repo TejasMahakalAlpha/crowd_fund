@@ -8,7 +8,24 @@
   color: white;
   padding: 60px 20px;
   text-align: center;
+
+  /* Full width across viewport */
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  box-sizing: border-box;
 }
+.blog-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  padding: 60px 20px;
+  background: #f0fdfa;
+}
+
 
 .blog-hero h1 {
   font-size: 2.5rem;
