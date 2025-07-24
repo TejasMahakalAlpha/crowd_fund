@@ -2,15 +2,14 @@
 import axios from 'axios';
 
 const API = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL, // 🔁 Replace with your backend URL
+  baseURL: import.meta.env.VITE_API_BASE_URL, // 🔁 Set in your .env file
 });
 
 // ✅ Automatically attach token to all requests
-
 API.interceptors.request.use((config) => {
   const token = localStorage.getItem("adminToken");
   if (token) {
-    config.headers.Authorization = `Basic ${token}`; // Important: prefix with "Basic "
+    config.headers.Authorization = `Basic ${token}`;
   }
   return config;
 });
@@ -25,8 +24,13 @@ export const PublicApi = {
   getEventById: (id) => API.get(`events/${id}`),
   getDonation: () => API.get(`donations`),
   getCauses: () => API.get(`causes`),
-  getCausesById: (id) => API.get(`causes/${id}`)
-}
+  getCausesById: (id) => API.get(`causes/${id}`),
+
+  // ✅ Added for Razorpay donation integration
+  makeDonation: (donationData) => API.post(`/donate`, donationData),
+  getAllDonations: () => API.get(`/donations`),
+  getSupportedCurrencies: () => API.get(`/payment/currencies`)
+};
 
 export const AdminApi = {
   getevents: (id) => API.get(`admin/events/${id}`),
@@ -45,7 +49,6 @@ export const AdminApi = {
   getAllBlogs: () => API.get(`admin/blogs`),
   getAllDonations: () => API.get(`donations`),
   // getAllContacts: () => API.get(`admin/contacts`),
-
-}
+};
 
 export default API;
