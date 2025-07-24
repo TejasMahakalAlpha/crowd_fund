@@ -64,7 +64,7 @@ const DonationCard = () => {
       const { orderId, currency } = res.data;
 
       const options = {
-        key: import.meta.env.VITE_RAZORPAY_KEY_ID || "rzp_live_xxxxxxxxxxxxxx", // ✅ Set in .env
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID || "rzp_test_a3kb1GXuvUpqcu", // ✅ Set in .env
         amount: amount,
         currency: currency || "INR",
         name: "Alphaseam Foundation",
