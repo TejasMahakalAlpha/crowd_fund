@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
-import { PublicApi } from "../services/api";
+import axios from "axios";
 import "./DonationCard.css";
 
 const DonationCard = () => {
@@ -29,7 +29,7 @@ const DonationCard = () => {
 
   const fetchTotalDonation = async () => {
     try {
-      const res = await PublicApi.getAllDonations();
+      const res = await axios.get("https://cloud-fund-i1kt.onrender.com/donations");
       const total = res.data.reduce((sum, d) => sum + parseFloat(d.amount || 0), 0);
       setTotalAmount(total);
     } catch (err) {
@@ -60,25 +60,44 @@ const DonationCard = () => {
     try {
       Swal.fire({ title: "Processing...", allowOutsideClick: false, didOpen: () => Swal.showLoading() });
 
-      const res = await PublicApi.makeDonation({ amount });
-      const { orderId, currency } = res.data;
+      const { data: orderData } = await axios.post("https://cloud-fund-i1kt.onrender.com/payment/create-order", {
+        amount,
+        currency: "INR",
+      });
 
       const options = {
-        key: import.meta.env.VITE_RAZORPAY_KEY_ID || "rzp_test_a3kb1GXuvUpqcu", // ✅ Set in .env
-        amount: amount,
-        currency: currency || "INR",
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID || "rzp_test_a3kb1GXuvUpqcu",
+        amount: orderData.amount,
+        currency: orderData.currency,
         name: "Alphaseam Foundation",
         description: "Donation Payment",
         image: "/logo.png",
-        order_id: orderId,
-        handler: function (response) {
-          Swal.fire({
-            title: "🎉 Donation Successful!",
-            html: `Payment ID: <b>${response.razorpay_payment_id}</b>`,
-            icon: "success",
-            confirmButtonColor: "#0f172a",
-          });
-          fetchTotalDonation();
+        order_id: orderData.id,
+        handler: async function (response) {
+          try {
+            await axios.post("https://cloud-fund-i1kt.onrender.com/payment/verify", {
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+            });
+
+            await axios.post("https://cloud-fund-i1kt.onrender.com/donate-and-pay", {
+              amount,
+              paymentId: response.razorpay_payment_id,
+            });
+
+            Swal.fire({
+              title: "🎉 Donation Successful!",
+              html: `Payment ID: <b>${response.razorpay_payment_id}</b>`,
+              icon: "success",
+              confirmButtonColor: "#0f172a",
+            });
+
+            fetchTotalDonation();
+          } catch (err) {
+            Swal.fire("Error", "Payment verification failed", "error");
+            console.error(err);
+          }
         },
         prefill: {
           name: "Donor",
@@ -105,6 +124,8 @@ const DonationCard = () => {
   return (
     <section className="donation-section" id="donation">
       <h2 className="donation-title">Ways You Can Support</h2>
+      <p className="donation-total">Total Raised: ₹{(totalAmount / 100).toFixed(2)}</p>
+
       <div className="donation-card-container">
         {donationTypes.map((type, index) => (
           <div className="donation-card" key={index}>
