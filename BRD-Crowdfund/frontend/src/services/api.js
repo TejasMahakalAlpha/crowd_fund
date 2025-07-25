@@ -1,4 +1,3 @@
-// services/api.js
 import axios from 'axios';
 
 const API = axios.create({
@@ -26,10 +25,14 @@ export const PublicApi = {
   getCauses: () => API.get(`causes`),
   getCausesById: (id) => API.get(`causes/${id}`),
 
-  // ✅ Added for Razorpay donation integration
+  // ✅ Razorpay integration
   makeDonation: (donationData) => API.post(`/donate`, donationData),
   getAllDonations: () => API.get(`/donations`),
-  getSupportedCurrencies: () => API.get(`/payment/currencies`)
+  getSupportedCurrencies: () => API.get(`/payment/currencies`),
+
+  // ✅   ⭐ Add these for the new payment flow:
+  createDonationAndOrder: (donationData) => API.post(`/donate-and-pay`, donationData),
+  verifyPayment: (verifyData) => API.post(`/payment/verify`, verifyData),
 };
 
 export const AdminApi = {
