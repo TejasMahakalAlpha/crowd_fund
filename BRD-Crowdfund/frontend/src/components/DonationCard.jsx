@@ -1,32 +1,23 @@
 import React, { useEffect, useState } from "react";
-import Swal from "sweetalert2";
 import axios from "axios";
-import "./DonationCard.css";
+import Swal from "sweetalert2";
 
 const DonationCard = () => {
+  const [amount, setAmount] = useState("");
   const [totalAmount, setTotalAmount] = useState(0);
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);
 
-  const donationTypes = [
-    {
-      title: "ONE-TIME GIFT",
-      description:
-        "Make a one-time donation and help us take a step forward in our mission to support critical causes.",
-      amount: 50000,
-    },
-    {
-      title: "LIVING LEGACY",
-      description:
-        "Leave a legacy of hope and kindness that lasts for generations by contributing in memory or will.",
-      amount: 100000,
-    },
-  ];
-
+  // Load Razorpay script
   useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.onload = () => setIsScriptLoaded(true);
+    document.body.appendChild(script);
+
     fetchTotalDonation();
-    loadRazorpayScript();
   }, []);
 
+  // Fetch total donation
   const fetchTotalDonation = async () => {
     try {
       const res = await axios.get("https://cloud-fund-i1kt.onrender.com/donations");
@@ -37,36 +28,44 @@ const DonationCard = () => {
     }
   };
 
-  const loadRazorpayScript = () => {
-    if (document.querySelector("#razorpay-script")) {
-      setIsScriptLoaded(true);
-      return;
-    }
-
-    const script = document.createElement("script");
-    script.id = "razorpay-script";
-    script.src = "https://checkout.razorpay.com/v1/checkout.js";
-    script.onload = () => setIsScriptLoaded(true);
-    script.onerror = () => Swal.fire("Error", "Failed to load Razorpay SDK", "error");
-    document.body.appendChild(script);
-  };
-
+  // Start payment
   const startPayment = async (amount) => {
     if (!isScriptLoaded) {
       Swal.fire("Please wait", "Loading payment gateway...", "info");
       return;
     }
 
-    try {
-      Swal.fire({ title: "Processing...", allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+    const token = localStorage.getItem("authToken");
 
-      const { data: orderData } = await axios.post("https://cloud-fund-i1kt.onrender.com/payment/create-order", {
-        amount,
-        currency: "INR",
+    if (!token) {
+      Swal.fire({
+        icon: "warning",
+        title: "Login Required",
+        text: "Please log in to make a donation.",
+        confirmButtonColor: "#0f172a",
+      });
+      return;
+    }
+
+    try {
+      Swal.fire({
+        title: "Processing...",
+        allowOutsideClick: false,
+        didOpen: () => Swal.showLoading(),
       });
 
+      const { data: orderData } = await axios.post(
+        "https://cloud-fund-i1kt.onrender.com/payment/create-order",
+        { amount, currency: "INR" },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
       const options = {
-        key: import.meta.env.VITE_RAZORPAY_KEY_ID || "rzp_test_a3kb1GXuvUpqcu",
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID || "rzp_test_a3kb1GXuvUpqcu", // test key
         amount: orderData.amount,
         currency: orderData.currency,
         name: "Alphaseam Foundation",
@@ -81,10 +80,18 @@ const DonationCard = () => {
               razorpay_signature: response.razorpay_signature,
             });
 
-            await axios.post("https://cloud-fund-i1kt.onrender.com/donate-and-pay", {
-              amount,
-              paymentId: response.razorpay_payment_id,
-            });
+            await axios.post(
+              "https://cloud-fund-i1kt.onrender.com/donate-and-pay",
+              {
+                amount,
+                paymentId: response.razorpay_payment_id,
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
 
             Swal.fire({
               title: "🎉 Donation Successful!",
@@ -122,22 +129,16 @@ const DonationCard = () => {
   };
 
   return (
-    <section className="donation-section" id="donation">
-      <h2 className="donation-title">Ways You Can Support</h2>
-      <p className="donation-total">Total Raised: ₹{(totalAmount / 100).toFixed(2)}</p>
-
-      <div className="donation-card-container">
-        {donationTypes.map((type, index) => (
-          <div className="donation-card" key={index}>
-            <h3>{type.title}</h3>
-            <p>{type.description}</p>
-            <button className="donate-btn" onClick={() => startPayment(type.amount)}>
-              Donate Now
-            </button>
-          </div>
-        ))}
-      </div>
-    </section>
+    <div className="donation-card">
+      <h2>Total Raised: ₹{totalAmount}</h2>
+      <input
+        type="number"
+        placeholder="Enter amount"
+        value={amount}
+        onChange={(e) => setAmount(e.target.value)}
+      />
+      <button onClick={() => startPayment(amount)}>Donate</button>
+    </div>
   );
 };
 
