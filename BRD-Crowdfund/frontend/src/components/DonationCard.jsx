@@ -6,8 +6,10 @@ import "./DonationCard.css";
 const DonationCard = () => {
   const [totalAmount, setTotalAmount] = useState(0);
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const donationTypes = [
+    // ...your donation options
     {
       title: "ONE-TIME GIFT",
       description:
@@ -42,7 +44,6 @@ const DonationCard = () => {
       setIsScriptLoaded(true);
       return;
     }
-
     const script = document.createElement("script");
     script.id = "razorpay-script";
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
@@ -56,34 +57,58 @@ const DonationCard = () => {
       Swal.fire("Please wait", "Loading payment gateway...", "info");
       return;
     }
+    setLoading(true);
 
     try {
       Swal.fire({ title: "Processing...", allowOutsideClick: false, didOpen: () => Swal.showLoading() });
 
-      const res = await PublicApi.makeDonation({ amount });
-      const { orderId, currency } = res.data;
+      // STEP 1: Create donation and payment order at backend
+      // Customize this payload as needed!
+      const donationPayload = {
+        donorName: "Donor",          // Later, allow user input
+        donorEmail: "donor@example.com",
+        donorPhone: "9876543210",
+        amount,
+        causeId: 1,
+        currency: "INR",
+        message: "",
+      };
 
+      // Make a POST to /donate-and-pay, which should return Razorpay order info
+      const res = await PublicApi.createDonationAndOrder(donationPayload); // SEE NOTE BELOW
+
+      const { orderId, razorpayKeyId, currency, donorId } = res.data;
+
+      // STEP 2: Open Razorpay Checkout with order details
       const options = {
-        key: import.meta.env.VITE_RAZORPAY_KEY_ID || "rzp_test_a3kb1GXuvUpqcu", // ✅ Set in .env
+        key: razorpayKeyId || import.meta.env.VITE_RAZORPAY_KEY_ID,
+        order_id: orderId,
         amount: amount,
         currency: currency || "INR",
         name: "Alphaseam Foundation",
         description: "Donation Payment",
         image: "/logo.png",
-        order_id: orderId,
-        handler: function (response) {
-          Swal.fire({
-            title: "🎉 Donation Successful!",
-            html: `Payment ID: <b>${response.razorpay_payment_id}</b>`,
-            icon: "success",
-            confirmButtonColor: "#0f172a",
-          });
-          fetchTotalDonation();
+        handler: async function (response) {
+          // STEP 3: Verify payment on backend
+          try {
+            Swal.fire({ title: "Verifying payment...", didOpen: () => Swal.showLoading() });
+            // Send payment response to backend
+            await PublicApi.verifyPayment({
+              orderId: response.razorpay_order_id,
+              paymentId: response.razorpay_payment_id,
+              signature: response.razorpay_signature,
+              donorId, // pass if your backend needs to link payment to donation row
+            });
+            Swal.fire("🎉 Donation Successful!", `Payment ID: <b>${response.razorpay_payment_id}</b>`, "success");
+            fetchTotalDonation();
+          } catch (verifyError) {
+            Swal.fire("Warning", "Payment completed, but verification failed. Please contact support.", "warning");
+          }
         },
         prefill: {
-          name: "Donor",
-          email: "donor@example.com",
-          contact: "9876543210",
+          name: donationPayload.donorName,
+          email: donationPayload.donorEmail,
+          contact: donationPayload.donorPhone,
         },
         notes: {
           purpose: "Donation",
@@ -91,14 +116,22 @@ const DonationCard = () => {
         theme: {
           color: "#0f172a",
         },
+        modal: {
+          ondismiss: function () {
+            // Optionally handle payment dismiss
+          }
+        }
       };
 
       const rzp = new window.Razorpay(options);
       rzp.open();
       Swal.close();
     } catch (error) {
-      console.error("Error initiating payment:", error);
-      Swal.fire("Error", "Unable to start payment", "error");
+      console.error("Error during payment initiation:", error);
+      const msg = (error?.response && error.response.data?.error) ? error.response.data.error : "Unable to start payment";
+      Swal.fire("Error", msg, "error");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -110,8 +143,12 @@ const DonationCard = () => {
           <div className="donation-card" key={index}>
             <h3>{type.title}</h3>
             <p>{type.description}</p>
-            <button className="donate-btn" onClick={() => startPayment(type.amount)}>
-              Donate Now
+            <button
+              className="donate-btn"
+              onClick={() => startPayment(type.amount)}
+              disabled={loading}
+            >
+              {loading ? "Processing..." : "Donate Now"}
             </button>
           </div>
         ))}
