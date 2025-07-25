@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import API, { AdminApi } from "../services/api";
-// import "./ManageEvents.css";
+ import "./ManageEvents.css";
 import Swal from "sweetalert2";
 import { Navigate, useNavigate } from "react-router-dom";
 
