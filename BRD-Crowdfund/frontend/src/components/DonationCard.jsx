@@ -1,26 +1,35 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import Swal from "sweetalert2";
+import { PublicApi } from "../services/api";
+import "./DonationCard.css";
 
 const DonationCard = () => {
-  const [amount, setAmount] = useState("");
   const [totalAmount, setTotalAmount] = useState(0);
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);
 
-  // Load Razorpay script
-  useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "https://checkout.razorpay.com/v1/checkout.js";
-    script.onload = () => setIsScriptLoaded(true);
-    document.body.appendChild(script);
+  const donationTypes = [
+    {
+      title: "ONE-TIME GIFT",
+      description:
+        "Make a one-time donation and help us take a step forward in our mission to support critical causes.",
+      amount: 50000,
+    },
+    {
+      title: "LIVING LEGACY",
+      description:
+        "Leave a legacy of hope and kindness that lasts for generations by contributing in memory or will.",
+      amount: 100000,
+    },
+  ];
 
+  useEffect(() => {
     fetchTotalDonation();
+    loadRazorpayScript();
   }, []);
 
-  // Fetch total donation
   const fetchTotalDonation = async () => {
     try {
-      const res = await axios.get("https://cloud-fund-i1kt.onrender.com/donations");
+      const res = await PublicApi.getAllDonations();
       const total = res.data.reduce((sum, d) => sum + parseFloat(d.amount || 0), 0);
       setTotalAmount(total);
     } catch (err) {
@@ -28,83 +37,48 @@ const DonationCard = () => {
     }
   };
 
-  // Start payment
+  const loadRazorpayScript = () => {
+    if (document.querySelector("#razorpay-script")) {
+      setIsScriptLoaded(true);
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.id = "razorpay-script";
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.onload = () => setIsScriptLoaded(true);
+    script.onerror = () => Swal.fire("Error", "Failed to load Razorpay SDK", "error");
+    document.body.appendChild(script);
+  };
+
   const startPayment = async (amount) => {
     if (!isScriptLoaded) {
       Swal.fire("Please wait", "Loading payment gateway...", "info");
       return;
     }
 
-    const token = localStorage.getItem("authToken");
-
-    if (!token) {
-      Swal.fire({
-        icon: "warning",
-        title: "Login Required",
-        text: "Please log in to make a donation.",
-        confirmButtonColor: "#0f172a",
-      });
-      return;
-    }
-
     try {
-      Swal.fire({
-        title: "Processing...",
-        allowOutsideClick: false,
-        didOpen: () => Swal.showLoading(),
-      });
+      Swal.fire({ title: "Processing...", allowOutsideClick: false, didOpen: () => Swal.showLoading() });
 
-      const { data: orderData } = await axios.post(
-        "https://cloud-fund-i1kt.onrender.com/payment/create-order",
-        { amount, currency: "INR" },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await PublicApi.makeDonation({ amount });
+      const { orderId, currency } = res.data;
 
       const options = {
-        key: import.meta.env.VITE_RAZORPAY_KEY_ID || "rzp_test_a3kb1GXuvUpqcu", // test key
-        amount: orderData.amount,
-        currency: orderData.currency,
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID || "rzp_test_a3kb1GXuvUpqcu", // ✅ Set in .env
+        amount: amount,
+        currency: currency || "INR",
         name: "Alphaseam Foundation",
         description: "Donation Payment",
         image: "/logo.png",
-        order_id: orderData.id,
-        handler: async function (response) {
-          try {
-            await axios.post("https://cloud-fund-i1kt.onrender.com/payment/verify", {
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_signature: response.razorpay_signature,
-            });
-
-            await axios.post(
-              "https://cloud-fund-i1kt.onrender.com/donate-and-pay",
-              {
-                amount,
-                paymentId: response.razorpay_payment_id,
-              },
-              {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-              }
-            );
-
-            Swal.fire({
-              title: "🎉 Donation Successful!",
-              html: `Payment ID: <b>${response.razorpay_payment_id}</b>`,
-              icon: "success",
-              confirmButtonColor: "#0f172a",
-            });
-
-            fetchTotalDonation();
-          } catch (err) {
-            Swal.fire("Error", "Payment verification failed", "error");
-            console.error(err);
-          }
+        order_id: orderId,
+        handler: function (response) {
+          Swal.fire({
+            title: "🎉 Donation Successful!",
+            html: `Payment ID: <b>${response.razorpay_payment_id}</b>`,
+            icon: "success",
+            confirmButtonColor: "#0f172a",
+          });
+          fetchTotalDonation();
         },
         prefill: {
           name: "Donor",
@@ -129,16 +103,20 @@ const DonationCard = () => {
   };
 
   return (
-    <div className="donation-card">
-      <h2>Total Raised: ₹{totalAmount}</h2>
-      <input
-        type="number"
-        placeholder="Enter amount"
-        value={amount}
-        onChange={(e) => setAmount(e.target.value)}
-      />
-      <button onClick={() => startPayment(amount)}>Donate</button>
-    </div>
+    <section className="donation-section" id="donation">
+      <h2 className="donation-title">Ways You Can Support</h2>
+      <div className="donation-card-container">
+        {donationTypes.map((type, index) => (
+          <div className="donation-card" key={index}>
+            <h3>{type.title}</h3>
+            <p>{type.description}</p>
+            <button className="donate-btn" onClick={() => startPayment(type.amount)}>
+              Donate Now
+            </button>
+          </div>
+        ))}
+      </div>
+    </section>
   );
 };
 
