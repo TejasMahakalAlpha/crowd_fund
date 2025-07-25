@@ -280,7 +280,7 @@ const ManageVolunteers = () => {
                 <strong>Motivation:</strong> {v.motivation}
               </p>
             </div>
-            <button onClick={() => handleDelete(v.id || v._id)}>Delete</button>
+            {/* <button onClick={() => handleDelete(v.id || v._id)}>Delete</button> */}
           </div>
         ))
       )}

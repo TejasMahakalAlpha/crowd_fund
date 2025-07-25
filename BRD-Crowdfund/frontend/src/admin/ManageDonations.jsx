@@ -166,7 +166,7 @@ const ManageDonations = () => {
               {d.currency && <p>Currency: {d.currency}</p>}
               {d.paymentMethod && <p>Method: {d.paymentMethod}</p>}
             </div>
-            <button onClick={() => handleDelete(d._id)}>Delete</button>
+            {/* <button onClick={() => handleDelete(d._id)}>Delete</button> */}
           </div>
         ))}
       </div>
