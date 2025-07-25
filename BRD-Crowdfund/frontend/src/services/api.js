@@ -1,13 +1,17 @@
+// src/services/api.js
 import axios from 'axios';
 
-const API = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL, // 🔁 Set in your .env file
-});
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const username = import.meta.env.VITE_DONATION_API_USERNAME;
+const password = import.meta.env.VITE_DONATION_API_PASSWORD;
+const basicAuth = "Basic " + btoa(`${username}:${password}`);
 
-// ✅ Automatically attach token to all requests
+const API = axios.create({ baseURL: API_BASE_URL });
+
+// ✅ Attach admin token only for admin routes
 API.interceptors.request.use((config) => {
   const token = localStorage.getItem("adminToken");
-  if (token) {
+  if (token && config.url.startsWith("/admin")) {
     config.headers.Authorization = `Basic ${token}`;
   }
   return config;
@@ -15,24 +19,25 @@ API.interceptors.request.use((config) => {
 
 export const PublicApi = {
   registerVolunteer: (data) => API.post(`volunteer/register`, data),
-  donate: (data) => API.post(`donate`, data),
   contactMessage: (data) => API.post(`contact/send`, data),
-  getPayment: () => API.get(`payment/currencies`),
   homePageStats: () => API.get(`homepage-stats`),
   getEvents: () => API.get(`events`),
   getEventById: (id) => API.get(`events/${id}`),
   getDonation: () => API.get(`donations`),
   getCauses: () => API.get(`causes`),
   getCausesById: (id) => API.get(`causes/${id}`),
+  getPayment: () => API.get(`payment/currencies`),
+  getSupportedCurrencies: () => API.get(`payment/currencies`),
+  getAllDonations: () => API.get(`donations`),
 
-  // ✅ Razorpay integration
-  makeDonation: (donationData) => API.post(`/donate`, donationData),
-  getAllDonations: () => API.get(`/donations`),
-  getSupportedCurrencies: () => API.get(`/payment/currencies`),
+  // ✅ Always attach Basic Auth for donation/payment routes
+  createDonationAndOrder: (data) => axios.post(`${API_BASE_URL}/donate-and-pay`, data, {
+    headers: { Authorization: basicAuth },
+  }),
 
-  // ✅   ⭐ Add these for the new payment flow:
-  createDonationAndOrder: (donationData) => API.post(`/donate-and-pay`, donationData),
-  verifyPayment: (verifyData) => API.post(`/payment/verify`, verifyData),
+  verifyPayment: (data) => axios.post(`${API_BASE_URL}/payment/verify`, data, {
+    headers: { Authorization: basicAuth },
+  }),
 };
 
 export const AdminApi = {
@@ -43,15 +48,12 @@ export const AdminApi = {
   updateCauses: (id, data) => API.put(`admin/causes/${id}/with-image`, data),
   deleteCauses: (id) => API.delete(`admin/causes/${id}`),
   getAllEvents: () => API.get(`admin/events`),
-  // createEvents: (data) => API.post(`admin/events`, data),
   createEvents: (data) => API.post(`admin/events/with-image`, data),
   getAllCauses: () => API.get(`admin/causes`),
-  // createCauses: (data) => API.post(`admin/causes`, data),
   createCauses: (data) => API.post(`admin/causes/with-image`, data),
   getAllVolunteer: () => API.get(`admin/volunteers`),
   getAllBlogs: () => API.get(`admin/blogs`),
   getAllDonations: () => API.get(`donations`),
-  // getAllContacts: () => API.get(`admin/contacts`),
 };
 
 export default API;
