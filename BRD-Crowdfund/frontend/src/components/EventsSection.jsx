@@ -122,8 +122,12 @@ const EventsSection = () => {
               <h2>{selectedEvent.title}</h2>
               <p className="modal-description">{selectedEvent.description}</p>
               <div className="modal-details">
-                <p><strong>Date:</strong> {new Date(selectedEvent.date).toLocaleDateString()}</p>
-                <p><strong>Time:</strong> {selectedEvent.time}</p>
+                <p><strong>Date:</strong> {new Date(selectedEvent.date || selectedEvent.eventDate).toLocaleDateString()}</p>
+                <p><strong>Time:</strong> {new Date(selectedEvent.date || selectedEvent.eventDate).toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  hour12: true
+                })}</p>
                 <p><strong>Location:</strong> {selectedEvent.location}</p>
               </div>
             </div>

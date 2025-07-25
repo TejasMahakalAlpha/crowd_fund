@@ -53,11 +53,11 @@ const ManageEvents = () => {
       newErrors.maxParticipants = "Max Participants must be a positive number";
     }
 
-    if (formData.currentParticipants === "") {
+    if (currentParticipants === "") {
       newErrors.currentParticipants = "Current Participants is required";
     } else if (
-      isNaN(formData.currentParticipants) ||
-      Number(formData.currentParticipants) < 0
+      isNaN(currentParticipants) ||
+      Number(currentParticipants) < 0
     ) {
       newErrors.currentParticipants =
         "Current Participants must be a non-negative number";

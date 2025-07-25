@@ -77,3 +77,11 @@
   color: #444;
   margin-bottom: 12px;
 }
+
+.error {
+  color: red;
+  font-size: 0.85rem;
+  margin-top: 4px;
+  margin-bottom: 10px;
+  display: block;
+}
