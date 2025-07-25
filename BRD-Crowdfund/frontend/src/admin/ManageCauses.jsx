@@ -80,21 +80,14 @@ const ManageCauses = () => {
         currentAmount: causeToEdit.currentAmount || "",
         endDate: causeToEdit.endDate ? causeToEdit.endDate.slice(0, 10) : "", // format YYYY-MM-DD
         status: causeToEdit.status || "ACTIVE",
+        if(imageFile) {
+          form.append("image", imageFile); // ⚠️ key must match @RequestParam("image") in controller
+        }
       });
-
-      // Optional: preview existing image if needed
-      if (causeToEdit.imageUrl) {
-        setImagePreview(causeToEdit.imageUrl); // assuming backend returns image URL
-      } else {
-        setImagePreview(null);
-      }
-
-      // Don't set imageFile here; user can change it manually via file input
       setEditId(id);
       setIsEditing(true);
     }
   };
-
 
 
   const handleChange = (e) => {

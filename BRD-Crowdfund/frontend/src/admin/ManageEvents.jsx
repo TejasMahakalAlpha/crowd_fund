@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import API, { AdminApi } from "../services/api";
- import "./ManageEvents.css";
+import "./ManageEvents.css";
 import Swal from "sweetalert2";
 import { Navigate, useNavigate } from "react-router-dom";
 
@@ -22,6 +22,7 @@ const ManageEvents = () => {
   const [errors, setErrors] = useState({});
   const [isEditing, setIsEditing] = useState(false);
   const [editId, setEditId] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
   const navigate = useNavigate()
 
   // Validate fields and set errors state
@@ -73,6 +74,8 @@ const ManageEvents = () => {
     fetchEvents();
   }, []);
 
+
+
   const fetchEvents = async () => {
     try {
       const res = await AdminApi.getAllEvents();
@@ -104,6 +107,11 @@ const ManageEvents = () => {
       currentParticipants: eventToEdit.currentParticipants || "",
       imageUrl: eventToEdit.imageUrl || "",
     });
+    setImagePreview(
+      eventToEdit.imageUrl?.startsWith("http")
+        ? eventToEdit.imageUrl
+        : `${API}/${eventToEdit.imageUrl}`
+    );
 
     setEditId(id);
     setIsEditing(true);
@@ -240,24 +248,6 @@ const ManageEvents = () => {
           onChange={handleChange}
         />
         {errors.location && <p style={{ color: "red" }}>{errors.location}</p>}
-        <input
-          type="file"
-          name="image"
-          accept=".png,.jpg,.jpeg,.gif,.webp"
-          onChange={(e) => {
-            const file = e.target.files[0];
-            const allowedTypes = ["image/png", "image/jpeg", "image/jpg", "image/gif", "image/webp"];
-
-            if (file && !allowedTypes.includes(file.type)) {
-              Swal.fire("Invalid File", "Only PNG, JPEG, JPG, GIF, and WEBP formats are allowed.", "error");
-              e.target.value = null;
-              setImageFile(null);
-            } else {
-              setImageFile(file);
-            }
-          }}
-        />
-
 
         <select name="status" value={formData.status} onChange={handleChange}>
           <option value="">Select Status</option>
@@ -289,6 +279,34 @@ const ManageEvents = () => {
         {errors.currentParticipants && (
           <p style={{ color: "red" }}>{errors.currentParticipants}</p>
         )}
+        <input
+          type="file"
+          name="image"
+          accept=".png,.jpg,.jpeg,.gif,.webp"
+          onChange={(e) => {
+            const file = e.target.files[0];
+            const allowedTypes = ["image/png", "image/jpeg", "image/jpg", "image/gif", "image/webp"];
+
+            if (file && !allowedTypes.includes(file.type)) {
+              Swal.fire("Invalid File", "Only PNG, JPEG, JPG, GIF, and WEBP formats are allowed.", "error");
+              e.target.value = null;
+              setImageFile(null);
+              setImagePreview(null);
+            } else {
+              setImageFile(file);
+              setImagePreview(URL.createObjectURL(file)); // 🔥 preview
+            }
+          }}
+        />
+
+        {imagePreview && (
+          <img
+            src={imagePreview}
+            alt="Preview"
+            style={{ width: "200px", marginTop: "10px", borderRadius: "8px" }}
+          />
+        )}
+
 
 
         <button type="submit">{isEditing ? "Update Event" : "Add Event"}</button>

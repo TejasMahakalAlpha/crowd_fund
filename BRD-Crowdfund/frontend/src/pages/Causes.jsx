@@ -110,6 +110,7 @@ const Causes = () => {
           const raised = Number(cause.currentAmount) || 0;
           const goal = Number(cause.targetAmount) || 1;
           const percentage = Math.min(100, Math.round((raised / goal) * 100));
+          console.log(cause.imageUrl)
           return (
             <div className="cause-box" key={cause._id || index}>
               <div onClick={() => { setSelectedCause(cause); setModalOpen(true); }} style={{ cursor: 'pointer' }}>

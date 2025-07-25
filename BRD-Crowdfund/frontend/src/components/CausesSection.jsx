@@ -10,6 +10,7 @@ const CausesSection = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedCause, setSelectedCause] = useState(null);
   const navigate = useNavigate();
+  const [imagePreview, setImagePreview] = useState(null);
 
   useEffect(() => {
     // Static demo data
@@ -129,7 +130,7 @@ const CausesSection = () => {
                 {/* ✅ Cause Image */}
                 {cause.imageUrl && (
                   <img
-                    src={`${cause.imageUrl}`}
+                    src={`${API}api/images/${cause.imageUrl}`}
                     alt={cause.title}
                     className="cause-image"
                     style={{
