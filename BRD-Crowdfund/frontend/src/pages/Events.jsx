@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import API, { PublicApi } from "../services/api";
 import "./Events.css";
-
+const API_BASE = process.env.VITE_API_BASE_URL;
 const Events = () => {
   const [events, setEvents] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const getImageUrl = (relativePath) => {
-    return `${API}/api/images/${relativePath}`;
+    return `${API_BASE}/api/images/${relativePath}`;
   };
   useEffect(() => {
     const fetchEvents = async () => {
