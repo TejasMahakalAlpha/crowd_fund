@@ -53,7 +53,7 @@ const VolunteerForm = () => {
 
     // Validate skills (optional but must be valid if entered)
     if (!isTextOnly(formData.skills)) newErrors.skills = "Only letters and spaces allowed";
-    else if (formData.skills.trim()) newErrors.skills = "Skills is required"
+    else if (!formData.skills.trim()) newErrors.skills = "Skills is required"
     // Validate availability
     if (!formData.availability.trim()) newErrors.availability = "Availability is required";
 

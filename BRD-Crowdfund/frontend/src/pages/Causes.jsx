@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import "./Causes.css";
 import API, { PublicApi } from "../services/api"; // Adjust path as needed
+import Swal from "sweetalert2";
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 const Causes = () => {
