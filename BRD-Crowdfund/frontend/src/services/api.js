@@ -6,16 +6,32 @@ const username = import.meta.env.VITE_DONATION_API_USERNAME;
 const password = import.meta.env.VITE_DONATION_API_PASSWORD;
 const basicAuth = "Basic " + btoa(`${username}:${password}`);
 
-const API = axios.create({ baseURL: API_BASE_URL });
-
+// const API = axios.create({ baseURL: API_BASE_URL });
+const API = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+  withCredentials: true,
+});
 // ✅ Attach admin token only for admin routes
 API.interceptors.request.use((config) => {
-  const token = localStorage.getItem("adminToken");
-  if (token && config.url.startsWith("/admin")) {
+  const token = localStorage.getItem("token");
+  if (token) {
     config.headers.Authorization = `Basic ${token}`;
   }
   return config;
 });
+
+API.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      console.warn("Unauthorized - Token may be expired");
+    }
+    return Promise.reject(error);
+  }
+);
 
 export const PublicApi = {
   registerVolunteer: (data) => API.post(`volunteer/register`, data),
@@ -30,15 +46,16 @@ export const PublicApi = {
   getSupportedCurrencies: () => API.get(`payment/currencies`),
   getAllDonations: () => API.get(`donations`),
 
-  // ✅ Always attach Basic Auth for donation/payment routes
-  createDonationAndOrder: (data) => axios.post(`${API_BASE_URL}/donate-and-pay`, data, {
-    headers: { Authorization: basicAuth },
-  }),
 
-  verifyPayment: (data) => axios.post(`${API_BASE_URL}/payment/verify`, data, {
-    headers: { Authorization: basicAuth },
-  }),
 };
+
+export const PaymentApi = {
+  // ✅ Always attach Basic Auth for donation/payment routes
+  createDonationAndOrder: (data) => API.post(`donate-and-pay`, data),
+
+  verifyPayment: (data) => API.post(`payment/verify`, data),
+}
+
 
 export const AdminApi = {
   getevents: (id) => API.get(`admin/events/${id}`),
