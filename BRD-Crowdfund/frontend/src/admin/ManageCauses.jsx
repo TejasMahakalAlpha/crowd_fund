@@ -3,7 +3,7 @@ import API, { AdminApi } from "../services/api";
 import "./ManageBlogs.css";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
-const API_BASE = process.env.VITE_API_BASE_URL;
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 const ManageCauses = () => {
   const [causes, setCauses] = useState([]);

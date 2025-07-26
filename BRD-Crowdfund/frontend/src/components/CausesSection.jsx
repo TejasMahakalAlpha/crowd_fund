@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import API, { PublicApi } from "../services/api";
 import "./CausesSection.css";
 import Swal from "sweetalert2";
-const API_BASE = process.env.VITE_API_BASE_URL;
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
 const CausesSection = () => {
   const [causes, setCauses] = useState([]);
   const [loading, setLoading] = useState(true);

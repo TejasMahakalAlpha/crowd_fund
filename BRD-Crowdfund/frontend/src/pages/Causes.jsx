@@ -2,7 +2,8 @@
 import React, { useEffect, useState } from "react";
 import "./Causes.css";
 import API, { PublicApi } from "../services/api"; // Adjust path as needed
-const API_BASE = process.env.VITE_API_BASE_URL;
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
 const Causes = () => {
   const [causes, setCauses] = useState([]);
   const [loading, setLoading] = useState(true)
@@ -112,7 +113,6 @@ const Causes = () => {
           const raised = Number(cause.currentAmount) || 0;
           const goal = Number(cause.targetAmount) || 1;
           const percentage = Math.min(100, Math.round((raised / goal) * 100));
-          console.log(cause.imageUrl)
           return (
             <div className="cause-box" key={cause._id || index}>
               <div onClick={() => { setSelectedCause(cause); setModalOpen(true); }} style={{ cursor: 'pointer' }}>

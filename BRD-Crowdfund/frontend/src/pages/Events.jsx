@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import API, { PublicApi } from "../services/api";
 import "./Events.css";
-const API_BASE = process.env.VITE_API_BASE_URL;
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
 const Events = () => {
   const [events, setEvents] = useState([]);
   const [error, setError] = useState("");
