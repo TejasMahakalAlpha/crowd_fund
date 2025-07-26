@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import "./Causes.css";
 import API, { PublicApi } from "../services/api"; // Adjust path as needed
-
+const API_BASE = process.env.VITE_API_BASE_URL;
 const Causes = () => {
   const [causes, setCauses] = useState([]);
   const [loading, setLoading] = useState(true)
@@ -10,7 +10,7 @@ const Causes = () => {
   const [selectedCause, setSelectedCause] = useState(null);
 
   const getImageUrl = (relativePath) => {
-    return `${API}/api/images/${relativePath}`;
+    return `${API_BASE}/api/images/${relativePath}`;
   };
   // useEffect(() => {
   //   // Static demo data

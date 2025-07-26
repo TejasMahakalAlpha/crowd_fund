@@ -3,7 +3,7 @@ import API, { AdminApi } from "../services/api";
 import "./ManageEvents.css";
 import Swal from "sweetalert2";
 import { Navigate, useNavigate } from "react-router-dom";
-
+const API_BASE = process.env.VITE_API_BASE_URL;
 const ManageEvents = () => {
   const [events, setEvents] = useState([]);
   const [imageFile, setImageFile] = useState(null);
@@ -19,7 +19,7 @@ const ManageEvents = () => {
     imageUrl: "",
   });
   const getImageUrl = (relativePath) => {
-    return `${API}/api/images/${relativePath}`;
+    return `${API_BASE}/api/images/${relativePath}`;
   };
   const [errors, setErrors] = useState({});
   const [isEditing, setIsEditing] = useState(false);

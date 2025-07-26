@@ -3,14 +3,14 @@ import { useNavigate } from "react-router-dom";
 import API, { PublicApi } from "../services/api";
 import "./CausesSection.css";
 import Swal from "sweetalert2";
-
+const API_BASE = process.env.VITE_API_BASE_URL;
 const CausesSection = () => {
   const [causes, setCauses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedCause, setSelectedCause] = useState(null);
   const getImageUrl = (relativePath) => {
-    return `${API}/api/images/${relativePath}`;
+    return `${API_BASE}/api/images/${relativePath}`;
   };
 
   // useEffect(() => {

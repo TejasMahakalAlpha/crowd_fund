@@ -3,7 +3,7 @@ import API, { AdminApi } from "../services/api";
 import "./ManageBlogs.css";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
-
+const API_BASE = process.env.VITE_API_BASE_URL;
 
 const ManageCauses = () => {
   const [causes, setCauses] = useState([]);
@@ -26,7 +26,7 @@ const ManageCauses = () => {
   const [errors, setErrors] = useState({});
   const [imageFile, setImageFile] = useState(null);
   const getImageUrl = (relativePath) => {
-    return `${API}/api/images/${relativePath}`;
+    return `${API_BASE}/api/images/${relativePath}`;
   };
   const navigate = useNavigate();
 
