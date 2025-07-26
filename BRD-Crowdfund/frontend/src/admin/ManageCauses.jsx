@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { AdminApi } from "../services/api";
+import API, { AdminApi } from "../services/api";
 import "./ManageBlogs.css";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";

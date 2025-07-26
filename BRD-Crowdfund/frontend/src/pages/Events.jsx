@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { PublicApi } from "../services/api";
+import API, { PublicApi } from "../services/api";
 import "./Events.css";
 
 const Events = () => {

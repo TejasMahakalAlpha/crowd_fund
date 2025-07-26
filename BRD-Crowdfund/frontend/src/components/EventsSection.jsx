@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { PublicApi } from "../services/api";
+import API, { PublicApi } from "../services/api";
 import "./EventsSection.css";
 
 const EventsSection = () => {
@@ -19,35 +19,35 @@ const EventsSection = () => {
       } catch (err) {
         console.error("Error fetching events", err);
         // Fallback static data
-        setEvents([
-          {
-            id: 1,
-            title: "Health Check-up Camp",
-            description: "Free general health check-up and consultations by certified doctors.",
-            date: "2025-08-05T10:00:00",
-            time: "10:00 AM - 2:00 PM",
-            location: "Community Center, Pune",
-            imageUrl: "healthcamp.jpeg",
-          },
-          {
-            id: 2,
-            title: "Tree Plantation Drive",
-            description: "Join us to plant 500+ trees in the city outskirts to promote greenery.",
-            date: "2025-08-10T08:30:00",
-            time: "8:30 AM - 12:00 PM",
-            location: "Outskirts of Nagpur",
-            imageUrl: "treeplantation.jpeg",
-          },
-          {
-            id: 3,
-            title: "Blood Donation Drive",
-            description: "Donate blood and save lives. A small act of kindness goes a long way.",
-            date: "2025-08-15T09:00:00",
-            time: "9:00 AM - 1:00 PM",
-            location: "Red Cross Hall, Mumbai",
-            imageUrl: "blooddonation.jpeg",
-          },
-        ]);
+        // setEvents([
+        //   {
+        //     id: 1,
+        //     title: "Health Check-up Camp",
+        //     description: "Free general health check-up and consultations by certified doctors.",
+        //     date: "2025-08-05T10:00:00",
+        //     time: "10:00 AM - 2:00 PM",
+        //     location: "Community Center, Pune",
+        //     imageUrl: "healthcamp.jpeg",
+        //   },
+        //   {
+        //     id: 2,
+        //     title: "Tree Plantation Drive",
+        //     description: "Join us to plant 500+ trees in the city outskirts to promote greenery.",
+        //     date: "2025-08-10T08:30:00",
+        //     time: "8:30 AM - 12:00 PM",
+        //     location: "Outskirts of Nagpur",
+        //     imageUrl: "treeplantation.jpeg",
+        //   },
+        //   {
+        //     id: 3,
+        //     title: "Blood Donation Drive",
+        //     description: "Donate blood and save lives. A small act of kindness goes a long way.",
+        //     date: "2025-08-15T09:00:00",
+        //     time: "9:00 AM - 1:00 PM",
+        //     location: "Red Cross Hall, Mumbai",
+        //     imageUrl: "blooddonation.jpeg",
+        //   },
+        // ]);
       }
     };
 

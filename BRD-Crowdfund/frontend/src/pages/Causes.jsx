@@ -12,53 +12,53 @@ const Causes = () => {
   const getImageUrl = (relativePath) => {
     return `${API}/api/images/${relativePath}`;
   };
-  useEffect(() => {
-    // Static demo data
-    const staticCauses = [
-      {
-        id: 1,
-        title: "Rain Water Harvesting",
-        shortDescription: "Conserving rainwater for future use, reducing groundwater depletion and urban flooding.",
-        description: "Heavy monsoons caused flooding in several villages. Funds will be used for food, shelter, and medicine.",
-        category: "Disaster Relief",
-        location: "Assam",
-        targetAmount: 5000000,
-        currentAmount: 1200000,
-        endDate: "2025-08-31T00:00:00",
-        imageUrl: "rainwaterharvesting.jpg",
-        status: "ACTIVE"
-      },
-      {
-        id: 2,
-        title: "Sewing Machine Distribution for Women Empowerment",
-        shortDescription: "Support underprivileged women by providing sewing machines to help them become self-reliant and financially independent.",
-        description: "Raise funds to build toilets, repair roofs, and buy benches for underfunded village schools.",
-        category: "Education",
-        location: "Bihar",
-        targetAmount: 3000000,
-        currentAmount: 150000,
-        endDate: "2025-09-15T00:00:00",
-        imageUrl: "womanempower.jpg",
-        status: "ACTIVE"
-      },
-      {
-        id: 3,
-        title: "School Bag Distribution for Children",
-        shortDescription: "Distribute school bags and educational materials to children from economically weaker sections.",
-        description: "Help us build additional kennels and provide medical supplies for rescued street animals.",
-        category: "Animal Welfare",
-        location: "Pune",
-        targetAmount: 1000000,
-        currentAmount: 450000,
-        endDate: "2025-08-10T00:00:00",
-        imageUrl: "student.jpg",
-        status: "ACTIVE"
-      },
+  // useEffect(() => {
+  //   // Static demo data
+  //   const staticCauses = [
+  //     {
+  //       id: 1,
+  //       title: "Rain Water Harvesting",
+  //       shortDescription: "Conserving rainwater for future use, reducing groundwater depletion and urban flooding.",
+  //       description: "Heavy monsoons caused flooding in several villages. Funds will be used for food, shelter, and medicine.",
+  //       category: "Disaster Relief",
+  //       location: "Assam",
+  //       targetAmount: 5000000,
+  //       currentAmount: 1200000,
+  //       endDate: "2025-08-31T00:00:00",
+  //       imageUrl: "rainwaterharvesting.jpg",
+  //       status: "ACTIVE"
+  //     },
+  //     {
+  //       id: 2,
+  //       title: "Sewing Machine Distribution for Women Empowerment",
+  //       shortDescription: "Support underprivileged women by providing sewing machines to help them become self-reliant and financially independent.",
+  //       description: "Raise funds to build toilets, repair roofs, and buy benches for underfunded village schools.",
+  //       category: "Education",
+  //       location: "Bihar",
+  //       targetAmount: 3000000,
+  //       currentAmount: 150000,
+  //       endDate: "2025-09-15T00:00:00",
+  //       imageUrl: "womanempower.jpg",
+  //       status: "ACTIVE"
+  //     },
+  //     {
+  //       id: 3,
+  //       title: "School Bag Distribution for Children",
+  //       shortDescription: "Distribute school bags and educational materials to children from economically weaker sections.",
+  //       description: "Help us build additional kennels and provide medical supplies for rescued street animals.",
+  //       category: "Animal Welfare",
+  //       location: "Pune",
+  //       targetAmount: 1000000,
+  //       currentAmount: 450000,
+  //       endDate: "2025-08-10T00:00:00",
+  //       imageUrl: "student.jpg",
+  //       status: "ACTIVE"
+  //     },
 
-    ];
-    setLoading(false)
-    setCauses(staticCauses);
-  }, []);
+  //   ];
+  //   setLoading(false)
+  //   setCauses(staticCauses);
+  // }, []);
   useEffect(() => {
     const fetchCauses = async () => {
       try {
@@ -68,7 +68,7 @@ const Causes = () => {
         console.error("Failed to load causes", err);
       }
     };
-
+    setLoading(false)
     fetchCauses();
   }, []);
 
