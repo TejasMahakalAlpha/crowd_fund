@@ -6,7 +6,9 @@ const EventsSection = () => {
   const [events, setEvents] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
-
+  const getImageUrl = (relativePath) => {
+    return `${API}/api/images/${relativePath}`;
+  };
   useEffect(() => {
     const fetchEvents = async () => {
       try {
@@ -96,7 +98,7 @@ const EventsSection = () => {
                 <p className="location">{event.location}</p>
                 {event.imageUrl && (
                   <img
-                    src={event.imageUrl}
+                    src={getImageUrl(event.imageUrl)}
                     alt={event.title}
                     className="event-image"
                   />
@@ -113,9 +115,10 @@ const EventsSection = () => {
             <button className="modal-close" onClick={closeModal}>×</button>
             <div className="modal-header">
               <img
-                src={selectedEvent.imageUrl}
+                src={getImageUrl(selectedEvent.imageUrl)}
                 alt={selectedEvent.title}
-                className="modal-image"
+                className="cause-image"
+                style={{ width: "100%", borderRadius: "8px", objectFit: "cover", maxHeight: "200px" }}
               />
             </div>
             <div className="modal-body">

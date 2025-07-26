@@ -9,7 +9,9 @@ const CausesSection = () => {
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedCause, setSelectedCause] = useState(null);
-
+  const getImageUrl = (relativePath) => {
+    return `${API}/api/images/${relativePath}`;
+  };
 
   // useEffect(() => {
   // Static demo data
@@ -129,7 +131,7 @@ const CausesSection = () => {
                 {/* ✅ Cause Image */}
 
                 {cause.imageUrl && (
-                  <img src={`${cause.imageUrl}`}
+                  <img src={getImageUrl(cause.imageUrl)}
                     alt={cause.title}
                     className="cause-image"
                     style={{
@@ -190,7 +192,7 @@ const CausesSection = () => {
 
             {selectedCause.imageUrl && (
               <img
-                src={selectedCause.imageUrl}
+                src={getImageUrl(selectedCause.imageUrl)}
                 alt={selectedCause.title}
                 className="modal-image"
               />

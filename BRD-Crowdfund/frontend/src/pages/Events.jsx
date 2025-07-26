@@ -6,7 +6,9 @@ const Events = () => {
   const [events, setEvents] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
-
+  const getImageUrl = (relativePath) => {
+    return `${API}/api/images/${relativePath}`;
+  };
   useEffect(() => {
     const fetchEvents = async () => {
       try {
@@ -76,9 +78,10 @@ const Events = () => {
 
                   {event.imageUrl && (
                     <img
-                      src={event.imageUrl}
+                      src={getImageUrl(event.imageUrl)}
                       alt={event.title}
-                      className="event-image"
+                      className="cause-image"
+                      style={{ width: "100%", borderRadius: "8px", objectFit: "cover", maxHeight: "200px" }}
                     />
                   )}
 

@@ -25,7 +25,9 @@ const ManageCauses = () => {
   const [imagePreview, setImagePreview] = useState(null); // for showing selected image
   const [errors, setErrors] = useState({});
   const [imageFile, setImageFile] = useState(null);
-
+  const getImageUrl = (relativePath) => {
+    return `${API}/api/images/${relativePath}`;
+  };
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -292,7 +294,7 @@ const ManageCauses = () => {
                 <p><strong>Target Amount:</strong> ₹{cause.targetAmount?.toLocaleString()}</p>
                 <p><strong>Current Amount:</strong> ₹{cause.currentAmount?.toLocaleString()}</p>
                 <p><strong>End Date:</strong> {new Date(cause.endDate).toLocaleDateString()}</p>
-                <img src={cause.imageUrl} alt={cause.title} style={{ width: "100%", maxWidth: "300px", marginTop: "10px" }} />
+                <img src={getImageUrl(cause.imageUrl)} alt={cause.title} style={{ width: "100%", maxWidth: "300px", marginTop: "10px" }} />
               </div>
               <button className="edit-button" onClick={() => handleUpdate(cause.id || cause._id)}>Edit</button>
               <button onClick={() => handleDelete(cause.id || cause._id)}>Delete</button>

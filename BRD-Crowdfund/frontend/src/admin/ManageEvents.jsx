@@ -18,7 +18,9 @@ const ManageEvents = () => {
     currentParticipants: "",
     imageUrl: "",
   });
-
+  const getImageUrl = (relativePath) => {
+    return `${API}/api/images/${relativePath}`;
+  };
   const [errors, setErrors] = useState({});
   const [isEditing, setIsEditing] = useState(false);
   const [editId, setEditId] = useState(null);
@@ -335,12 +337,8 @@ const ManageEvents = () => {
               </p>
               {event.imageUrl && (
                 <img
-                  src={
-                    event.imageUrl.startsWith("http")
-                      ? event.imageUrl
-                      : `${API}/${event.imageUrl}`
-                  }
-                  alt="Event"
+                  src={getImageUrl(event.imageUrl)}
+                  alt={event.imageUrl}
                   style={{ width: "100%", maxWidth: "300px", marginTop: "10px" }}
                 />
               )}

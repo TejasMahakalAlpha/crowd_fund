@@ -9,7 +9,9 @@ const Causes = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedCause, setSelectedCause] = useState(null);
 
-  const url = API;
+  const getImageUrl = (relativePath) => {
+    return `${API}/api/images/${relativePath}`;
+  };
   useEffect(() => {
     // Static demo data
     const staticCauses = [
@@ -116,11 +118,12 @@ const Causes = () => {
               <div onClick={() => { setSelectedCause(cause); setModalOpen(true); }} style={{ cursor: 'pointer' }}>
                 {cause.imageUrl && (
                   <img
-                    src={cause.imageUrl}
+                    src={getImageUrl(cause.imageUrl)}
                     alt={cause.title}
                     className="cause-image"
                     style={{ width: "100%", borderRadius: "8px", objectFit: "cover", maxHeight: "200px" }}
                   />
+
                 )}
                 <h3>{cause.title}</h3>
                 <div className="progress-bar">
@@ -146,10 +149,11 @@ const Causes = () => {
 
             {selectedCause.imageUrl && (
               <img
-                src={selectedCause.imageUrl}
+                src={getImageUrl(selectedCause.imageUrl)}
                 alt={selectedCause.title}
                 className="modal-image"
               />
+
             )}
 
             <div className="modal-details">
