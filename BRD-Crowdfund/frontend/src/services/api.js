@@ -1,57 +1,31 @@
 // src/services/api.js
 import axios from 'axios';
 
-// ✅ IMPORTANT: VITE_API_BASE_URL will now be just the base domain, e.g., https://cloud-fund-i1kt.onrender.com or http://localhost:8080
+// ✅ IMPORTANT: VITE_API_BASE_URL should be set in your .env file in the project root.
+// Example: VITE_API_BASE_URL=https://cloud-fund-i1kt.onrender.com
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-// --- 1. Main API Instance (for general use if needed, but we'll use specific ones) ---
+// --- 1. Main API Instance (for general use if needed) ---
 const API = axios.create({
   baseURL: BASE_URL,
 });
 
 // --- 2. Public API Instance ---
-// This instance will be used for all public routes like /api/public/causes, /api/public/volunteer/register etc.
-// It does NOT attach any authentication token.
+// This instance is for all public routes like /api/public/causes, /api/public/volunteer/register etc.
+// Based on Swagger, public blogs are indeed under /api/public/
 const PublicApiInstance = axios.create({
   baseURL: `${BASE_URL}/api/public`,
 });
 
 // --- 3. Admin API Instance ---
-// This instance will be used for all admin routes like /api/admin/causes, /api/admin/login etc.
-// It will ATTACH the adminToken from localStorage.
+// This instance is for all admin routes.
+// ⭐ CRITICAL CHANGE BASED ON SWAGGER ⭐: Swagger shows admin blog paths as /admin/blogs (e.g., /admin/blogs/{id})
+// This implies the /api prefix for admin is either NOT used or is handled by a global Spring MVC servlet path.
+// This assumes your Spring Boot AdminController has @RequestMapping("/admin")
+// If your backend AdminController has @RequestMapping("/api/admin"), then change this back to `${BASE_URL}/api/admin`
 const AdminApiInstance = axios.create({
-  baseURL: `${BASE_URL}/api/admin`, // Assuming your admin routes start with /api/admin
+  baseURL: `${BASE_URL}/admin`, // Changed from /api/admin to /admin based on Swagger evidence
 });
-
-// Request Interceptor for Admin API Instance: Attach the JWT to outgoing requests
-AdminApiInstance.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem("adminToken"); // Retrieve the token (expecting a JWT now)
-    if (token) {
-      // ✅ Change from 'Basic' to 'Bearer' for JWT authentication
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
-
-// Optional: Response Interceptor for Admin API Instance to handle 401/403 errors
-AdminApiInstance.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response && (error.response.status === 401 || error.response.status === 403)) {
-      console.warn("Authentication/Authorization error for Admin API. Redirecting to login.");
-      localStorage.removeItem("adminToken"); // Clear invalid token
-      // You might want to use react-router-dom's navigate here, e.g., navigate('/admin/login');
-      // For simplicity, using window.location for now, but better to handle in AuthContext or higher component
-      window.location.href = '/admin/login';
-    }
-    return Promise.reject(error);
-  }
-);
 
 
 // --- API Endpoints ---
@@ -64,18 +38,17 @@ export const PublicApi = {
   getEvents: () => PublicApiInstance.get(`events`),
   getEventById: (id) => PublicApiInstance.get(`events/${id}`),
   getDonation: () => PublicApiInstance.get(`donations`),
-  getCauses: () => PublicApiInstance.get(`causes`), // This will hit /api/public/causes
+  getCauses: () => PublicApiInstance.get(`causes`),
   getCausesById: (id) => PublicApiInstance.get(`causes/${id}`),
-  getAllDonations: () => PublicApiInstance.get(`donations`), // This will hit /api/public/donations (if public)
+  getAllDonations: () => PublicApiInstance.get(`donations`), // If this is a public endpoint
 
-  // ✅ NEW: Public Blog Endpoints
-  getBlogs: () => PublicApiInstance.get(`blogs`), // Get all public blogs
-  getBlogById: (id) => PublicApiInstance.get(`blogs/${id}`), // Get a single public blog by ID
+  // Public Blog Endpoints (Confirmed by Swagger to be under /api/public/)
+  getBlogs: () => PublicApiInstance.get(`blogs`),
+  getBlogById: (slug) => PublicApiInstance.get(`blogs/${slug}`), // Assuming you fetch by slug for public detail page
 };
 
 export const PaymentApi = {
   // These might also go through PublicApiInstance if they don't require admin auth
-  // Assuming these are also public-facing under /api/public
   createDonationAndOrder: (data) => PublicApiInstance.post(`donate-and-pay`, data),
   getPayment: () => PublicApiInstance.get(`payment/currencies`),
   getSupportedCurrencies: () => PublicApiInstance.get(`payment/currencies`),
@@ -84,39 +57,39 @@ export const PaymentApi = {
 
 
 export const AdminApi = {
-  // Admin Login (This will use AdminApiInstance, which has no token initially, but receives it)
-  // Ensure your backend has a POST /api/admin/login endpoint that returns a JWT
-  login: (credentials) => AdminApiInstance.post(`/login`, credentials), // This will hit /api/admin/login
+  // Helper to attach Basic Auth headers
+  _authHeader: () => {
+    const token = localStorage.getItem("adminToken"); // This token is the base64(username:password)
+    return token ? { Authorization: `Basic ${token}` } : {};
+  },
 
-  // All these calls will now go to BASE_URL/api/admin/... and will include the Bearer token
-  // Events
-  getAllEvents: () => AdminApiInstance.get(`events`), // All events (renamed for consistency)
-  getEventsById: (id) => AdminApiInstance.get(`events/${id}`), // Specific event
-  updateEvents: (id, data) => AdminApiInstance.put(`events/${id}/with-image`, data), // For multipart/form-data
-  deleteEvents: (id) => AdminApiInstance.delete(`events/${id}`),
-  createEvents: (data) => AdminApiInstance.post(`events/with-image`, data), // For multipart/form-data
+  // All these calls will now go to BASE_URL/admin/... and will include the Basic token
+  // Events (These will hit /admin/events)
+  getAllEvents: () => AdminApiInstance.get(`events`, { headers: AdminApi._authHeader() }), // This was the commented line, now active.
+  getEventsById: (id) => AdminApiInstance.get(`events/${id}`, { headers: AdminApi._authHeader() }),
+  createEvents: (data) => AdminApiInstance.post(`events/with-image`, data, { headers: AdminApi._authHeader() }),
+  updateEvents: (id, data) => AdminApiInstance.put(`events/${id}/with-image`, data, { headers: AdminApi._authHeader() }),
+  deleteEvents: (id) => AdminApiInstance.delete(`events/${id}`, { headers: AdminApi._authHeader() }),
 
   // Causes
-  getAllCauses: () => AdminApiInstance.get(`causes`), // All causes (renamed for consistency)
-  getCausesById: (id) => AdminApiInstance.get(`causes/${id}`), // Specific cause
-  updateCauses: (id, data) => AdminApiInstance.put(`causes/${id}/with-image`, data), // For multipart/form-data
-  deleteCauses: (id) => AdminApiInstance.delete(`causes/${id}`),
-  createCauses: (data) => AdminApiInstance.post(`causes/with-image`, data), // For multipart/form-data
+  getAllCauses: () => AdminApiInstance.get(`causes`, { headers: AdminApi._authHeader() }),
+  getCausesById: (id) => AdminApiInstance.get(`causes/${id}`, { headers: AdminApi._authHeader() }),
+  createCauses: (data) => AdminApiInstance.post(`causes/with-image`, data, { headers: AdminApi._authHeader() }),
+  updateCauses: (id, data) => AdminApiInstance.put(`causes/${id}/with-image`, data, { headers: AdminApi._authHeader() }),
+  deleteCauses: (id) => AdminApiInstance.delete(`causes/${id}`, { headers: AdminApi._authHeader() }),
 
   // Volunteers
-  getAllVolunteer: () => AdminApiInstance.get(`volunteers`),
-  createVolunteer: (data) => AdminApiInstance.post(`volunteers`, data), // For admin panel to add volunteer
+  getAllVolunteer: () => AdminApiInstance.get(`volunteers`, { headers: AdminApi._authHeader() }),
 
-  // ✅ NEW: Admin Blog Endpoints
-  getAllBlogs: () => AdminApiInstance.get(`blogs`), // Get all blogs for admin
-  getBlogById: (id) => AdminApiInstance.get(`blogs/${id}`), // Get a single blog by ID for editing
-  createBlog: (data) => AdminApiInstance.post(`blogs/with-image`, data), // Create a new blog (expects FormData with image)
-  updateBlog: (id, data) => AdminApiInstance.put(`blogs/${id}/with-image`, data), // Update a blog (expects FormData with image)
-  deleteBlog: (id) => AdminApiInstance.delete(`blogs/${id}`), // Delete a blog by ID
+  // Admin Blog Endpoints (Confirmed by Swagger to be under /admin/)
+  getAllBlogs: () => AdminApiInstance.get(`blogs`, { headers: AdminApi._authHeader() }),
+  getBlogById: (id) => AdminApiInstance.get(`blogs/${id}`, { headers: AdminApi._authHeader() }), // Swagger confirms by ID
+  createBlog: (data) => AdminApiInstance.post(`blogs/with-image`, data, { headers: AdminApi._authHeader() }),
+  updateBlog: (id, data) => AdminApiInstance.put(`blogs/${id}/with-image`, data, { headers: AdminApi._authHeader() }),
+  deleteBlog: (id) => AdminApiInstance.delete(`blogs/${id}`, { headers: AdminApi._authHeader() }),
 
   // Other Admin
-  getAllDonationsAdmin: () => AdminApiInstance.get(`donations`), // Admin-specific donations view
+  getAllDonationsAdmin: () => AdminApiInstance.get(`donations`, { headers: AdminApi._authHeader() }),
 };
 
-// Export the main API instance if needed for other routes not explicitly categorized
 export default API;

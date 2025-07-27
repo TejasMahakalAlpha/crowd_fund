@@ -1,113 +1,72 @@
-// src/components/Blog.jsx
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { PublicApi } from "../services/api"; // Use PublicApi
-import Swal from "sweetalert2"; // For user-friendly error messages
-import "./Blog.css"; // Ensure this CSS is linked
+// src/pages/Blog.jsx
+import React, { useState, useEffect } from 'react';
+import { PublicApi } from '../services/api'; // Import PublicApi for public blog endpoints
+import { Link } from 'react-router-dom';
 
 const Blog = () => {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchBlogs = async () => {
-      setLoading(true);
-      setError(null);
       try {
-        const res = await PublicApi.getBlogs(); // Use PublicApi to get all blogs
-        if (Array.isArray(res.data)) {
-          setBlogs(res.data);
-        } else {
-          console.error("Unexpected response format for blogs:", res.data);
-          setBlogs([]); // Ensure it's an array
-          setError("Unexpected data format received from server for blogs.");
-        }
+        setLoading(true);
+        setError(null);
+        // This will attempt to fetch from BASE_URL/api/public/blogs
+        const response = await PublicApi.getBlogs(); // Swagger shows this as 200 OK
+        setBlogs(response.data);
       } catch (err) {
-        console.error("Error fetching blogs for public view:", err);
-        setError("Failed to fetch blog posts. Please try again later.");
-        // Optional: Show a Swal alert for user
-        Swal.fire("Oops!", "Could not load blog posts. Please try again later.", "error");
+        console.error("Error fetching blogs:", err);
+        setError("Oops! Could not load blog posts. Please try again later.");
+        if (err.response && err.response.status === 401) {
+          setError("Access Denied: Public blogs endpoint incorrectly requires authentication. (Backend configuration error)"); //
+        } else if (err.response && err.response.status === 404) {
+          setError("Blog endpoint not found. Please check backend URL for /api/public/blogs.");
+        }
       } finally {
         setLoading(false);
       }
     };
+
     fetchBlogs();
-  }, []); // Empty dependency array means this runs once on component mount
+  }, []);
 
   if (loading) {
-    return (
-      <div className="blog-page">
-        <section className="blog-hero">
-          <h1>Our Blog</h1>
-          <p>Stories, updates, and insights from our ground-level efforts.</p>
-        </section>
-        <div className="blog-list">Loading blog posts...</div>
-      </div>
-    );
+    return <div style={{ textAlign: 'center', padding: '2rem' }}>Loading blogs...</div>;
   }
 
   if (error) {
-    return (
-      <div className="blog-page">
-        <section className="blog-hero">
-          <h1>Our Blog</h1>
-          <p>Stories, updates, and insights from our ground-level efforts.</p>
-        </section>
-        <div className="blog-list" style={{ color: 'red', textAlign: 'center' }}>
-          Error: {error}
-        </div>
-      </div>
-    );
+    return <div style={{ textAlign: 'center', padding: '2rem', color: 'red' }}>{error}</div>;
+  }
+
+  if (blogs.length === 0) {
+    return <div style={{ textAlign: 'center', padding: '2rem' }}>No blog posts available yet.</div>;
   }
 
   return (
-    <div className="blog-page">
-      <section className="blog-hero">
-        <h1>Our Blog</h1>
-        <p>Stories, updates, and insights from our ground-level efforts.</p>
-      </section>
-
-      <div className="blog-list">
-        {blogs.length === 0 ? (
-          <p style={{ textAlign: 'center', width: '100%' }}>No blog posts available yet. Check back soon!</p>
-        ) : (
-          blogs.map((post) => (
-            <div className="blog-card" key={post.id}> {/* Assuming post.id from backend */}
-              {post.imageUrl && ( // Display blog image from backend
-                <img
-                  src={post.imageUrl} // Direct URL from backend
-                  alt={post.title}
-                  style={{
-                    width: "100%",
-                    height: "200px",
-                    objectFit: "cover",
-                    borderTopLeftRadius: "8px",
-                    borderTopRightRadius: "8px"
-                  }}
-                />
-              )}
-              <div className="blog-content">
-                <h3>{post.title}</h3>
-                <p className="date">
-                  {new Date(post.createdAt).toLocaleDateString("en-IN", {
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric"
-                  })}
-                </p>
-                <p className="summary">{post.content?.slice(0, 150)}...</p> {/* Increased slice for more content */}
-                <button
-                  className="read-more"
-                  onClick={() => navigate(`/blog/${post.id}`)} // Navigate to individual blog post
-                >
-                  Read More
-                </button>
-              </div>
+    <div style={{ padding: '2rem', maxWidth: '900px', margin: '0 auto' }}>
+      <h1 style={{ textAlign: 'center', marginBottom: '2rem' }}>Our Latest Blogs</h1>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
+        {blogs.map((blog) => (
+          <div key={blog.id} style={{ border: '1px solid #ddd', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+            {blog.imageUrl && ( // Assuming blog objects have an imageUrl property
+              <img src={blog.imageUrl} alt={blog.title} style={{ width: '100%', height: '200px', objectFit: 'cover' }} />
+            )}
+            <div style={{ padding: '1.5rem' }}>
+              <h3 style={{ marginBottom: '0.5rem', fontSize: '1.5rem' }}>{blog.title}</h3>
+              <p style={{ color: '#555', fontSize: '0.9rem' }}>{new Date(blog.createdAt).toLocaleDateString()}</p>
+              <p style={{ fontSize: '1rem', lineHeight: '1.6' }}>
+                {/* Display a snippet of content */}
+                {blog.content ? `${blog.content.substring(0, Math.min(blog.content.length, 100))}...` : 'No content available'}
+              </p>
+              {/* Link to individual blog post using ID (or slug if your backend supports fetching by slug for detail) */}
+              <Link to={`/blogs/${blog.slug || blog.id}`} style={{ display: 'inline-block', marginTop: '1rem', padding: '0.5rem 1rem', backgroundColor: '#007bff', color: 'white', textDecoration: 'none', borderRadius: '4px' }}>
+                Read More
+              </Link>
             </div>
-          ))
-        )}
+          </div>
+        ))}
       </div>
     </div>
   );

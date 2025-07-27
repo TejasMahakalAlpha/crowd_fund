@@ -1,220 +1,260 @@
-// src/admin/ManageBlogs.jsx
-import React, { useEffect, useState } from 'react';
-import { AdminApi } from '../services/api'; // Use AdminApi
-import Swal from 'sweetalert2'; // For better alerts
-import './ManageBlogs.css'; // Ensure this CSS is linked
+// src/admin/ManageBlog.jsx
+import React, { useState, useEffect } from 'react';
+import { AdminApi } from '../services/api'; // Import AdminApi for authenticated blog endpoints
+import { useNavigate } from 'react-router-dom';
 
-const ManageBlogs = () => {
+const ManageBlog = () => {
   const [blogs, setBlogs] = useState([]);
-  const [formData, setFormData] = useState({
-    title: '',
-    content: '',
-    image: null, // File object
-    imageUrl: '', // For displaying current image if editing
-  });
-  const [editingBlogId, setEditingBlogId] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentBlog, setCurrentBlog] = useState(null); // For edit/add form
+  // Initialize formData with correct structure for blog properties
+  const [formData, setFormData] = useState({ title: '', content: '', imageFile: null, imageUrl: '' });
+  const navigate = useNavigate();
 
   useEffect(() => {
-    fetchBlogs();
+    fetchAdminBlogs();
   }, []);
 
-  const fetchBlogs = async () => {
-    setLoading(true);
-    setError(null);
+  const fetchAdminBlogs = async () => {
     try {
-      const res = await AdminApi.getAllBlogs(); // Use AdminApi to get all blogs
-      if (Array.isArray(res.data)) {
-        setBlogs(res.data);
-      } else {
-        console.error("Unexpected response format for blogs:", res.data);
-        setBlogs([]); // Ensure it's an array
-        setError("Unexpected data format received for blogs.");
-      }
+      setLoading(true);
+      setError(null);
+      // This will attempt to fetch from BASE_URL/admin/blogs
+      const response = await AdminApi.getAllBlogs();
+      setBlogs(response.data);
     } catch (err) {
-      console.error("Error fetching blogs:", err);
-      setError(err.response?.data?.message || "Failed to fetch blogs. Ensure backend is running and you are authenticated.");
+      console.error("Error fetching admin blogs:", err);
+      if (err.response && (err.response.status === 401 || err.response.status === 403)) {
+        setError("You are not authorized to view this page. Please log in.");
+        navigate('/admin/login'); // Redirect to login if unauthorized
+      } else if (err.response && err.response.status === 404) {
+        setError("Admin Blog API endpoint not found. Check backend URL for /admin/blogs.");
+      }
+      else {
+        setError("Failed to load blogs. Please try again.");
+      }
     } finally {
       setLoading(false);
     }
   };
 
-  const handleChange = (e) => {
-    const { name, value, files } = e.target;
-    setFormData({
-      ...formData,
-      [name]: files ? files[0] : value,
-    });
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
   };
 
-  const handleEdit = (blog) => {
-    setEditingBlogId(blog.id); // Assuming backend uses 'id' not '_id'
-    setFormData({
-      title: blog.title,
-      content: blog.content,
-      image: null, // Don't pre-fill file input, user will select new if needed
-      imageUrl: blog.imageUrl || '', // Store for display
-    });
+  const handleFileChange = (e) => {
+    setFormData({ ...formData, imageFile: e.target.files[0] });
+  };
+
+  const openAddModal = () => {
+    setCurrentBlog(null);
+    setFormData({ title: '', content: '', imageFile: null, imageUrl: '' });
+    setIsModalOpen(true);
+  };
+
+  const openEditModal = (blog) => {
+    setCurrentBlog(blog);
+    // Pre-fill form with existing blog data, but reset imageFile input
+    setFormData({ 
+      title: blog.title, 
+      content: blog.content, 
+      imageFile: null, 
+      imageUrl: blog.imageUrl || '' // Store existing image URL if any
+    }); 
+    setIsModalOpen(true);
+  };
+
+  const closeFormModal = () => {
+    setIsModalOpen(false);
+    setCurrentBlog(null);
+    setFormData({ title: '', content: '', imageFile: null, imageUrl: '' });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
     setError(null);
+    setLoading(true);
 
-    Swal.fire({
-      title: editingBlogId ? "Updating Blog..." : "Adding Blog...",
-      allowOutsideClick: false,
-      didOpen: () => Swal.showLoading(),
-    });
-
-    const data = new FormData();
-    data.append("title", formData.title);
-    data.append("content", formData.content);
-    if (formData.image) {
-      data.append("image", formData.image); // Append the File object
+    const formPayload = new FormData();
+    formPayload.append('title', formData.title);
+    formPayload.append('content', formData.content);
+    // Only append image if a new one is selected
+    if (formData.imageFile) {
+      formPayload.append('image', formData.imageFile); // 'image' should match backend @RequestParam name
+    } else if (currentBlog && formData.imageUrl) {
+        // If it's an edit and no new file is selected but there was an existing image URL, 
+        // you might need a way to tell the backend to keep the old image.
+        // This often involves sending the existing imageUrl or a flag.
+        // For simplicity, if no new file, we assume backend keeps existing if not explicitly told to change.
+        // Some APIs might expect 'imageUrl' field for existing image, or 'keepExistingImage: true'
+        // For now, we don't send anything if no new file and no currentBlog (new post)
+        // or if it's an edit and no new file, the backend should implicitly keep the old one.
     }
+
 
     try {
-      if (editingBlogId) {
-        // Use AdminApi.updateBlog for PUT request
-        await AdminApi.updateBlog(editingBlogId, data);
-        Swal.fire("✅ Blog Updated!", "", "success");
+      if (currentBlog) {
+        await AdminApi.updateBlog(currentBlog.id, formPayload); // Swagger shows PUT /admin/blogs/{id}
       } else {
-        // Use AdminApi.createBlog for POST request
-        await AdminApi.createBlog(data);
-        Swal.fire("✅ Blog Added!", "", "success");
+        await AdminApi.createBlog(formPayload); // Assuming POST /admin/blogs/with-image
       }
-      setFormData({ title: '', content: '', image: null, imageUrl: '' }); // Clear form
-      setEditingBlogId(null); // Exit editing mode
-      fetchBlogs(); // Refresh list
+      closeFormModal();
+      fetchAdminBlogs(); // Refresh list
     } catch (err) {
       console.error("Error saving blog:", err);
-      let errorMessage = "Failed to save blog. Please try again.";
-      if (err.response) {
-        errorMessage = err.response.data.message || err.response.data.error || errorMessage;
-      }
-      Swal.fire("Error", errorMessage, "error");
+      setError(err.response?.data?.message || "Failed to save blog. Please check your input and try again.");
     } finally {
       setLoading(false);
-      Swal.close();
     }
   };
 
-  const handleDelete = async (id) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "Yes, delete it!"
-    }).then(async (result) => {
-      if (result.isConfirmed) {
+  const handleDelete = async (blogId) => {
+    if (window.confirm("Are you sure you want to delete this blog post?")) {
+      try {
         setLoading(true);
-        setError(null);
-        try {
-          await AdminApi.deleteBlog(id); // Use AdminApi.deleteBlog
-          Swal.fire("Deleted!", "Your blog has been deleted.", "success");
-          fetchBlogs(); // Refresh list
-        } catch (err) {
-          console.error("Error deleting blog:", err);
-          let errorMessage = "Failed to delete blog.";
-          if (err.response) {
-            errorMessage = err.response.data.message || err.response.data.error || errorMessage;
-          }
-          Swal.fire("Error!", errorMessage, "error");
-        } finally {
-          setLoading(false);
-        }
+        await AdminApi.deleteBlog(blogId); // Swagger shows DELETE /admin/blogs/{id}
+        fetchAdminBlogs(); // Refresh list
+      } catch (err) {
+        console.error("Error deleting blog:", err);
+        setError(err.response?.data?.message || "Failed to delete blog. Please try again.");
+      } finally {
+        setLoading(false);
       }
-    });
+    }
   };
 
-  if (loading && blogs.length === 0) {
-    return <div className="admin-content">Loading blogs...</div>;
+  if (loading && !blogs.length) {
+    return <div style={{ textAlign: 'center', padding: '2rem' }}>Loading blogs...</div>;
   }
 
-  if (error) {
-    return <div className="admin-content" style={{ color: 'red' }}>Error: {error}</div>;
+  if (error && !isModalOpen) {
+    return <div style={{ textAlign: 'center', padding: '2rem', color: 'red' }}>{error}</div>;
   }
 
   return (
-    <div className="manage-blogs admin-content"> {/* Added admin-content class for consistency */}
-      <h2>{editingBlogId ? "Edit Blog" : "Add New Blog"}</h2>
+    <div style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto' }}>
+      <h1 style={{ textAlign: 'center', marginBottom: '2rem' }}>Manage Blog Posts</h1>
+      <button onClick={openAddModal} style={{ padding: '0.75rem 1.5rem', backgroundColor: '#28a745', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', marginBottom: '1.5rem' }}>
+        Add New Blog
+      </button>
 
-      <form className="blog-form" onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="title"
-          placeholder="Blog Title"
-          value={formData.title}
-          onChange={handleChange}
-          required
-          disabled={loading}
-        />
-        <textarea
-          name="content"
-          placeholder="Blog Content"
-          value={formData.content}
-          onChange={handleChange}
-          rows={4}
-          required
-          disabled={loading}
-        />
-        {formData.imageUrl && editingBlogId && (
-          <div className="current-image-preview">
-            <p>Current Image:</p>
-            <img src={formData.imageUrl} alt="Current Blog" style={{ maxWidth: '200px', maxHeight: '150px', objectFit: 'cover' }} />
-            <p style={{fontSize: '0.8em', color: '#666'}}>Select a new file to change the image.</p>
-          </div>
-        )}
-        <input
-          type="file"
-          name="image"
-          accept="image/*"
-          onChange={handleChange}
-          disabled={loading}
-        />
-        <button type="submit" disabled={loading}>
-          {loading ? "Processing..." : (editingBlogId ? "Update Blog" : "Add Blog")}
-        </button>
-        {editingBlogId && (
-          <button type="button" onClick={() => {
-            setEditingBlogId(null);
-            setFormData({ title: '', content: '', image: null, imageUrl: '' });
-          }} disabled={loading} className="cancel-btn">
-            Cancel Edit
-          </button>
-        )}
-      </form>
-
-      <h3>All Blogs</h3>
-      {blogs.length === 0 ? (
-        <p>No blogs available. Add one above!</p>
+      {error && isModalOpen && <p style={{ color: 'red', textAlign: 'center', marginBottom: '1rem' }}>{error}</p>}
+      
+      {blogs.length === 0 && !loading ? (
+        <div style={{ textAlign: 'center', padding: '2rem' }}>No blog posts to manage. Add one!</div>
       ) : (
-        <div className="blog-list">
-          {blogs.map((blog) => (
-            <div className="blog-item" key={blog.id}> {/* Assuming blog.id */}
-              {blog.imageUrl && ( // Display image thumbnail in list
-                <img src={blog.imageUrl} alt={blog.title} className="blog-thumbnail" />
-              )}
-              <div className="blog-item-details">
-                <h3>{blog.title}</h3>
-                <p>Published: {new Date(blog.createdAt).toLocaleDateString()}</p> {/* Assuming createdAt */}
+        <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '1.5rem' }}>
+          <thead>
+            <tr style={{ backgroundColor: '#f2f2f2' }}>
+              <th style={{ padding: '0.8rem', border: '1px solid #ddd', textAlign: 'left' }}>Title</th>
+              <th style={{ padding: '0.8rem', border: '1px solid #ddd', textAlign: 'left' }}>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {blogs.map((blog) => (
+              <tr key={blog.id}>
+                <td style={{ padding: '0.8rem', border: '1px solid #ddd' }}>{blog.title}</td>
+                <td style={{ padding: '0.8rem', border: '1px solid #ddd' }}>
+                  <button
+                    onClick={() => openEditModal(blog)}
+                    style={{ padding: '0.5rem 1rem', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', marginRight: '0.5rem' }}>
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(blog.id)}
+                    style={{ padding: '0.5rem 1rem', backgroundColor: '#dc3545', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+
+      {/* Form Modal */}
+      {isModalOpen && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0,0,0,0.5)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 1000
+        }}>
+          <div style={{
+            backgroundColor: 'white',
+            padding: '2rem',
+            borderRadius: '8px',
+            width: '90%',
+            maxWidth: '600px',
+            boxShadow: '0 4px 8px rgba(0,0,0,0.2)'
+          }}>
+            <h2 style={{ marginBottom: '1.5rem', textAlign: 'center' }}>{currentBlog ? 'Edit Blog Post' : 'Add New Blog Post'}</h2>
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <label>
+                Title:
+                <input
+                  type="text"
+                  name="title"
+                  value={formData.title}
+                  onChange={handleInputChange}
+                  required
+                  style={{ width: '100%', padding: '0.5rem', border: '1px solid #ddd', borderRadius: '4px' }}
+                />
+              </label>
+              <label>
+                Content:
+                <textarea
+                  name="content"
+                  value={formData.content}
+                  onChange={handleInputChange}
+                  required
+                  rows="5"
+                  style={{ width: '100%', padding: '0.5rem', border: '1px solid #ddd', borderRadius: '4px' }}
+                ></textarea>
+              </label>
+              <label>
+                Image (optional):
+                <input
+                  type="file"
+                  name="imageFile"
+                  onChange={handleFileChange}
+                  accept="image/*"
+                  style={{ width: '100%', padding: '0.5rem', border: '1px solid #ddd', borderRadius: '4px' }}
+                />
+                {/* Display current image if editing and no new file selected */}
+                {currentBlog && currentBlog.imageUrl && !formData.imageFile && (
+                    <img src={currentBlog.imageUrl} alt="Current Blog Image" style={{ width: '100px', height: 'auto', marginTop: '10px', borderRadius: '4px' }} />
+                )}
+              </label>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '1rem' }}>
+                <button
+                  type="button"
+                  onClick={closeFormModal}
+                  style={{ padding: '0.75rem 1.5rem', backgroundColor: '#6c757d', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  style={{ padding: '0.75rem 1.5rem', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '4px', cursor: loading ? 'not-allowed' : 'pointer' }}>
+                  {loading ? 'Saving...' : 'Save Blog'}
+                </button>
               </div>
-              <div className="actions">
-                <button onClick={() => handleEdit(blog)} disabled={loading}>Edit</button>
-                <button onClick={() => handleDelete(blog.id)} disabled={loading}>Delete</button>
-              </div>
-            </div>
-          ))}
+            </form>
+          </div>
         </div>
       )}
     </div>
   );
 };
 
-export default ManageBlogs;
+export default ManageBlog;
