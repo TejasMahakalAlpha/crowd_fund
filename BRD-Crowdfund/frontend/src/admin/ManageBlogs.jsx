@@ -1,30 +1,42 @@
+// src/admin/ManageBlogs.jsx
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import './ManageBlogs.css';
-import { AdminApi } from '../services/api';
+import { AdminApi } from '../services/api'; // Use AdminApi
+import Swal from 'sweetalert2'; // For better alerts
+import './ManageBlogs.css'; // Ensure this CSS is linked
 
 const ManageBlogs = () => {
   const [blogs, setBlogs] = useState([]);
   const [formData, setFormData] = useState({
     title: '',
     content: '',
-    image: null,
+    image: null, // File object
+    imageUrl: '', // For displaying current image if editing
   });
   const [editingBlogId, setEditingBlogId] = useState(null);
-
-  // const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     fetchBlogs();
   }, []);
 
   const fetchBlogs = async () => {
+    setLoading(true);
+    setError(null);
     try {
-      // const res = await axios.get(`${BASE_URL}/api/blogs`);
-      const res = AdminApi.getAllBlogs();
-      setBlogs(res.data);
-    } catch (error) {
-      console.error("Error fetching blogs:", error);
+      const res = await AdminApi.getAllBlogs(); // Use AdminApi to get all blogs
+      if (Array.isArray(res.data)) {
+        setBlogs(res.data);
+      } else {
+        console.error("Unexpected response format for blogs:", res.data);
+        setBlogs([]); // Ensure it's an array
+        setError("Unexpected data format received for blogs.");
+      }
+    } catch (err) {
+      console.error("Error fetching blogs:", err);
+      setError(err.response?.data?.message || "Failed to fetch blogs. Ensure backend is running and you are authenticated.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -36,51 +48,102 @@ const ManageBlogs = () => {
     });
   };
 
+  const handleEdit = (blog) => {
+    setEditingBlogId(blog.id); // Assuming backend uses 'id' not '_id'
+    setFormData({
+      title: blog.title,
+      content: blog.content,
+      image: null, // Don't pre-fill file input, user will select new if needed
+      imageUrl: blog.imageUrl || '', // Store for display
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    Swal.fire({
+      title: editingBlogId ? "Updating Blog..." : "Adding Blog...",
+      allowOutsideClick: false,
+      didOpen: () => Swal.showLoading(),
+    });
+
     const data = new FormData();
     data.append("title", formData.title);
     data.append("content", formData.content);
     if (formData.image) {
-      data.append("image", formData.image);
+      data.append("image", formData.image); // Append the File object
     }
 
     try {
       if (editingBlogId) {
-        await axios.put(`${BASE_URL}/api/blogs/${editingBlogId}`, data);
-        alert("✅ Blog updated");
-        setEditingBlogId(null);
+        // Use AdminApi.updateBlog for PUT request
+        await AdminApi.updateBlog(editingBlogId, data);
+        Swal.fire("✅ Blog Updated!", "", "success");
       } else {
-        await axios.post(`${BASE_URL}/api/blogs`, data);
-        alert("✅ Blog added");
+        // Use AdminApi.createBlog for POST request
+        await AdminApi.createBlog(data);
+        Swal.fire("✅ Blog Added!", "", "success");
       }
-      setFormData({ title: '', content: '', image: null });
-      fetchBlogs();
-    } catch (error) {
-      console.error("Error saving blog:", error);
+      setFormData({ title: '', content: '', image: null, imageUrl: '' }); // Clear form
+      setEditingBlogId(null); // Exit editing mode
+      fetchBlogs(); // Refresh list
+    } catch (err) {
+      console.error("Error saving blog:", err);
+      let errorMessage = "Failed to save blog. Please try again.";
+      if (err.response) {
+        errorMessage = err.response.data.message || err.response.data.error || errorMessage;
+      }
+      Swal.fire("Error", errorMessage, "error");
+    } finally {
+      setLoading(false);
+      Swal.close();
     }
-  };
-
-  const handleEdit = (blog) => {
-    setEditingBlogId(blog._id);
-    setFormData({ title: blog.title, content: blog.content, image: null });
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this blog?")) {
-      try {
-        await axios.delete(`${BASE_URL}/api/blogs/${id}`);
-        alert("🗑️ Blog deleted");
-        fetchBlogs();
-      } catch (error) {
-        console.error("Error deleting blog:", error);
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!"
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        setLoading(true);
+        setError(null);
+        try {
+          await AdminApi.deleteBlog(id); // Use AdminApi.deleteBlog
+          Swal.fire("Deleted!", "Your blog has been deleted.", "success");
+          fetchBlogs(); // Refresh list
+        } catch (err) {
+          console.error("Error deleting blog:", err);
+          let errorMessage = "Failed to delete blog.";
+          if (err.response) {
+            errorMessage = err.response.data.message || err.response.data.error || errorMessage;
+          }
+          Swal.fire("Error!", errorMessage, "error");
+        } finally {
+          setLoading(false);
+        }
       }
-    }
+    });
   };
 
+  if (loading && blogs.length === 0) {
+    return <div className="admin-content">Loading blogs...</div>;
+  }
+
+  if (error) {
+    return <div className="admin-content" style={{ color: 'red' }}>Error: {error}</div>;
+  }
+
   return (
-    <div className="manage-blogs">
-      <h2>{editingBlogId ? "Edit Blog" : "Add Blog"}</h2>
+    <div className="manage-blogs admin-content"> {/* Added admin-content class for consistency */}
+      <h2>{editingBlogId ? "Edit Blog" : "Add New Blog"}</h2>
 
       <form className="blog-form" onSubmit={handleSubmit}>
         <input
@@ -90,6 +153,7 @@ const ManageBlogs = () => {
           value={formData.title}
           onChange={handleChange}
           required
+          disabled={loading}
         />
         <textarea
           name="content"
@@ -98,30 +162,57 @@ const ManageBlogs = () => {
           onChange={handleChange}
           rows={4}
           required
+          disabled={loading}
         />
+        {formData.imageUrl && editingBlogId && (
+          <div className="current-image-preview">
+            <p>Current Image:</p>
+            <img src={formData.imageUrl} alt="Current Blog" style={{ maxWidth: '200px', maxHeight: '150px', objectFit: 'cover' }} />
+            <p style={{fontSize: '0.8em', color: '#666'}}>Select a new file to change the image.</p>
+          </div>
+        )}
         <input
           type="file"
           name="image"
           accept="image/*"
           onChange={handleChange}
+          disabled={loading}
         />
-        <button type="submit">{editingBlogId ? "Update Blog" : "Add Blog"}</button>
+        <button type="submit" disabled={loading}>
+          {loading ? "Processing..." : (editingBlogId ? "Update Blog" : "Add Blog")}
+        </button>
+        {editingBlogId && (
+          <button type="button" onClick={() => {
+            setEditingBlogId(null);
+            setFormData({ title: '', content: '', image: null, imageUrl: '' });
+          }} disabled={loading} className="cancel-btn">
+            Cancel Edit
+          </button>
+        )}
       </form>
 
-      <div className="blog-list">
-        {blogs.map((blog) => (
-          <div className="blog-item" key={blog._id}>
-            <div>
-              <h3>{blog.title}</h3>
-              <p>{new Date(blog.createdAt).toLocaleDateString()}</p>
+      <h3>All Blogs</h3>
+      {blogs.length === 0 ? (
+        <p>No blogs available. Add one above!</p>
+      ) : (
+        <div className="blog-list">
+          {blogs.map((blog) => (
+            <div className="blog-item" key={blog.id}> {/* Assuming blog.id */}
+              {blog.imageUrl && ( // Display image thumbnail in list
+                <img src={blog.imageUrl} alt={blog.title} className="blog-thumbnail" />
+              )}
+              <div className="blog-item-details">
+                <h3>{blog.title}</h3>
+                <p>Published: {new Date(blog.createdAt).toLocaleDateString()}</p> {/* Assuming createdAt */}
+              </div>
+              <div className="actions">
+                <button onClick={() => handleEdit(blog)} disabled={loading}>Edit</button>
+                <button onClick={() => handleDelete(blog.id)} disabled={loading}>Delete</button>
+              </div>
             </div>
-            <div className="actions">
-              <button onClick={() => handleEdit(blog)}>Edit</button>
-              <button onClick={() => handleDelete(blog._id)}>Delete</button>
-            </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
