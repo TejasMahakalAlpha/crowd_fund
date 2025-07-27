@@ -52,15 +52,15 @@ const VolunteerForm = () => {
     else if (formData.address.trim().length < 10) newErrors.address = "Minimum 10 characters required";
 
     // Validate skills (optional but must be valid if entered)
-<<<<<<< HEAD
+
     if (!isTextOnly(formData.skills)) newErrors.skills = "Only letters and spaces allowed";
     else if (!formData.skills.trim()) newErrors.skills = "Skills is required"
-=======
+
     if (formData.skills.trim() && !isTextOnly(formData.skills)) {
   newErrors.skills = "Only letters and spaces allowed";
 }
 
->>>>>>> 8a32cec816848a70912a70d1379c55db6fb0c8ab
+
     // Validate availability
     if (!formData.availability.trim()) newErrors.availability = "Availability is required";
 
