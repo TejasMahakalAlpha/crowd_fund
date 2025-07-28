@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import API, { AdminApi } from "../services/api";
-import "./ManageBlogs.css";
+import API, { AdminApi } from "../services/api"; // Ensure AdminApi is correctly imported
+import "./ManageCauses.css"; // ⭐ Changed import from ManageBlogs.css to ManageCauses.css if that's the correct name for this component's CSS
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 const ManageCauses = () => {
-  const [causes, setCauses] = useState([]);//
+  const [causes, setCauses] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [editId, setEditId] = useState(null);
   const [formData, setFormData] = useState({
@@ -21,10 +21,10 @@ const ManageCauses = () => {
     status: "ACTIVE",
   });
 
-
   const [imagePreview, setImagePreview] = useState(null); // for showing selected image
   const [errors, setErrors] = useState({});
   const [imageFile, setImageFile] = useState(null);
+
   const getImageUrl = (relativePath) => {
     return `${API_BASE}/api/images/${relativePath}`;
   };
@@ -45,6 +45,7 @@ const ManageCauses = () => {
       }
     } catch (err) {
       console.error("Error fetching causes", err);
+      Swal.fire("Error", "Failed to fetch causes. Please check your network or API.", "error");
     }
   };
 
@@ -73,7 +74,7 @@ const ManageCauses = () => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: name === "targetAmount" ? value : value,
+      [name]: name === "targetAmount" || name === "currentAmount" ? value : value,
     });
     setErrors({ ...errors, [name]: "" });
   };
@@ -91,16 +92,13 @@ const ManageCauses = () => {
         currentAmount: causeToEdit.currentAmount || "",
         endDate: causeToEdit.endDate ? causeToEdit.endDate.slice(0, 10) : "", // format YYYY-MM-DD
         status: causeToEdit.status || "ACTIVE",
-        if(imageFile) {
-          form.append("image", imageFile); // ⚠️ key must match @RequestParam("image") in controller
-        }
       });
+      // ⭐ Removed the incorrect if(imageFile) block from here
+      setImagePreview(causeToEdit.imageUrl ? getImageUrl(causeToEdit.imageUrl) : null); // Show current image
       setEditId(id);
       setIsEditing(true);
     }
   };
-
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -124,10 +122,10 @@ const ManageCauses = () => {
 
     try {
       if (isEditing) {
-        await AdminApi.updateCauses(editId, form); // <-- adjust this method
+        await AdminApi.updateCauses(editId, form);
         Swal.fire("Updated", "Cause updated successfully", "success");
       } else {
-        await AdminApi.createCauses(form); // <-- adjust this method
+        await AdminApi.createCauses(form);
         Swal.fire("Success", "Cause created successfully", "success");
       }
 
@@ -147,7 +145,7 @@ const ManageCauses = () => {
       setImagePreview(null);
       setIsEditing(false);
       setEditId(null);
-      fetchCauses();
+      fetchCauses(); // Re-fetch causes to update the list
     } catch (err) {
       console.error("Error submitting cause", err);
       Swal.fire("Error", "Failed to submit cause", "error");
@@ -159,9 +157,11 @@ const ManageCauses = () => {
     if (file) {
       setImageFile(file);
       setImagePreview(URL.createObjectURL(file));
+    } else {
+      setImageFile(null);
+      setImagePreview(null);
     }
   };
-
 
   const handleDelete = async (id) => {
     const result = await Swal.fire({
@@ -178,7 +178,7 @@ const ManageCauses = () => {
       try {
         await AdminApi.deleteCauses(id);
         Swal.fire("Deleted!", "Cause has been deleted.", "success");
-        fetchCauses();
+        fetchCauses(); // Re-fetch causes to update the list
       } catch (err) {
         console.error("Error deleting cause", err);
         Swal.fire("Error", "Failed to delete cause", "error");
@@ -187,14 +187,14 @@ const ManageCauses = () => {
   };
 
   return (
-    <div className="manage-blogs">
+    <div className="manage-causes"> {/* ⭐ Changed from manage-blogs to manage-causes */}
       <button onClick={() => navigate(-1)} className="back-button">
         ← Back
       </button>
 
       <h2>Manage Causes</h2>
 
-      <form className="blog-form" onSubmit={handleSubmit} noValidate>
+      <form className="cause-form" onSubmit={handleSubmit} noValidate> {/* ⭐ Changed from blog-form to cause-form */}
         <input
           type="text"
           name="title"
@@ -274,17 +274,13 @@ const ManageCauses = () => {
           />
         )}
 
-
-
         <button type="submit">{isEditing ? "Update Cause" : "Add Cause"}</button>
-
       </form>
 
-
-      <div className="blog-list">
+      <div className="cause-list"> {/* ⭐ Changed from blog-list to cause-list */}
         {Array.isArray(causes) && causes.length > 0 ? (
           causes.map((cause) => (
-            <div className="blog-item" key={cause.id || cause._id}>
+            <div className="cause-item" key={cause.id || cause._id}> {/* ⭐ Changed from blog-item to cause-item */}
               <div>
                 <h3>{cause.title}</h3>
                 <p><strong>Short Description:</strong> {cause.shortDescription}</p>
@@ -295,13 +291,21 @@ const ManageCauses = () => {
                 <p><strong>Target Amount:</strong> ₹{cause.targetAmount?.toLocaleString()}</p>
                 <p><strong>Current Amount:</strong> ₹{cause.currentAmount?.toLocaleString()}</p>
                 <p><strong>End Date:</strong> {new Date(cause.endDate).toLocaleDateString()}</p>
-                <img src={getImageUrl(cause.imageUrl)} alt={cause.title} style={{ width: "100%", maxWidth: "300px", marginTop: "10px" }} />
+                {cause.imageUrl && ( // Only render image if imageUrl exists
+                    <img
+                        src={getImageUrl(cause.imageUrl)}
+                        alt={cause.title}
+                        // Added height: auto and object-fit for better image handling
+                        style={{ width: "100%", maxWidth: "300px", marginTop: "10px", height: "auto", objectFit: "cover", borderRadius: "8px" }}
+                    />
+                )}
               </div>
-              <button className="edit-button" onClick={() => handleUpdate(cause.id || cause._id)}>Edit</button>
-              <button onClick={() => handleDelete(cause.id || cause._id)}>Delete</button>
+              {/* ⭐ Wrapped buttons in a new div */}
+              <div className="cause-actions">
+                <button className="edit-button" onClick={() => handleUpdate(cause.id || cause._id)}>Edit</button>
+                <button className="delete-button" onClick={() => handleDelete(cause.id || cause._id)}>Delete</button>
+              </div>
             </div>
-
-
           ))
         ) : (
           <p>No causes available.</p>
