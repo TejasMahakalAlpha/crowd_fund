@@ -1,9 +1,8 @@
 // src/admin/Login.jsx
 import React, { useState, useContext } from "react";
-import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import API, { AdminApi } from "../services/api";
+import { AdminApi } from "../services/api";
 
 const Login = () => {
   const { login } = useContext(AuthContext);
@@ -11,69 +10,65 @@ const Login = () => {
 
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   setError("");
-  //   try {
-  //     // const res = await axios.post(
-  //     //   `${import.meta.env.VITE_API_BASE_URL}/api/admin/login`,
-  //     //   formData,
-  //     //   { headers: { "Content-Type": "application/json" } }
-  //     // );
-  //     const res = await API.post(`api/admin/login`, formData);
-  //     // ✅ Save token
-  //     localStorage.setItem("adminToken", res.data.token);
-  //     login(res.data.token);
-
-  //     navigate("/admin/dashboard");
-  //   } catch (err) {
-  //     setError(err.response?.data?.message || "Login failed");
-  //   }
-  // };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
 
     try {
-      const token = btoa(`${formData.username}:${formData.password}`); // Base64 encode
-      const res = await API.get("/admin/events", {
-        headers: {
-          Authorization: `Basic ${token}`,
-        },
-        validateStatus: (status) => status === 200,
-      });
+      const basicToken = btoa(`${formData.username}:${formData.password}`);
+      localStorage.setItem("adminToken", basicToken); // Store token immediately
 
-      localStorage.setItem("adminToken", token);
-      login(token);
+      // Attempt to make an authenticated request to a protected admin endpoint to verify credentials.
+      // This will use the token just stored in localStorage.
+      await AdminApi.getAllEvents(); // Frontend will attempt to hit BASE_URL/admin/events
 
+      // If the above request succeeds (does not throw), then login is successful.
+      login(basicToken);
       navigate("/admin/dashboard");
     } catch (err) {
       console.error("Login error:", err);
-      setError("Invalid credentials or server error");
+      localStorage.removeItem("adminToken"); // Clear invalid token if login failed
+
+      if (err.response) {
+        if (err.response.status === 401 || err.response.status === 403) {
+          setError("Invalid username or password."); //
+        } else if (err.response.status === 404) {
+          setError("Admin API endpoint for events not found. Check backend configuration/URL for /admin/events."); //
+        } else {
+          setError(`Server error: ${err.response.status} ${err.response.statusText || 'Unknown error'}`);
+        }
+      } else if (err.request) {
+        setError("Network error: Could not reach the server.");
+      } else {
+        setError(err.message || "An unexpected error occurred during login.");
+      }
+    } finally {
+      setLoading(false);
     }
   };
-
-
 
   return (
     <div className="login-container" style={{ padding: "2rem", textAlign: "center" }}>
       <h2>Admin Login</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <form onSubmit={handleSubmit} style={{ maxWidth: "400px", margin: "0 auto" }}>
+      {error && <p style={{ color: "red", fontWeight: "bold" }}>{error}</p>}
+      <form onSubmit={handleSubmit} style={{ maxWidth: "400px", margin: "0 auto", display: "flex", flexDirection: "column", gap: "1rem" }}>
         <input
           type="text"
-          name="username" // ✅ correct
+          name="username"
           placeholder="Admin username"
           value={formData.username}
           onChange={handleChange}
           required
-          style={{ width: "100%", padding: "10px", marginBottom: "1rem" }}
+          disabled={loading}
+          autoComplete="username" // Corrected DOM property
+          style={{ width: "100%", padding: "10px", border: "1px solid #ccc", borderRadius: "4px" }}
         />
         <input
           type="password"
@@ -82,9 +77,13 @@ const Login = () => {
           value={formData.password}
           onChange={handleChange}
           required
-          style={{ width: "100%", padding: "10px", marginBottom: "1rem" }}
+          disabled={loading}
+          autoComplete="current-password" // Corrected DOM property
+          style={{ width: "100%", padding: "10px", border: "1px solid #ccc", borderRadius: "4px" }}
         />
-        <button type="submit" style={{ padding: "10px 20px" }}>Login</button>
+        <button type="submit" disabled={loading} style={{ padding: "10px 20px", backgroundColor: "#007bff", color: "white", border: "none", borderRadius: "4px", cursor: loading ? "not-allowed" : "pointer" }}>
+          {loading ? "Logging in..." : "Login"}
+        </button>
       </form>
     </div>
   );
