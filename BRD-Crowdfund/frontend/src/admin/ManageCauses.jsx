@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 const ManageCauses = () => {
-  const [causes, setCauses] = useState([]);
+  const [causes, setCauses] = useState([]);//
   const [isEditing, setIsEditing] = useState(false);
   const [editId, setEditId] = useState(null);
   const [formData, setFormData] = useState({
@@ -69,6 +69,15 @@ const ManageCauses = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: name === "targetAmount" ? value : value,
+    });
+    setErrors({ ...errors, [name]: "" });
+  };
+
   const handleUpdate = (id) => {
     const causeToEdit = causes.find((cause) => cause.id === id || cause._id === id);
     if (causeToEdit) {
@@ -92,14 +101,6 @@ const ManageCauses = () => {
   };
 
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: name === "targetAmount" ? value : value,
-    });
-    setErrors({ ...errors, [name]: "" });
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();

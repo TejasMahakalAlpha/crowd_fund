@@ -115,3 +115,10 @@
 .back-button:hover {
   background-color: #00695c;
 }
+/* ManageBlogs.css */
+.error {
+  color: red;
+  font-size: 0.85rem;
+  margin-top: -8px;
+  margin-bottom: 8px;
+}

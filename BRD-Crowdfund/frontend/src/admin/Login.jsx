@@ -46,6 +46,7 @@ const Login = () => {
         headers: {
           Authorization: `Basic ${token}`,
         },
+        validateStatus: (status) => status === 200,
       });
 
       localStorage.setItem("adminToken", token);

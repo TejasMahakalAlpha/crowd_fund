@@ -24,14 +24,14 @@ const Dashboard = () => {
   const fetchSummary = async () => {
     try {
       const [
-        // blogsRes,
+        blogsRes,
         causesRes,
         donationsRes,
         volunteersRes,
         eventsRes,
         // contactsRes,
       ] = await Promise.all([
-        // AdminApi.getAllBlogs(),
+        AdminApi.getAllBlogs(),
         AdminApi.getAllCauses(),
         AdminApi.getAllDonations(),
         AdminApi.getAllVolunteer(),
@@ -40,7 +40,7 @@ const Dashboard = () => {
       ]);
 
       setSummary({
-        // blogs: blogsRes.data.length,
+        blogs: blogsRes.data.length,
         causes: causesRes.data.length,
         donations: donationsRes.data.length,
         volunteers: volunteersRes.data.length,
@@ -71,10 +71,10 @@ const Dashboard = () => {
       </div>
       <h2>Admin Dashboard Summary</h2>
       <div className="dashboard-cards">
-        {/* <div className="card" onClick={() => navigate("/admin/manage-blogs")}>
+        <div className="card" onClick={() => navigate("/admin/manage-blogs")}>
           <h3>Blogs</h3>
           <p>{summary.blogs}</p>
-        </div> */}
+        </div>
         <div className="card" onClick={() => navigate("/admin/manage-causes")}>
           <h3>Causes</h3>
           <p>{summary.causes}</p>
