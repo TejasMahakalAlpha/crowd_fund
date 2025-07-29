@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import { AdminApi } from "../services/api"; // Ensure AdminApi is correctly imported
 import Swal from "sweetalert2";
-// import "./ManagePersonalCauses.css"; 
+ import "./ManagePersonalCauses.css"; 
 // CSS for this component
 import { AuthContext } from "../../src/context/AuthContext"; // Import AuthContext for admin name
 
