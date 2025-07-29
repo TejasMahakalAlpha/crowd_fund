@@ -17,6 +17,7 @@ const Dashboard = () => {
     volunteers: 0,
     events: 0,
     contacts: 0,
+    personalCauses: 0, // ⭐ NEW: Add personalCauses to summary state
   });
 
   useEffect(() => {
@@ -32,6 +33,7 @@ const Dashboard = () => {
         AdminApi.getAllDonationsAdmin(),
         AdminApi.getAllVolunteer(),
         AdminApi.getAllEvents(),
+        AdminApi.getPersonalCauseSubmissions(), // ⭐ NEW: Fetch personal cause submissions
         // AdminApi.getAllContacts(), // Uncomment if you have this API endpoint
       ]);
 
@@ -43,51 +45,60 @@ const Dashboard = () => {
       const newSummary = { ...summary }; // Create a copy to update
 
       // Process each result from Promise.allSettled
-      // blogs
+      // blogs (index 0)
       if (results[0].status === 'fulfilled') {
         newSummary.blogs = results[0].value.data.length;
       } else {
         console.error("Error fetching blogs:", results[0].reason);
-        newSummary.blogs = 0; // Set to 0 if API failed
+        newSummary.blogs = 0;
       }
 
-      // causes
+      // causes (index 1)
       if (results[1].status === 'fulfilled') {
         newSummary.causes = results[1].value.data.length;
       } else {
         console.error("Error fetching causes:", results[1].reason);
-        newSummary.causes = 0; // Set to 0 if API failed
+        newSummary.causes = 0;
       }
 
-      // donations
+      // donations (index 2)
       if (results[2].status === 'fulfilled') {
         newSummary.donations = results[2].value.data.length;
       } else {
         console.error("Error fetching donations:", results[2].reason);
-        newSummary.donations = 0; // Set to 0 if API failed
+        newSummary.donations = 0;
       }
 
-      // volunteers
+      // volunteers (index 3)
       if (results[3].status === 'fulfilled') {
         newSummary.volunteers = results[3].value.data.length;
       } else {
         console.error("Error fetching volunteers:", results[3].reason);
-        newSummary.volunteers = 0; // Set to 0 if API failed
+        newSummary.volunteers = 0;
       }
 
-      // events
+      // events (index 4)
       if (results[4].status === 'fulfilled') {
         newSummary.events = results[4].value.data.length;
       } else {
         console.error("Error fetching events:", results[4].reason);
-        newSummary.events = 0; // Set to 0 if API failed
+        newSummary.events = 0;
       }
 
-      // Uncomment and add similar logic for contacts if you enable it
-      // if (results[5] && results[5].status === 'fulfilled') {
-      //   newSummary.contacts = results[5].value.data.length;
+      // ⭐ NEW: personalCauses (index 5)
+      // Check if results[5] exists before accessing its properties
+      if (results[5] && results[5].status === 'fulfilled') {
+        newSummary.personalCauses = results[5].value.data.length;
+      } else {
+        console.error("Error fetching personal causes:", results[5]?.reason || "API call failed or result missing.");
+        newSummary.personalCauses = 0;
+      }
+
+      // Uncomment and add similar logic for contacts if you enable it (index 6 if personalCauses is index 5)
+      // if (results[6] && results[6].status === 'fulfilled') {
+      //   newSummary.contacts = results[6].value.data.length;
       // } else {
-      //   console.error("Error fetching contacts:", results[5]?.reason);
+      //   console.error("Error fetching contacts:", results[6]?.reason);
       //   newSummary.contacts = 0;
       // }
 
@@ -95,7 +106,6 @@ const Dashboard = () => {
 
     } catch (error) {
       console.error("Unexpected error in fetchSummary (this should be rare with allSettled):", error);
-      // More robust error handling, especially for authentication issues
       if (error.response) {
         if (error.response.status === 401 || error.response.status === 403) {
           console.log("Unauthorized or Forbidden access. Redirecting to login.");
@@ -131,7 +141,7 @@ const Dashboard = () => {
         <div className="card" onClick={() => navigate("/admin/manage-causes")}>
           <h3>Causes</h3>
           <p>{summary.causes}</p>
-         </div>
+        </div>
         <div className="card" onClick={() => navigate("/admin/manage-donations")}>
           <h3>Donations</h3>
           <p>{summary.donations}</p>
@@ -143,6 +153,11 @@ const Dashboard = () => {
         <div className="card" onClick={() => navigate("/admin/manage-events")}>
           <h3>Events</h3>
           <p>{summary.events}</p>
+        </div>
+        {/* ⭐ NEW: Personal Causes Card ⭐ */}
+        <div className="card" onClick={() => navigate("/admin/manage-personal-causes")}>
+          <h3>Personal Causes</h3>
+          <p>{summary.personalCauses}</p>
         </div>
         {/* <div className="card" onClick={() => navigate("/admin/manage-contacts")}>
           <h3>Contacts</h3>

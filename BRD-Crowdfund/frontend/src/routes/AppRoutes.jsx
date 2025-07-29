@@ -16,8 +16,8 @@ import Events from '../pages/Events';
 import Gallery from '../pages/Gallery';       
 import Blog from '../pages/Blog';             
 import VolunteerForm from '../pages/VolunteerForm'; 
-// import SubmitCause from '../pages/SubmitCause';     
-import WhatsApp from '../components/WhatsApp'; // ⭐ NEW: Import WhatsApp component
+import SubmitCause from '../pages/SubmitCause';     // ⭐ UNCOMMENTED: SubmitCause import
+import WhatsApp from '../components/WhatsApp'; 
 
 
 // Admin Pages
@@ -29,7 +29,7 @@ import ManageDonations from '../admin/ManageDonations';
 import ManageVolunteers from '../admin/ManageVolunteers'; 
 import ManageEvents from '../admin/ManageEvents';       
 import ManageContacts from "../admin/ManageContacts";   
-// import ManagePersonalCauses from '../admin/ManagePersonalCauses'; 
+import ManagePersonalCauses from '../admin/ManagePersonalCauses'; // ⭐ UNCOMMENTED: ManagePersonalCauses import
 
 
 const AppRoutes = () => {
@@ -59,7 +59,7 @@ const AppRoutes = () => {
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/volunteer" element={<VolunteerForm />} />
-        {/* <Route path="/submit-cause" element={<SubmitCause/>} />  */}
+        <Route path="/submit-cause" element={<SubmitCause/>} /> {/* ⭐ UNCOMMENTED: SubmitCause route */}
 
         {/* 🔒 Admin Routes - protected by authentication */}
         <Route path="/admin/login" element={<Login />} /> 
@@ -72,14 +72,13 @@ const AppRoutes = () => {
         <Route path="/admin/manage-volunteers" element={<ProtectedRoute element={<ManageVolunteers />} />} />
         <Route path="/admin/manage-events" element={<ProtectedRoute element={<ManageEvents />} />} />
         <Route path="/admin/manage-contacts" element={<ProtectedRoute element={<ManageContacts />} />} />
-        {/* <Route path="/admin/manage-personal-causes" element={<ProtectedRoute element={<ManagePersonalCauses />} />} />  */}
+        <Route path="/admin/manage-personal-causes" element={<ProtectedRoute element={<ManagePersonalCauses />} />} /> {/* ⭐ UNCOMMENTED: ManagePersonalCauses route */}
       </Routes>
 
       {/* Footer is shown only if it's NOT an admin route */}
       {!isAdminRoute && <Footer />}
       
-      {/* ⭐ NEW: WhatsApp component added here conditionally ⭐ */}
-      {/* It will render only if it's NOT an admin route */}
+      {/* WhatsApp component added here conditionally */}
       {!isAdminRoute && <WhatsApp />} 
     </>
   );

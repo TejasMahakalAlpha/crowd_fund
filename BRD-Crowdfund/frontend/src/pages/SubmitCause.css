@@ -1,0 +1,260 @@
+/* src/pages/SubmitCause.css */
+
+.submit-cause-container {
+  padding: 40px 20px;
+  max-width: 800px;
+  margin: 30px auto;
+  font-family: 'Poppins', sans-serif;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  color: #333;
+}
+
+.submit-cause-container h2 {
+  font-size: 2.5rem;
+  color: #004d40; /* Dark teal */
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+
+.intro-text {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #555;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.cause-submission-form h3 {
+  font-size: 1.8rem;
+  color: #00796b; /* Green-teal */
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 10px;
+  margin-top: 40px;
+  margin-bottom: 25px;
+  font-weight: 600;
+}
+
+.required-star {
+  color: #e74c3c; /* Red for required fields */
+  margin-left: 4px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #34495e; /* Darker grey for labels */
+  margin-bottom: 8px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group input[type="email"],
+.form-group input[type="tel"],
+.form-group input[type="datetime-local"],
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #dcdcdc;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: 'Poppins', sans-serif;
+  color: #333;
+  box-sizing: border-box; /* Ensures padding doesn't affect total width */
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  border-color: #00796b;
+  box-shadow: 0 0 0 3px rgba(0, 121, 107, 0.2);
+  outline: none;
+}
+
+.form-group textarea {
+  resize: vertical; /* Allow vertical resizing for textareas */
+  min-height: 80px;
+}
+
+.form-group input[type="file"] {
+    padding: 10px 0; /* Adjust padding for file input */
+}
+
+.error-message {
+  color: #e74c3c; /* Red for error messages */
+  font-size: 0.85rem;
+  margin-top: 5px;
+  margin-bottom: 0;
+  padding-left: 5px;
+}
+
+/* File upload specific styling */
+.file-upload-group {
+    background-color: #f0f0f0;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px dashed #ccc;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.image-preview-container,
+.file-preview-container {
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background-color: #e8e8e8;
+    padding: 10px;
+    border-radius: 8px;
+    width: fit-content;
+    max-width: 100%; /* Ensure it doesn't overflow on small screens */
+}
+
+.form-image-preview {
+    max-width: 150px;
+    height: auto;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    object-fit: contain;
+}
+
+.uploaded-file-name {
+    font-size: 0.9rem;
+    color: #34495e;
+    word-break: break-all; /* Break long file names */
+}
+
+.remove-file-btn {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 50%; /* Circle shape */
+    width: 25px;
+    height: 25px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0; /* Prevent shrinking */
+    transition: background 0.2s ease;
+}
+
+.remove-file-btn:hover {
+    background: #c0392b;
+}
+
+
+.submit-cause-btn {
+  display: block;
+  width: auto; /* Changed to auto so it doesn't stretch to full width */
+  margin: 30px auto 0; /* Center button */
+  padding: 15px 30px;
+  background: #00796b; /* Green-teal */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.submit-cause-btn:hover {
+  background: #004d40;
+  transform: translateY(-2px);
+}
+
+.submit-cause-btn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .submit-cause-container {
+    padding: 25px 15px;
+    margin: 20px auto;
+  }
+  .submit-cause-container h2 {
+    font-size: 2rem;
+  }
+  .intro-text {
+    font-size: 1rem;
+  }
+  .cause-submission-form h3 {
+    font-size: 1.5rem;
+  }
+  .form-group label {
+    font-size: 0.95rem;
+  }
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    padding: 10px 12px;
+    font-size: 0.95rem;
+  }
+  .submit-cause-btn {
+    padding: 12px 25px;
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .submit-cause-container {
+    padding: 15px 10px;
+    margin: 15px auto;
+    border-radius: 8px;
+  }
+  .submit-cause-container h2 {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+  }
+  .intro-text {
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+  }
+  .cause-submission-form h3 {
+    font-size: 1.3rem;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    padding-bottom: 8px;
+  }
+  .form-group {
+    margin-bottom: 15px;
+  }
+  .form-group label {
+    font-size: 0.9rem;
+  }
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    padding: 8px 10px;
+    font-size: 0.9rem;
+  }
+  .submit-cause-btn {
+    padding: 10px 20px;
+    font-size: 1rem;
+  }
+  .image-preview-container, .file-preview-container {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+  }
+  .remove-file-btn {
+      margin-left: auto; /* Push remove button to right when stacked */
+  }
+}
