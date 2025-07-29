@@ -1,43 +1,177 @@
 /* src/admin/ManageDonations.css */
 
-.manage-donations {
+.manage-donations-container {
   padding: 20px;
   font-family: 'Poppins', sans-serif;
+  max-width: 1200px;
+  margin: auto;
 }
 
-.manage-donations h2 {
-  font-size: 1.5rem;
+.manage-donations-container h2 {
+  font-size: 1.8rem;
   color: #004d40;
   margin-bottom: 20px;
+  text-align: center;
 }
 
-/* Table Styles */
-.donation-table {
+.back-button {
+    padding: 10px 20px;
+    background: #6c757d; /* Grey back button */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    transition: background 0.3s ease;
+}
+
+.back-button:hover {
+    background: #5a6268;
+}
+
+/* Form Styling (Renamed from blog-form) */
+.donation-form {
   display: flex;
   flex-direction: column;
+  gap: 15px;
   background: #ffffff;
+  padding: 25px;
   border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  margin-bottom: 40px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
-.donation-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  padding: 15px 20px;
-  border-bottom: 1px solid #eee;
+.donation-form input,
+.donation-form textarea,
+.donation-form select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.donation-row.header {
+.donation-form button[type="submit"] {
+  padding: 10px 15px;
+  background: #00796b; /* Green-teal */
+  color: white;
+  border: none;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  align-self: flex-end; /* Align to right */
+  width: auto;
+}
+
+.donation-form button[type="submit"]:hover {
   background: #004d40;
-  color: #ffffff;
-  font-weight: bold;
 }
 
-.donation-row:last-child {
-  border-bottom: none;
+/* Donation List (Renamed from blog-list) */
+.donations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Smaller gap for list items */
 }
 
-.donation-row div {
+/* Donation Item (Renamed from blog-item) */
+.donation-item {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap; /* Allow wrapping */
+  gap: 15px; /* Gap between content and actions */
+}
+
+.donation-item > div:first-child { /* Content container */
+    flex-grow: 1;
+    min-width: 200px; /* Ensure content doesn't squeeze too much */
+}
+
+.donation-item h3 {
+  margin: 0 0 5px;
+  color: #004d40;
+  font-size: 1.3rem;
+}
+
+.donation-item p {
   font-size: 0.95rem;
+  margin: 2px 0;
+  color: #555;
+  line-height: 1.4;
+}
+.donation-item p strong {
+    color: #00796b;
+}
+
+.donation-actions { /* Wrapper for action buttons */
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.donation-item .delete-btn { /* Use a specific class for delete button */
+  background: #dc3545; /* Red delete button */
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s;
+  font-weight: 500;
+}
+
+.donation-item .delete-btn:hover {
+  background: #c82333;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .manage-donations-container {
+        padding: 15px;
+    }
+    .donation-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .donation-actions {
+        width: 100%;
+        justify-content: space-around;
+        margin-top: 10px;
+    }
+    .donation-item .delete-btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .manage-donations-container h2 {
+        font-size: 1.5rem;
+    }
+    .donation-form {
+        padding: 15px;
+    }
+    .donation-form input,
+    .donation-form textarea {
+        font-size: 0.9rem;
+    }
+    .donation-form button[type="submit"] {
+        font-size: 0.9rem;
+        padding: 8px 12px;
+    }
+    .donation-item h3 {
+        font-size: 1.1rem;
+    }
+    .donation-item p {
+        font-size: 0.85rem;
+    }
 }

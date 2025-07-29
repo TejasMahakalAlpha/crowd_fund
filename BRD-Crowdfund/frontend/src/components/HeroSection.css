@@ -1,62 +1,201 @@
 /* src/components/HeroSection.css */
-.hero-section {
-  background: 
-    linear-gradient(135deg, rgba(0, 77, 64, 0.5), rgba(0, 37, 26, 0.5)), 
-    url('/donate-coin-jar.jpg'); /* Replace with your actual image path */
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  color: #fff;
-  padding: 80px 20px;
-  text-align: center;
-  position: relative;
+
+/* ⭐ Global Reset (Agar App.css/index.css mein nahi hai toh yahan add kar sakte ho) ⭐ */
+body, html {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    overflow-x: hidden; /* Prevent horizontal scroll due to potential overflows */
 }
 
-.hero-content h1 {
-  font-size: 3rem;
+.hero-section {
+  /* ⭐ Background image removed from here ⭐ */
+  background-color: #f0f8ff; /* Default background color for the section */
+  color: #333; /* Default text color (can be overridden by .hero-text-content) */
+  padding: 0; /* ⭐ No padding on hero section itself ⭐ */
+  position: relative; 
+  min-height: 550px; /* Adjust min-height if needed */
+  display: flex; /* Make it a flex container to hold the main content wrapper */
+  align-items: center; /* Center content vertically */
+  justify-content: center; /* Center content horizontally */
+  overflow: hidden; /* Ensure nothing spills out */
+  width: 100%; /* Take full width */
+}
+
+.hero-content-wrapper { /* ⭐ This wrapper handles the side-by-side layout ⭐ */
+  display: flex;
+  justify-content: center; /* Center content horizontally within wrapper */
+  align-items: center; /* Center items vertically */
+  max-width: 1200px; /* Max width for content */
+  margin: 0 auto; /* Center the wrapper itself */
+  width: 100%; /* Take full width of its parent */
+  flex-wrap: wrap; /* Allow wrapping on smaller screens */
+  padding: 40px 20px; /* ⭐ Re-added some padding for overall content area ⭐ */
+  box-sizing: border-box; /* Include padding in width calculation */
+  /* No specific background or shadow here, it was for the previous design */
+}
+
+.hero-text-content { /* ⭐ Styles for the left text part ⭐ */
+  flex: 1 1 50%; /* Takes about half width, can shrink/grow */
+  padding-right: 30px; /* Space between text and image */
+  text-align: left; /* Text is left-aligned */
+  color: #333; /* Default text color for this block */
+  max-width: 550px; /* Limit width of text block */
+  box-sizing: border-box; /* Include padding in width */
+}
+
+.hero-text-content h1 {
+  font-size: 3rem; /* Heading size */
   margin-bottom: 20px;
   line-height: 1.2;
+  font-weight: 700;
+  color: #004d40; /* Dark teal for heading */
 }
 
-.hero-content p {
-  font-size: 1.2rem;
-  max-width: 700px;
-  margin: 0 auto 30px;
+.highlight-text { /* For highlighting "Other" and "Better" */
+    color: #4dc2c2; /* Lighter teal color for highlight */
+    font-weight: 800;
 }
 
-.hero-buttons {
+.hero-text-content p {
+  font-size: 1.2rem; /* Paragraph size */
+  max-width: 600px;
+  margin: 0 0 30px; 
+  line-height: 1.6;
+  color: #555; /* Dark grey for paragraph */
+}
+
+.hero-buttons { /* ⭐ Buttons container, back inside text content ⭐ */
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-start; /* Buttons are left-aligned */
   gap: 15px;
+  margin-top: 20px;
 }
 
+/* ⭐ Button Styling reverted to match the FIRST screenshot's style ⭐ */
 .btn {
-  padding: 12px 24px;
-  border-radius: 8px;
+  padding: 12px 24px; /* Standard padding */
+  border-radius: 8px; /* Slightly rounded corners */
   font-weight: bold;
   transition: 0.3s ease;
   cursor: pointer;
-  border: none;
+  border: none; /* No border by default */
+  text-transform: capitalize; /* Capitalize words, not all uppercase */
+  letter-spacing: normal;
+  box-shadow: none; /* No shadow by default */
 }
 
-.btn.primary {
-  background-color: #26a69a;
+.btn.primary { /* Example: "View Our Causes" */
+  background-color: #26a69a; /* Teal */
   color: white;
 }
 
-.btn.secondary {
-  background-color: #ff7043;
+.btn.secondary { /* Example: "Donate Now" */
+  background-color: #ff7043; /* Orange */
   color: white;
 }
 
-.btn.outline {
+.btn.outline { /* Example: "Become a Volunteer" */
   background-color: transparent;
-  color: white;
-  border: 2px solid white;
+  color: #26a69a; /* Teal text */
+  border: 2px solid #26a69a; /* Teal border */
 }
 
+/* Hover effects for these original buttons */
 .btn:hover {
   transform: translateY(-3px);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+.btn.outline:hover {
+    background-color: #26a69a;
+    color: white;
+}
+
+.hero-image-container { /* ⭐ Styles for the right image part ⭐ */
+  flex: 1 1 45%; /* Takes about 45% width, can shrink/grow */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-left: 20px; /* Space from text content */
+  min-width: 300px; /* Ensure image container doesn't get too small */
+  box-sizing: border-box; /* Include padding in width */
+}
+
+.hero-main-image { /* Styles for the <img> tag */
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px; /* Slightly rounded corners for the image */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); /* Subtle shadow for the image */
+  display: block; /* Remove extra space below image */
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .hero-content-wrapper {
+    flex-direction: column; /* Stack content vertically */
+    padding: 30px 20px;
+  }
+  .hero-text-content {
+    flex: 0 0 100%; /* Full width when stacked */
+    text-align: center; /* Center text when stacked */
+    padding-right: 0; /* Remove right padding */
+    margin-bottom: 30px; /* Space between text and image */
+  }
+  .hero-buttons {
+    justify-content: center; /* Center buttons when stacked */
+  }
+  .hero-image-container {
+    flex: 0 0 80%; /* Image takes up more width when stacked */
+    padding-left: 0; /* Remove left padding */
+    max-width: 400px; /* Limit image width when stacked */
+    margin: 0 auto; /* Center image */
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    min-height: auto; /* Allow height to adjust */
+    padding: 30px 0;
+  }
+  .hero-content-wrapper {
+      padding: 20px 15px;
+  }
+  .hero-text-content h1 {
+    font-size: 2.5rem;
+  }
+  .hero-text-content p {
+    font-size: 1rem;
+    margin-bottom: 25px;
+  }
+  .btn {
+    padding: 10px 20px;
+    font-size: 0.95rem;
+  }
+  .hero-buttons {
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-content-wrapper {
+    padding: 15px 10px;
+  }
+  .hero-text-content h1 {
+    font-size: 2rem;
+  }
+  .hero-text-content p {
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+  }
+  .hero-buttons {
+    flex-direction: column; /* Stack buttons vertically */
+    align-items: center; /* Center stacked buttons */
+  }
+  .btn {
+    width: 90%; /* Make buttons take more width when stacked */
+    max-width: 250px;
+    padding: 10px 15px;
+    font-size: 0.9rem;
+  }
 }

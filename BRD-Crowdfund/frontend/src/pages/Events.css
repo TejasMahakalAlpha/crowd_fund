@@ -2,6 +2,8 @@
 
 .events-page {
   font-family: 'Poppins', sans-serif;
+  overflow-x: hidden;
+  background: #f8f8f8;
 }
 
 .events-hero {
@@ -28,110 +30,221 @@
   text-align: center;
   margin-top: 20px;
   font-weight: 500;
+  color: #555;
+  padding: 20px;
 }
 
-/* EVENTS GRID CONTAINER */
-.events-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 30px;
-  padding: 60px 20px;
-  background: #f0fdfa;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-/* CARD STYLE */
-.event-card {
+/* ⭐ Donation Options Section ⭐ */
+.donation-options-section {
   display: flex;
-  flex-direction: column;
-  background: white;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+  max-width: 1200px;
+  margin: 60px auto;
+  padding: 0 20px;
+}
+
+.donation-option-card {
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
   border-radius: 12px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-  overflow: hidden;
-  transition: transform 0.3s ease;
-  height: 100%; /* NEW: ensures card grows to fit container */
-}
-
-@media (min-width: 768px) {
-  .event-card {
-    flex-direction: row;
-    align-items: stretch; /* Ensures both children match height */
-  }
-}
-
-
-.event-card:hover {
-  transform: translateY(-5px);
-}
-
-/* DATE BOX */
-.event-date {
-  background: #00796b;
-  color: white;
-  padding: 20px;
+  padding: 25px;
+  flex: 1 1 280px;
+  max-width: 350px;
   text-align: center;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  gap: 10px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-
-.event-date .day {
-  font-size: 2rem;
-  font-weight: bold;
+.donation-option-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
-.event-date .month,
-.event-date .year {
-  font-size: 0.9rem;
+.donation-option-icon {
+  width: 60px;
+  height: 60px;
+  margin-bottom: 15px;
+  object-fit: contain;
 }
 
-/* EVENT CONTENT */
-.event-info {
-  padding: 20px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-
-.event-info h3 {
+.donation-option-card h3 {
   font-size: 1.3rem;
   color: #004d40;
   margin-bottom: 10px;
 }
 
-.event-info .time {
-  font-weight: bold;
-  color: #444;
-  margin-bottom: 10px;
-}
-
-.event-info .description {
-  color: #555;
-  font-size: 1rem;
+.donation-option-card p {
+  font-size: 0.95rem;
+  color: #666;
   line-height: 1.5;
-  margin-bottom: 10px;
 }
 
-.event-info .location {
-  color: #777;
+/* ⭐ Featured Cause Section ⭐ */
+.featured-cause-section {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  max-width: 1200px;
+  margin: 60px auto;
+  background: #e6f7ff;
+  border-radius: 12px;
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.featured-image-container {
+  flex: 1 1 40%;
+  max-width: 500px;
+  height: 350px;
+  overflow: hidden;
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
+}
+
+.featured-cause-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.featured-text-content {
+  flex: 1 1 50%;
+  max-width: 650px;
+  padding: 30px;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.featured-title {
+  font-size: 2.2rem;
+  color: #004d40;
+  margin-bottom: 15px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.featured-description {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.6;
+}
+
+/* ⭐ Existing Events Section ⭐ */
+.section-title {
+  font-size: 2.5rem;
+  color: #004d40;
+  margin-bottom: 40px;
+  margin-top: 60px;
+}
+
+.events-list-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px 60px;
+  box-sizing: border-box;
+}
+
+.events-list {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.event-card {
+  display: flex;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: transform 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.event-card:hover {
+  transform: translateY(-5px);
+}
+
+.event-date-col {
+  background: #004d40;
+  color: white;
+  padding: 25px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  width: 140px;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.event-date-col .month-day {
+  font-size: 1.8rem;
+  font-weight: bold;
+  line-height: 1.2;
+}
+
+.event-date-col .year {
+  font-size: 0.95rem;
+  margin-top: 5px;
+}
+
+.event-details-col {
+  padding: 25px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.event-details-col .event-datetime {
+  font-weight: bold;
+  color: #555;
   font-size: 0.95rem;
   margin-bottom: 10px;
 }
 
-.event-image {
-  width: 100%;
-  max-height: 220px;
-  object-fit: cover;
-  border-radius: 8px;
-  margin-top: 10px;
+.event-details-col .event-title {
+  font-size: 1.6rem;
+  color: #00796b;
+  margin-bottom: 10px;
+  line-height: 1.3;
 }
 
-/* BUTTON */
+.event-details-col .event-description {
+  color: #666;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 15px;
+}
+
+.event-thumbnails {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+  flex-wrap: wrap;
+}
+
+.event-thumbnail {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  flex-shrink: 0;
+}
+
 .join-btn {
   background-color: #26a69a;
   color: #fff;
@@ -148,26 +261,170 @@
   background-color: #00796b;
 }
 
-/* RESPONSIVE: Row layout on wide screens */
-@media (min-width: 768px) {
-  .event-card {
-    flex-direction: row;
-  }
-
-  .event-date {
-    min-width: 120px;
-    display: flex;
+/* MEDIA QUERIES */
+@media (max-width: 992px) {
+  .donation-options-section {
     flex-direction: column;
-    justify-content: center;
+    gap: 20px;
+  }
+  .donation-option-card {
+    max-width: 450px;
   }
 
-  .event-info {
-    flex: 1;
+  .featured-cause-section {
+    flex-direction: column;
   }
 
-  .event-image {
-    margin-top: 20px;
+  .featured-image-container {
+    max-width: 100%;
+    height: 300px;
+    border-radius: 12px;
+  }
+
+  .featured-text-content {
+    max-width: 100%;
+    text-align: center;
+  }
+
+  .featured-title {
+    font-size: 1.8rem;
+  }
+
+  .featured-description {
+    font-size: 0.9rem;
+  }
+
+  .events-list-wrapper {
+    padding: 0 15px 40px;
+  }
+
+  .event-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .event-date-col {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 15px;
+  }
+
+  .event-details-col {
+    align-items: center;
+  }
+
+  .event-details-col .event-datetime,
+  .event-details-col .event-title,
+  .event-details-col .event-description {
+    text-align: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .events-hero {
+    padding: 40px 15px;
+  }
+
+  .events-hero h1 {
+    font-size: 2rem;
+  }
+
+  .events-hero p {
+    font-size: 1rem;
+  }
+
+  .donation-options-section {
+    margin: 40px auto;
+  }
+
+  .donation-option-card {
+    padding: 20px;
+  }
+
+  .donation-option-card h3 {
+    font-size: 1.1rem;
+  }
+
+  .donation-option-card p {
+    font-size: 0.85rem;
+  }
+
+  .featured-cause-section {
+    margin: 40px auto;
+  }
+
+  .featured-image-container {
+    height: 250px;
+  }
+
+  .featured-title {
+    font-size: 1.6rem;
+  }
+
+  .section-title {
+    font-size: 2rem;
+    margin-top: 40px;
+    margin-bottom: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .events-hero {
+    padding: 30px 10px;
+  }
+
+  .events-hero h1 {
+    font-size: 1.8rem;
+  }
+
+  .events-hero p {
+    font-size: 0.9rem;
+  }
+
+  .donation-options-section {
+    gap: 15px;
+    margin: 30px auto;
+  }
+
+  .donation-option-card {
+    padding: 15px;
+  }
+
+  .donation-option-card h3 {
+    font-size: 1rem;
+  }
+
+  .featured-cause-section {
+    margin: 30px auto;
     border-radius: 8px;
-    max-height: 200px;
+  }
+
+  .featured-image-container {
+    height: 200px;
+  }
+
+  .section-title {
+    font-size: 1.8rem;
+    margin-top: 30px;
+    margin-bottom: 25px;
+  }
+
+  .event-date-col .month-day {
+    font-size: 1.3rem;
+  }
+
+  .event-details-col .event-title {
+    font-size: 1.1rem;
+  }
+
+  .event-details-col .event-description {
+    font-size: 0.85rem;
+  }
+
+  .event-thumbnail {
+    width: 50px;
+    height: 50px;
   }
 }

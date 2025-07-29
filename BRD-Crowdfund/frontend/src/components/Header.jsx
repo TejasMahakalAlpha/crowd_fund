@@ -24,15 +24,14 @@ const Header = () => {
 
         {/* Navigation Links */}
         <nav className={`nav-links ${menuOpen ? 'open' : ''}`}>
-          <NavLink to="/" end onClick={closeMenu}>Home</NavLink>
-          <NavLink to="/about" onClick={closeMenu}>About</NavLink>
-          <NavLink to="/causes" onClick={closeMenu}>Causes</NavLink>
-          <NavLink to="/events" onClick={closeMenu}>Events</NavLink>
-          <NavLink to="/gallery" onClick={closeMenu}>Gallery</NavLink>
-          <NavLink to="/blog" onClick={closeMenu}>Blog</NavLink>
-          <NavLink to="/contact" onClick={closeMenu}>Contact</NavLink>
-          <NavLink to="/volunteer" onClick={closeMenu}>Volunteer</NavLink>
-
+          {/* ⭐ DROPDOWN INDICATORS REMOVED FROM HERE ⭐ */}
+          <NavLink to="/" end onClick={closeMenu}>Home</NavLink> 
+          <NavLink to="/about" onClick={closeMenu}>About</NavLink> 
+          <NavLink to="/causes" onClick={closeMenu}>Causes</NavLink> 
+          <NavLink to="/events" onClick={closeMenu}>Events</NavLink> 
+          <NavLink to="/gallery" onClick={closeMenu}>Gallery</NavLink> 
+          
+          {/* Mega Menu - This already has a dropdown indicator */}
           <div className="mega-menu">
             <NavLink to="#" onClick={(e) => e.preventDefault()}>Mega Menu ▾</NavLink>
             <div className="mega-menu-content">
@@ -42,8 +41,15 @@ const Header = () => {
             </div>
           </div>
 
+          <NavLink to="/blog" onClick={closeMenu}>Blog</NavLink> 
+          
+          <NavLink to="/volunteer" onClick={closeMenu}>Volunteer</NavLink> 
+          <NavLink to="/submit-cause" onClick={closeMenu}>Submit Cause</NavLink>
+
+          <NavLink to="/contact" onClick={closeMenu}>Contact</NavLink> 
+          
           <div className="header-contact">
-            <a href="tel:9322342225" className="phone-number">📞 9322342225</a>
+            <a href="tel:9322342225" className="phone-number">9322342225</a>
           </div>
         </nav>
       </div>

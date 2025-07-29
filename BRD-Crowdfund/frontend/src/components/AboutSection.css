@@ -1,64 +1,119 @@
+/* src/components/AboutSection.css */
 .about-section {
   padding: 80px 20px;
-  background: #e0f2f1; /* softer greenish tint */
-  text-align: center;
+  background: #ffffff; 
+  color: #333; 
   display: flex;
   justify-content: center;
-  
+  align-items: center;
 }
 
-.about-section .container {
-  max-width: 700px;
-  background: white;
-  padding: 40px 30px;
-  border-radius: 12px;
-  box-shadow: 0 8px 25px rgba(0, 77, 64, 0.15);
-  color: #004d40;
+.about-flex-container { 
+  max-width: 1200px; 
+  margin: 0 auto;
+  padding: 0; 
+  display: flex;
+  flex-wrap: wrap; 
+  justify-content: center; 
+  align-items: flex-start; 
+  gap: 40px; 
+}
+
+.about-title-wrapper { 
+  flex: 0 0 250px; 
+  max-width: 300px;
+  text-align: left; 
+  padding-right: 20px; 
+  box-sizing: border-box;
 }
 
 .section-title {
   font-size: 2.8rem;
-  margin-bottom: 25px;
+  margin-bottom: 0; 
   font-weight: 700;
-  letter-spacing: 1.2px;
+  color: #333; 
+  letter-spacing: normal; 
+  line-height: 1.2;
 }
 
-.about-text {
-  font-size: 1.25rem;
-  line-height: 1.8;
-  margin-bottom: 20px;
-  color: #2e2e2e;
+.highlight-text { 
+    color: #4dc2c2; 
+    font-weight: 800;
 }
 
-.about-subtext {
-  font-size: 1.05rem;
-  color: #5f6a66;
-  font-style: italic;
+.about-text-wrapper { 
+  flex: 1 1 600px; 
+  max-width: 800px;
+  padding-left: 20px; 
+  box-sizing: border-box;
 }
 
-@media (max-width: 600px) {
-  .about-section {
-    padding: 60px 10px;
+.about-main-text {
+  font-family: 'Georgia', serif; 
+  font-size: 1rem; 
+  line-height: 1.8; 
+  color: #777; 
+  text-align: justify; /* Default for desktop */
+  margin-bottom: 0; 
+  font-weight: 300; 
+  /* Ensure text wraps by default */
+  overflow-wrap: break-word; /* ⭐ Ensures long words break and wrap ⭐ */
+  word-break: break-word; /* Fallback for older browsers */
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .about-flex-container {
+    flex-direction: column; 
+    gap: 30px;
   }
-  .about-section .container {
-    padding: 30px 20px;
+  .about-title-wrapper {
+    flex: 0 0 auto; 
+    max-width: 100%;
+    text-align: left; /* ⭐ Changed to LEFT align title on mobile as per screenshot ⭐ */
+    padding-right: 0; /* Remove right padding */
+    padding-left: 15px; /* Add some left padding on mobile */
+    box-sizing: border-box;
   }
   .section-title {
-    font-size: 2rem;
+    font-size: 2.5rem;
+    margin-bottom: 15px; 
+    text-align: left; /* ⭐ Changed to LEFT align title on mobile ⭐ */
   }
-  .about-text {
-    font-size: 1.1rem;
+  .about-text-wrapper {
+    flex: 0 0 auto; 
+    max-width: 100%;
+    padding-left: 0;
   }
-  .about-subtext {
-    font-size: 1rem;
+  .about-main-text {
+    font-size: 0.95rem;
+    padding: 0 15px; /* ⭐ Add horizontal padding to text content on mobile ⭐ */
+    text-align: left; /* ⭐ Changed text alignment to LEFT on mobile as per screenshot ⭐ */
   }
 }
-.about-section .container {
-  max-width: 700px;
-  background: white;
-  padding: 40px 30px;
-  border-radius: 12px;
-  box-shadow: 0 8px 25px rgba(0, 77, 64, 0.15);
-  color: #004d40;
-  text-align: justify; /* Justify text */
+
+@media (max-width: 768px) {
+  .about-section {
+    padding: 60px 15px;
+  }
+  .section-title {
+    font-size: 2.2rem;
+  }
+  .about-main-text {
+    font-size: 0.9rem;
+    padding: 0 10px; /* Reduce padding further */
+  }
+}
+
+@media (max-width: 480px) {
+  .about-section {
+    padding: 40px 10px;
+  }
+  .section-title {
+    font-size: 1.8rem;
+  }
+  .about-main-text {
+    font-size: 0.85rem;
+    padding: 0 5px; /* Reduce padding even more */
+  }
 }

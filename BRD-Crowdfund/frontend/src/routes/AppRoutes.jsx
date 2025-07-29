@@ -3,49 +3,53 @@ import React, { useContext } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 
 // Context for authentication
-import { AuthContext } from '../context/AuthContext';
+import { AuthContext } from '../context/AuthContext'; 
 
-// Public Components
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+// Public Components (Pages)
+import Header from '../components/Header';   
+import Footer from '../components/Footer';   
+import Home from '../pages/Home';             
+import About from '../pages/About';           
+import Causes from '../pages/Causes';         
+import Contact from '../pages/Contact';       
+import Events from '../pages/Events';         
+import Gallery from '../pages/Gallery';       
+import Blog from '../pages/Blog';             
+import VolunteerForm from '../pages/VolunteerForm'; 
+// import SubmitCause from '../pages/SubmitCause';     
+import WhatsApp from '../components/WhatsApp'; // ⭐ NEW: Import WhatsApp component
 
-// Public Pages
-import Home from '../pages/Home';
-import About from '../pages/About';
-import Causes from '../pages/Causes';
-import Contact from '../pages/Contact';
-import Events from '../pages/Events';
-import Gallery from '../pages/Gallery';
-import Blog from '../pages/Blog';
-import VolunteerForm from '../pages/VolunteerForm';
 
 // Admin Pages
-import Login from '../admin/Login';
-import Dashboard from '../admin/Dashboard';
-import ManageBlogs from '../admin/ManageBlogs';
-import ManageCauses from '../admin/ManageCauses';
-import ManageDonations from '../admin/ManageDonations';
-import ManageVolunteers from '../admin/ManageVolunteers';
-import ManageEvents from '../admin/ManageEvents';
-import ManageContacts from "../admin/ManageContacts";
+import Login from '../admin/Login';                     
+import Dashboard from '../admin/Dashboard';             
+import ManageBlogs from '../admin/ManageBlogs';         
+import ManageCauses from '../admin/ManageCauses';       
+import ManageDonations from '../admin/ManageDonations'; 
+import ManageVolunteers from '../admin/ManageVolunteers'; 
+import ManageEvents from '../admin/ManageEvents';       
+import ManageContacts from "../admin/ManageContacts";   
+// import ManagePersonalCauses from '../admin/ManagePersonalCauses'; 
+
 
 const AppRoutes = () => {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/admin');
-  const { token } = useContext(AuthContext); // ✅ Get token from context
-  const isLoggedIn = !!token; // ✅ Boolean check
+  const { token } = useContext(AuthContext); 
+  const isLoggedIn = !!token; 
 
-  // 🔐 Protected admin routes
   const ProtectedRoute = ({ element }) => {
     return isLoggedIn ? element : <Navigate to="/admin/login" replace />;
   };
 
   return (
     <>
+      {/* Header is shown only if it's NOT an admin route */}
       {!isAdminRoute && <Header />}
 
+      {/* Define all your application routes here */}
       <Routes>
-        {/* 🌐 Public Routes */}
+        {/* 🌐 Public Routes - accessible to everyone */}
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/causes" element={<Causes />} />
@@ -55,9 +59,12 @@ const AppRoutes = () => {
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/volunteer" element={<VolunteerForm />} />
+        {/* <Route path="/submit-cause" element={<SubmitCause/>} />  */}
 
-        {/* 🔒 Admin Routes */}
-        <Route path="/admin/login" element={<Login />} />
+        {/* 🔒 Admin Routes - protected by authentication */}
+        <Route path="/admin/login" element={<Login />} /> 
+
+        {/* All routes below this point use ProtectedRoute */}
         <Route path="/admin/dashboard" element={<ProtectedRoute element={<Dashboard />} />} />
         <Route path="/admin/manage-blogs" element={<ProtectedRoute element={<ManageBlogs />} />} />
         <Route path="/admin/manage-causes" element={<ProtectedRoute element={<ManageCauses />} />} />
@@ -65,9 +72,15 @@ const AppRoutes = () => {
         <Route path="/admin/manage-volunteers" element={<ProtectedRoute element={<ManageVolunteers />} />} />
         <Route path="/admin/manage-events" element={<ProtectedRoute element={<ManageEvents />} />} />
         <Route path="/admin/manage-contacts" element={<ProtectedRoute element={<ManageContacts />} />} />
+        {/* <Route path="/admin/manage-personal-causes" element={<ProtectedRoute element={<ManagePersonalCauses />} />} />  */}
       </Routes>
 
+      {/* Footer is shown only if it's NOT an admin route */}
       {!isAdminRoute && <Footer />}
+      
+      {/* ⭐ NEW: WhatsApp component added here conditionally ⭐ */}
+      {/* It will render only if it's NOT an admin route */}
+      {!isAdminRoute && <WhatsApp />} 
     </>
   );
 };
