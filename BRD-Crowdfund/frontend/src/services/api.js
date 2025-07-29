@@ -5,26 +5,22 @@ import axios from 'axios';
 // Example: VITE_API_BASE_URL=https://cloud-fund-i1kt.onrender.com
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-// --- 1. Main API Instance (for general use if needed) ---
+// --- 1. Main API Instance (for general use or endpoints not fitting specific prefixes) ---
+// This instance is used for endpoints like /api/personal-cause-submissions which are not under /api/public or /admin
 const API = axios.create({
   baseURL: BASE_URL,
 });
 
 // --- 2. Public API Instance ---
 // This instance is for all public routes like /api/public/causes, /api/public/volunteer/register etc.
-// Based on Swagger, public blogs are indeed under /api/public/
 const PublicApiInstance = axios.create({
   baseURL: `${BASE_URL}/api/public`,
 });
 
 // --- 3. Admin API Instance ---
 // This instance is for all admin routes.
-// ⭐ CRITICAL CHANGE BASED ON SWAGGER ⭐: Swagger shows admin blog paths as /admin/blogs (e.g., /admin/blogs/{id})
-// This implies the /api prefix for admin is either NOT used or is handled by a global Spring MVC servlet path.
-// This assumes your Spring Boot AdminController has @RequestMapping("/admin")
-// If your backend AdminController has @RequestMapping("/api/admin"), then change this back to `${BASE_URL}/api/admin`
 const AdminApiInstance = axios.create({
-  baseURL: `${BASE_URL}/admin`, // Changed from /api/admin to /admin based on Swagger evidence
+  baseURL: `${BASE_URL}/admin`,
 });
 
 
@@ -45,6 +41,18 @@ export const PublicApi = {
   // Public Blog Endpoints (Confirmed by Swagger to be under /api/public/)
   getBlogs: () => PublicApiInstance.get(`blogs`),
   getBlogById: (slug) => PublicApiInstance.get(`blogs/${slug}`), // Assuming you fetch by slug for public detail page
+
+  // ⭐ NEW: Personal Cause Submission Public Endpoints (using main API instance 'API' as per docs)
+  submitPersonalCauseJson: (data) => API.post(`/api/personal-cause-submissions`, data, {
+    headers: { 'Content-Type': 'application/json' } // Explicitly set for JSON body
+  }),
+  submitPersonalCauseWithImage: (formData) => API.post(`/api/personal-cause-submissions/with-image`, formData, {
+    headers: { 'Content-Type': 'multipart/form-data' } // Important for FormData
+  }),
+  submitPersonalCauseWithFiles: (formData) => API.post(`/api/personal-cause-submissions/with-files`, formData, {
+    headers: { 'Content-Type': 'multipart/form-data' } // Important for FormData
+  }),
+  getUserSubmissionsByEmail: (email) => API.get(`/api/personal-cause-submissions/by-email/${encodeURIComponent(email)}`),
 };
 
 export const PaymentApi = {
@@ -65,7 +73,7 @@ export const AdminApi = {
 
   // All these calls will now go to BASE_URL/admin/... and will include the Basic token
   // Events (These will hit /admin/events)
-  getAllEvents: () => AdminApiInstance.get(`events`, { headers: AdminApi._authHeader() }), // This was the commented line, now active.
+  getAllEvents: () => AdminApiInstance.get(`events`, { headers: AdminApi._authHeader() }),
   getEventsById: (id) => AdminApiInstance.get(`events/${id}`, { headers: AdminApi._authHeader() }),
   createEvents: (data) => AdminApiInstance.post(`events/with-image`, data, { headers: AdminApi._authHeader() }),
   updateEvents: (id, data) => AdminApiInstance.put(`events/${id}/with-image`, data, { headers: AdminApi._authHeader() }),
@@ -83,7 +91,7 @@ export const AdminApi = {
 
   // Admin Blog Endpoints (Confirmed by Swagger to be under /admin/)
   getAllBlogs: () => AdminApiInstance.get(`blogs`, { headers: AdminApi._authHeader() }),
-  getBlogById: (id) => AdminApiInstance.get(`blogs/${id}`, { headers: AdminApi._authHeader() }), // Swagger confirms by ID
+  getBlogById: (id) => AdminApiInstance.get(`blogs/${id}`, { headers: AdminApi._authHeader() }),
   createBlog: (data) => AdminApiInstance.post(`blogs/with-image`, data, { headers: AdminApi._authHeader() }),
   updateBlog: (id, data) => AdminApiInstance.put(`blogs/${id}`, data, { headers: AdminApi._authHeader() }),
   deleteBlog: (id) => AdminApiInstance.delete(`blogs/${id}`, { headers: AdminApi._authHeader() }),
@@ -93,6 +101,15 @@ export const AdminApi = {
 
   // Other Admin
   getAllDonationsAdmin: () => AdminApiInstance.get(`donations`, { headers: AdminApi._authHeader() }),
+  deleteDonation: (id) => AdminApiInstance.delete(`donations/${id}`, { headers: AdminApi._authHeader() }), // Added delete donation
+
+  // ⭐ NEW: Admin Personal Cause Submission Endpoints ⭐
+  getPersonalCauseSubmissions: () => AdminApiInstance.get(`personal-cause-submissions`, { headers: AdminApi._authHeader() }),
+  getPersonalCauseSubmissionById: (id) => AdminApiInstance.get(`personal-cause-submissions/${id}`, { headers: AdminApi._authHeader() }),
+  getPersonalCauseSubmissionsByStatus: (status) => AdminApiInstance.get(`personal-cause-submissions/by-status/${status}`, { headers: AdminApi._authHeader() }),
+  approvePersonalCauseSubmission: (id, data) => AdminApiInstance.post(`personal-cause-submissions/${id}/approve`, data, { headers: { ...AdminApi._authHeader(), 'Content-Type': 'application/json' } }),
+  rejectPersonalCauseSubmission: (id, data) => AdminApiInstance.post(`personal-cause-submissions/${id}/reject`, data, { headers: { ...AdminApi._authHeader(), 'Content-Type': 'application/json' } }),
+  deletePersonalCauseSubmission: (id) => AdminApiInstance.delete(`personal-cause-submissions/${id}`, { headers: AdminApi._authHeader() }),
 };
 
 export default API;

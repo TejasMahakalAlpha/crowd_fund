@@ -6,6 +6,7 @@ import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 
 // Public Components (Pages)
+<<<<<<< HEAD
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Home from '../pages/Home';
@@ -30,6 +31,33 @@ import ManageVolunteers from '../admin/ManageVolunteers';
 import ManageEvents from '../admin/ManageEvents';
 import ManageContacts from "../admin/ManageContacts";
 import BlogDetails from '../pages/BlogDetails';
+=======
+import Header from '../components/Header';   
+import Footer from '../components/Footer';   
+import Home from '../pages/Home';             
+import About from '../pages/About';           
+import Causes from '../pages/Causes';         
+import Contact from '../pages/Contact';       
+import Events from '../pages/Events';         
+import Gallery from '../pages/Gallery';       
+import Blog from '../pages/Blog';             
+import VolunteerForm from '../pages/VolunteerForm'; 
+import SubmitCause from '../pages/SubmitCause';     // ⭐ UNCOMMENTED: SubmitCause import
+import WhatsApp from '../components/WhatsApp'; 
+
+
+// Admin Pages
+import Login from '../admin/Login';                     
+import Dashboard from '../admin/Dashboard';             
+import ManageBlogs from '../admin/ManageBlogs';         
+import ManageCauses from '../admin/ManageCauses';       
+import ManageDonations from '../admin/ManageDonations'; 
+import ManageVolunteers from '../admin/ManageVolunteers'; 
+import ManageEvents from '../admin/ManageEvents';       
+import ManageContacts from "../admin/ManageContacts";   
+import ManagePersonalCauses from '../admin/ManagePersonalCauses'; // ⭐ UNCOMMENTED: ManagePersonalCauses import
+
+>>>>>>> 5a5c34d105f895236ffe50f27e532c626aa5b61d
 
 const AppRoutes = () => {
   const location = useLocation();
@@ -59,7 +87,7 @@ const AppRoutes = () => {
         <Route path="/blog" element={<Blog />} />
         <Route path="/blogs/:slugOrId" element={<BlogDetails />} />
         <Route path="/volunteer" element={<VolunteerForm />} />
-        {/* <Route path="/submit-cause" element={<SubmitCause/>} />  */}
+        <Route path="/submit-cause" element={<SubmitCause/>} /> {/* ⭐ UNCOMMENTED: SubmitCause route */}
 
         {/* 🔒 Admin Routes - protected by authentication */}
         <Route path="/admin/login" element={<Login />} />
@@ -72,15 +100,21 @@ const AppRoutes = () => {
         <Route path="/admin/manage-volunteers" element={<ProtectedRoute element={<ManageVolunteers />} />} />
         <Route path="/admin/manage-events" element={<ProtectedRoute element={<ManageEvents />} />} />
         <Route path="/admin/manage-contacts" element={<ProtectedRoute element={<ManageContacts />} />} />
-        {/* <Route path="/admin/manage-personal-causes" element={<ProtectedRoute element={<ManagePersonalCauses />} />} />  */}
+        <Route path="/admin/manage-personal-causes" element={<ProtectedRoute element={<ManagePersonalCauses />} />} /> {/* ⭐ UNCOMMENTED: ManagePersonalCauses route */}
       </Routes>
 
       {/* Footer is shown only if it's NOT an admin route */}
       {!isAdminRoute && <Footer />}
+<<<<<<< HEAD
 
       {/* ⭐ NEW: WhatsApp component added here conditionally ⭐ */}
       {/* It will render only if it's NOT an admin route */}
       {!isAdminRoute && <WhatsApp />}
+=======
+      
+      {/* WhatsApp component added here conditionally */}
+      {!isAdminRoute && <WhatsApp />} 
+>>>>>>> 5a5c34d105f895236ffe50f27e532c626aa5b61d
     </>
   );
 };
