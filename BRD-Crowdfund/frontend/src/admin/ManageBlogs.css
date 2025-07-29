@@ -3,12 +3,32 @@
 .manage-blogs {
   padding: 20px;
   font-family: 'Poppins', sans-serif;
+  max-width: 1200px; /* Constrain width for better readability */
+  margin: 0 auto; /* Center the content */
 }
 
 .manage-blogs h2 {
-  font-size: 1.5rem;
+  font-size: 1.8rem; /* Slightly larger heading */
   color: #004d40;
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+.back-button {
+  padding: 10px 20px;
+  background: #4CAF50; /* Green color for back button */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
   margin-bottom: 20px;
+  transition: background 0.3s ease;
+}
+
+.back-button:hover {
+  background: #45a049;
 }
 
 /* Form Styling */
@@ -17,108 +37,247 @@
   flex-direction: column;
   gap: 15px;
   background: #ffffff;
-  padding: 20px;
+  padding: 30px; /* Increased padding */
   border-radius: 10px;
   margin-bottom: 40px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* Slightly more prominent shadow */
 }
 
 .blog-form input,
-.blog-form textarea {
-  padding: 10px;
-  border: 1px solid #ccc;
+.blog-form textarea,
+.blog-form select { /* Added select for completeness */
+  padding: 12px; /* Increased padding */
+  border: 1px solid #ddd; /* Lighter border */
   border-radius: 8px;
   font-size: 1rem;
+  width: 100%; /* Ensure full width */
+  box-sizing: border-box; /* Include padding in width */
 }
 
-.blog-form button {
-  padding: 10px 15px;
-  background: #004d40;
+.blog-form button[type="submit"] {
+  padding: 12px 20px;
+  background: #00796b; /* Slightly brighter green */
   color: white;
   border: none;
   font-weight: 600;
   border-radius: 8px;
   cursor: pointer;
   transition: background 0.3s ease;
+  font-size: 1.1rem;
+  align-self: flex-end; /* Align button to the right */
+  width: auto; /* Allow button to size itself */
 }
 
-.blog-form button:hover {
-  background: #00796b;
+.blog-form button[type="submit"]:hover {
+  background: #004d40;
 }
 
 /* Blog List */
 .blog-list {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 25px; /* Increased gap between items */
 }
 
 .blog-item {
+  background: #ffffff;
+  padding: 25px; /* Increased padding */
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08); /* More defined shadow */
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  background: #ffffff;
-  padding: 15px 20px;
-  border-radius: 10px;
-  box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+  align-items: flex-start; /* Align items to the top */
+  flex-wrap: wrap; /* Allow wrapping on smaller screens */
+  gap: 20px; /* Gap between content and action buttons */
+  position: relative;
+}
+
+.blog-item > div:first-child {
+  flex-grow: 1;
+  min-width: 250px;
 }
 
 .blog-item h3 {
-  margin: 0;
-  font-size: 1.1rem;
+  margin: 0 0 8px;
+  color: #004d40;
+  font-size: 1.3rem;
 }
 
 .blog-item p {
-  margin: 4px 0 0;
-  font-size: 0.9rem;
+  margin: 0 0 4px;
+  line-height: 1.5;
   color: #555;
 }
 
-.blog-item button {
-  background: #c62828;
+.blog-item p strong {
+  color: #00796b;
+}
+
+.blog-item img {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  object-fit: cover;
+  margin-top: 15px;
+  border-radius: 8px;
+}
+
+/* New: Styles for the div wrapping Edit/Delete buttons */
+.blog-actions {
+  display: flex;
+  flex-direction: column; /* Stack buttons vertically */
+  gap: 10px; /* Space between Edit and Delete buttons */
+  align-items: flex-end;
+  flex-shrink: 0; /* Prevent buttons from shrinking if space is tight */
+}
+
+.edit-button {
+  background: #2196F3; /* Blue color for Edit */
   color: white;
   border: none;
-  padding: 8px 14px;
+  padding: 8px 16px;
   border-radius: 6px;
   cursor: pointer;
   transition: background 0.3s;
+  font-weight: 500;
+  width: 100px; /* Fixed width for consistency */
+  text-align: center;
 }
 
-.blog-item button:hover {
+.edit-button:hover {
+  background: #1976D2;
+}
+
+.delete-button {
+  background: #c62828; /* Red color for Delete */
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s;
+  font-weight: 500;
+  width: 100px; /* Fixed width for consistency */
+  text-align: center;
+}
+
+.delete-button:hover {
   background: #b71c1c;
 }
 
-.blog-item .edit-button {
-  background-color: #1565c0 !important; /* Blue */
-  color: white;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 6px;
-  cursor: pointer;
-  margin-right: 10px;
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+  .blog-item {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 15px;
+  }
+  .blog-item > div:first-child {
+    min-width: auto;
+  }
+  .blog-actions {
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-around;
+    margin-top: 15px;
+    align-items: center;
+  }
+  .edit-button,
+  .delete-button {
+    flex-grow: 1;
+    width: auto;
+  }
 }
 
-.blog-item .edit-button:hover {
-  background-color: #0d47a1 !important;
+@media (max-width: 480px) {
+  .manage-blogs h2 {
+    font-size: 1.5rem;
+  }
+  .blog-form {
+    padding: 20px;
+  }
+  .blog-form input,
+  .blog-form textarea {
+    font-size: 0.9rem;
+  }
+  .blog-form button[type="submit"] {
+    font-size: 1rem;
+    padding: 10px 15px;
+  }
+  .blog-item h3 {
+    font-size: 1.1rem;
+  }
+  .blog-item p {
+    font-size: 0.9rem;
+  }
 }
 
-.back-button {
-  background-color: #004d40;
-  color: white;
-  padding: 8px 16px;
-  border: none;
-  margin-bottom: 16px;
-  cursor: pointer;
-  border-radius: 4px;
-  font-size: 0.9rem;
-}
-.back-button:hover {
-  background-color: #00695c;
-}
-/* ManageBlogs.css */
+/* Error Styling */
 .error {
   color: red;
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   margin-top: -8px;
   margin-bottom: 8px;
 }
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-end;
+  flex-shrink: 0;
+}
+
+.actions button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.95rem;
+  cursor: pointer;
+  width: 120px;
+  transition: background-color 0.3s ease;
+  color: white;
+}
+
+/* Edit Button */
+.actions button:nth-child(1) {
+  background-color: #2196F3;
+}
+.actions button:nth-child(1):hover {
+  background-color: #1976D2;
+}
+
+/* Delete Button */
+.actions button:nth-child(2) {
+  background-color: #e53935;
+}
+.actions button:nth-child(2):hover {
+  background-color: #b71c1c;
+}
+
+/* Publish/Unpublish Button */
+.actions button:nth-child(3),
+.actions button:nth-child(4) {
+  background-color: #00796b;
+}
+.actions button:nth-child(3):hover,
+.actions button:nth-child(4):hover {
+  background-color: #004d40;
+}
+
+@media (max-width: 768px) {
+  .actions {
+    flex-direction: row;
+    justify-content: space-around;
+    width: 100%;
+    align-items: center;
+    margin-top: 15px;
+  }
+
+  .actions button {
+    flex: 1;
+    width: auto;
+  }
+}
+

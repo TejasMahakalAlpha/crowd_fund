@@ -60,11 +60,11 @@ const ManageCauses = () => {
       newErrors.targetAmount = "Target Amount must be a positive number";
     }
 
-    if (formData.currentAmount === "") {
-      newErrors.currentAmount = "Current Amount is required";
-    } else if (isNaN(formData.currentAmount) || Number(formData.currentAmount) < 0) {
-      newErrors.currentAmount = "Current Amount must be zero or a positive number";
-    }
+    // if (formData.currentAmount === "") {
+    //   newErrors.currentAmount = "Current Amount is required";
+    // } else if (isNaN(formData.currentAmount) || Number(formData.currentAmount) < 0) {
+    //   newErrors.currentAmount = "Current Amount must be zero or a positive number";
+    // }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -89,8 +89,8 @@ const ManageCauses = () => {
         category: causeToEdit.category || "",
         location: causeToEdit.location || "",
         targetAmount: causeToEdit.targetAmount || "",
-        currentAmount: causeToEdit.currentAmount || "",
-        endDate: causeToEdit.endDate ? causeToEdit.endDate.slice(0, 10) : "", // format YYYY-MM-DD
+        // currentAmount: causeToEdit.currentAmount || "",
+        endDate: causeToEdit.endDate ? new Date(causeToEdit.endDate).toISOString().slice(0, 10) : "", // format YYYY-MM-DD
         status: causeToEdit.status || "ACTIVE",
       });
       // ⭐ Removed the incorrect if(imageFile) block from here
@@ -112,7 +112,7 @@ const ManageCauses = () => {
     form.append("category", formData.category);
     form.append("location", formData.location);
     form.append("targetAmount", formData.targetAmount);
-    form.append("currentAmount", formData.currentAmount);
+    // form.append("currentAmount", formData.currentAmount);
     form.append("endDate", formData.endDate ? `${formData.endDate}T00:00:00` : "");
     form.append("status", formData.status);
 
@@ -137,7 +137,7 @@ const ManageCauses = () => {
         category: "",
         location: "",
         targetAmount: "",
-        currentAmount: "",
+        // currentAmount: "",
         endDate: "",
         status: "ACTIVE",
       });
@@ -223,7 +223,7 @@ const ManageCauses = () => {
         />
         {errors.targetAmount && <p style={{ color: "red" }}>{errors.targetAmount}</p>}
 
-        <input
+        {/* <input
           type="number"
           name="currentAmount"
           placeholder="Current Amount"
@@ -231,7 +231,7 @@ const ManageCauses = () => {
           onChange={handleChange}
           min="0"
         />
-        {errors.currentAmount && <p style={{ color: "red" }}>{errors.currentAmount}</p>}
+        {errors.currentAmount && <p style={{ color: "red" }}>{errors.currentAmount}</p>} */}
 
         <input
           type="text"
@@ -292,12 +292,12 @@ const ManageCauses = () => {
                 <p><strong>Current Amount:</strong> ₹{cause.currentAmount?.toLocaleString()}</p>
                 <p><strong>End Date:</strong> {new Date(cause.endDate).toLocaleDateString()}</p>
                 {cause.imageUrl && ( // Only render image if imageUrl exists
-                    <img
-                        src={getImageUrl(cause.imageUrl)}
-                        alt={cause.title}
-                        // Added height: auto and object-fit for better image handling
-                        style={{ width: "100%", maxWidth: "300px", marginTop: "10px", height: "auto", objectFit: "cover", borderRadius: "8px" }}
-                    />
+                  <img
+                    src={getImageUrl(cause.imageUrl)}
+                    alt={cause.title}
+                    // Added height: auto and object-fit for better image handling
+                    style={{ width: "100%", maxWidth: "300px", marginTop: "10px", height: "auto", objectFit: "cover", borderRadius: "8px" }}
+                  />
                 )}
               </div>
               {/* ⭐ Wrapped buttons in a new div */}

@@ -28,6 +28,7 @@ import ManageDonations from '../admin/ManageDonations';
 import ManageVolunteers from '../admin/ManageVolunteers';
 import ManageEvents from '../admin/ManageEvents';
 import ManageContacts from "../admin/ManageContacts";
+import BlogDetails from '../pages/BlogDetails';
 
 const AppRoutes = () => {
   const location = useLocation();
@@ -54,6 +55,7 @@ const AppRoutes = () => {
         <Route path="/events" element={<Events />} />
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/blog" element={<Blog />} />
+        <Route path="/blogs/:slugOrId" element={<BlogDetails />} />
         <Route path="/volunteer" element={<VolunteerForm />} />
 
         {/* 🔒 Admin Routes */}

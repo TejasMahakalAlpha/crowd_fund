@@ -84,6 +84,46 @@ const ManageBlogs = () => {
     setErrors({ ...errors, [name]: '' });
   };
 
+  const handlePublish = async (id) => {
+    const confirm = await Swal.fire({
+      title: "Publish Blog?",
+      text: "Are you sure you want to publish this blog?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Yes, publish it",
+    });
+
+    if (confirm.isConfirmed) {
+      try {
+        await AdminApi.publishBlog(id);
+        Swal.fire("Success", "Blog published successfully", "success");
+        fetchBlogs(); // refresh the list
+      } catch (err) {
+        console.error("Publish error:", err);
+        Swal.fire("Error", "Failed to publish blog", "error");
+      }
+    }
+  };
+  const handleUnpublish = async (id) => {
+    const confirm = await Swal.fire({
+      title: "Unpublish Blog?",
+      text: "This blog will no longer be publicly visible.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, unpublish it",
+    });
+
+    if (confirm.isConfirmed) {
+      try {
+        await AdminApi.unpublishBlog(id);
+        Swal.fire("Success", "Blog unpublished successfully", "success");
+        fetchBlogs(); // Refresh list
+      } catch (err) {
+        console.error("Unpublish error:", err);
+        Swal.fire("Error", "Failed to unpublish blog", "error");
+      }
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -100,10 +140,10 @@ const ManageBlogs = () => {
       if (editingBlogId) {
         const updateData = { ...formData };
         delete updateData.image; // backend likely doesn’t support image update in PUT
-        await AdminApi.updateBlogs(editingBlogId, updateData); // Send JSON
+        await AdminApi.updateBlog(editingBlogId, updateData); // Send JSON
         Swal.fire("Updated", "Blog updated successfully", "success");
       } else {
-        await AdminApi.createBlogsWithImage(data); // Send FormData with image
+        await AdminApi.createBlog(data); // Send FormData with image
         Swal.fire("Added", "Blog updated successfully", "success");
       }
       setEditingBlogId(null);
@@ -139,7 +179,7 @@ const ManageBlogs = () => {
 
     if (result.isConfirmed) {
       try {
-        await AdminApi.deleteBlogs(id);
+        await AdminApi.deleteBlog(id);
         Swal.fire("Deleted!", "Blog has been deleted.", "success");
         fetchBlogs();
       } catch (err) {
@@ -171,13 +211,13 @@ const ManageBlogs = () => {
         <input name="authorEmail" placeholder="Author Email" type="email" value={formData.authorEmail} onChange={handleChange} />
         {errors.authorEmail && <p className="error">{errors.authorEmail}</p>}
 
-        <select name="status" value={formData.status} onChange={handleChange}>
+        {/* <select name="status" value={formData.status} onChange={handleChange}>
           <option value="DRAFT">DRAFT</option>
           <option value="PUBLISHED">PUBLISHED</option>
-        </select>
+        </select> */}
 
-        <input name="publishedAt" type="date" value={formData.publishedAt} onChange={handleChange} />
-        {errors.publishedAt && <p className="error">{errors.publishedAt}</p>}
+        {/* <input name="publishedAt" type="date" value={formData.publishedAt} onChange={handleChange} />
+        {errors.publishedAt && <p className="error">{errors.publishedAt}</p>} */}
 
         <input name="tags" placeholder="Tags (comma separated)" value={formData.tags} onChange={handleChange} />
 
@@ -207,7 +247,13 @@ const ManageBlogs = () => {
             <div className="actions">
               <button onClick={() => handleEdit(blog)}>Edit</button>
               <button onClick={() => handleDelete(blog.id)}>Delete</button>
+              {blog.status === 'PUBLISHED' ? (
+                <button onClick={() => handleUnpublish(blog.id)}>Unpublish</button>
+              ) : (
+                <button onClick={() => handlePublish(blog.id)}>Publish</button>
+              )}
             </div>
+
           </div>
         ))}
       </div>
