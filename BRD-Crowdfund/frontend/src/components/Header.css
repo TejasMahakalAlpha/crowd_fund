@@ -1,10 +1,20 @@
+/* src/components/Header.css */
+
+/* ⭐ IMPORTANT: Agar tumhare global CSS mein 'overflow: hidden' hai (html, body, #root, .App par),
+   toh use 'overflow-y: scroll;' ya 'overflow: visible;' mein change karna padega.
+   'position: fixed' ko aisi constraints ki wajah se problem nahi hoti,
+   lekin yeh achhi practice hai.
+*/
+
 .main-header {
-  background-color: #004d40;
-  padding: 15px 0;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  background-color: #ffffff; 
+  padding: 20px 0; 
+  position: fixed; /* ⭐ Changed from sticky to FIXED ⭐ */
+  top: 0;           
+  left: 0;          /* ⭐ Add left: 0 to ensure it spans full width ⭐ */
+  width: 100%;      /* ⭐ Add width: 100% to ensure it spans full width ⭐ */
+  z-index: 1000; 
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1); 
 }
 
 .container {
@@ -12,57 +22,62 @@
   margin: 0 auto;
   padding: 0 20px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 30px; 
   flex-wrap: wrap;
   position: relative;
 }
 
 /* Logo */
 .logo a {
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: white;
+  font-size: 2rem; 
+  font-weight: 700; 
+  color: #333; 
   text-decoration: none;
 }
 
-/* Phone Number */
+/* Phone Number - Inside nav-links on desktop, outside on mobile (controlled by JS toggle) */
 .header-contact {
-  margin-left: auto;
-  margin-right: 20px;
+  margin-left: auto; 
 }
 
 .phone-number {
-  color: white;
-  font-weight: 500;
+  color: #333; 
+  font-weight: 600; 
   text-decoration: none;
-  font-size: 1rem;
+  font-size: 1.05rem; 
+  transition: color 0.3s;
 }
 
 .phone-number:hover {
-  color: #26a69a;
+  color: #004d40; 
 }
 
 /* Navigation Links */
 .nav-links {
   display: flex;
-  gap: 25px;
+  gap: 30px; 
   align-items: center;
+  margin-left: auto; 
 }
 
-.nav-links a, p {
-  color: white;
+.nav-links a, p { /* p tag included if you use it in nav links */
+  color: #333; 
   text-decoration: none;
-  font-weight: 500;
+  font-weight: 500; 
   transition: color 0.3s;
+  display: block; 
+  padding: 5px 0; 
 }
 
 .nav-links a:hover,
 .nav-links a.active {
-  color: #26a69a;
+  color: #004d40; 
+  text-decoration: underline; 
+  text-underline-offset: 4px;
 }
 
-/* Mega Menu */
+/* Mega Menu (mostly unchanged, ensure colors are dark text on white background) */
 .mega-menu {
   position: relative;
 }
@@ -72,10 +87,11 @@
   position: absolute;
   top: 100%;
   left: 0;
-  background-color: #ffffff;
+  background-color: #ffffff; 
   box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
   min-width: 200px;
   z-index: 999;
+  border-radius: 4px; 
 }
 
 .mega-menu:hover .mega-menu-content {
@@ -85,60 +101,70 @@
 .mega-menu-content a {
   display: block;
   padding: 10px 15px;
-  color: #004d40;
+  color: #333; 
   text-decoration: none;
   white-space: nowrap;
 }
 
 .mega-menu-content a:hover {
-  background-color: #f1f1f1;
+  background-color: #f5f5f5; 
+  color: #004d40; 
 }
 
-/* Hamburger Icon */
+/* Hamburger Icon (unchanged, will be hidden on desktop) */
 .hamburger {
-  display: none;
+  display: none; 
   flex-direction: column;
   justify-content: space-between;
-  width: 25px;
-  height: 18px;
+  width: 28px; 
+  height: 20px; 
   cursor: pointer;
-  margin-left: auto; /* Pushes hamburger to the right */
+  margin-left: auto;
 }
 
 .hamburger .bar {
   height: 3px;
   width: 100%;
-  background-color: white;
+  background-color: #333; 
   border-radius: 2px;
   transition: 0.3s ease;
 }
 
+/* Hamburger active state unchanged */
 .hamburger .bar.open:nth-child(1) {
-  transform: translateY(7.5px) rotate(45deg);
+  transform: translateY(8.5px) rotate(45deg); 
 }
 .hamburger .bar.open:nth-child(2) {
   opacity: 0;
 }
 .hamburger .bar.open:nth-child(3) {
-  transform: translateY(-7.5px) rotate(-45deg);
+  transform: translateY(-8.5px) rotate(-45deg); 
 }
 
 /* Responsive */
 @media (max-width: 768px) {
+  .main-header {
+    padding: 15px 0; 
+  }
   .container {
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-between;
+    flex-direction: row; 
+    flex-wrap: wrap; 
+    justify-content: space-between; 
+    gap: 0; 
   }
 
   .nav-links {
     display: none;
     flex-direction: column;
-    width: 100%;
-    background-color: #004d40;
+    width: 100%; 
+    background-color: #ffffff; 
     margin-top: 10px;
     padding: 15px 10px;
     border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1); 
+    margin-left: 0; 
+    gap: 10px; 
+    align-items: flex-start; 
   }
 
   .nav-links.open {
@@ -148,7 +174,7 @@
   .nav-links a,
   .mega-menu-content a {
     padding: 8px 0;
-    color: white;
+    color: #333; 
   }
 
   .mega-menu-content {
@@ -158,16 +184,25 @@
   }
 
   .mega-menu-content a:hover {
-    background-color: #26a69a;
-    color: white;
+    background-color: #f5f5f5; 
+    color: #004d40; 
   }
 
   .header-contact {
     margin-top: 10px;
-    margin-left: 0;
+    margin-left: 0; 
   }
 
   .hamburger {
     display: flex;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo a {
+    font-size: 1.6rem;
+  }
+  .phone-number {
+    font-size: 0.9rem;
   }
 }

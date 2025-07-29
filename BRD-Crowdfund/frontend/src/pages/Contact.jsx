@@ -1,8 +1,14 @@
+// src/pages/Contact.jsx
 import React, { useState } from 'react';
-import axios from 'axios';
+import axios from 'axios'; // Already imported
 import './Contact.css';
-import { PublicApi } from '../services/api';
-import Swal from 'sweetalert2';
+import { PublicApi } from '../services/api'; // Already imported
+import Swal from 'sweetalert2'; // Already imported
+
+// ⭐ Import images for the layout ⭐
+import contactHeroBg from "../assets/contact/contact_form-hero.webp";
+ // Path to your hero background image
+import contactIllustration from '../assets/contact/contact_form_second.png'; // Path to your contact illustration image
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -40,7 +46,6 @@ const Contact = () => {
     }
     if (!formData.subject.trim()) newErrors.subject = 'Subject is required';
     else if (formData.subject.trim().length < 10) newErrors.subject = "Minimum 10 characters required";
-
 
     if (!formData.content.trim()) { newErrors.content = 'Message content is required'; }
     else if (formData.content.trim().length < 10) { newErrors.content = "Minimum 10 characters required"; }
@@ -88,72 +93,124 @@ const Contact = () => {
 
   return (
     <div className="contact-page">
-      <section className="contact-hero">
-        <h1>Contact Us</h1>
-        <p>We’d love to hear from you!</p>
+      {/* ⭐ Hero Section - Top Image with Text Overlay ⭐ */}
+      <section className="contact-hero-section" style={{ backgroundImage: `url(${contactHeroBg})` }}>
+        <div className="hero-overlay"></div> {/* For dark overlay on image */}
+        <div className="hero-content-text">
+          <h1>Contact <span className="highlight-word">Us</span></h1>
+          <p>By working together and supporting each other, we can create a more caring compassionate and equitable society.</p>
+        </div>
       </section>
 
-      <div className="contact-container">
-        <div className="contact-form">
-          <h2>Send a Message</h2>
+      {/* ⭐ Contact Info Cards Section - Overlapping Hero ⭐ */}
+      <section className="contact-info-cards-section">
+        <div className="contact-info-card">
+          <i className="fas fa-envelope contact-icon"></i> {/* Email icon */}
+          <h4>Email Address</h4>
+          <p>Lisbon.ferrao@gmail.com</p>
+        </div>
+        <div className="contact-info-card">
+          <i className="fas fa-phone contact-icon"></i> {/* Phone icon */}
+          <h4>Contact Info</h4>
+          <p>9322342225</p>
+        </div>
+        <div className="contact-info-card">
+          <i className="fas fa-building contact-icon"></i> {/* Organization icon */}
+          <h4>Organization</h4>
+          <p>Green Dharti</p>
+        </div>
+        <div className="contact-info-card">
+          <i className="fas fa-map-marker-alt contact-icon"></i> {/* Location icon */}
+          <h4>Address</h4>
+          <p>Address: Mary Villa, Badalepada, Giriz, Vasai West</p>
+        </div>
+      </section>
+
+      {/* ⭐ Main Contact Form Section - Illustration and Form ⭐ */}
+      <section className="contact-form-section">
+        <div className="contact-form-illustration">
+          <img src={contactIllustration} alt="Contact Us Illustration" />
+        </div>
+        <div className="contact-form-content">
+          <h2>Send a <span className="highlight-word">Message</span></h2>
+          <p className="form-intro-text">simply dummy text of the printing and typesetting industry. lorem ipsum has been the industry standard dummy text ever since the 1535 when an unknown printer.</p>
           <form onSubmit={handleSubmit} noValidate>
-            <input
-              type="text"
-              name="name"
-              placeholder="Your Name"
-              value={formData.name}
-              onChange={handleChange}
-            />
-            {errors.name && <span className="error">{errors.name}</span>}
+            <div className="form-row">
+              <div className="form-group">
+                <label htmlFor="name">Name</label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  placeholder="Your Name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                />
+                {errors.name && <span className="error-message">{errors.name}</span>}
+              </div>
 
-            <input
-              type="email"
-              name="email"
-              placeholder="Your Email Address"
-              value={formData.email}
-              onChange={handleChange}
-            />
-            {errors.email && <span className="error">{errors.email}</span>}
+              <div className="form-group">
+                <label htmlFor="email">Email Address</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  placeholder="Your Email Address"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                />
+                {errors.email && <span className="error-message">{errors.email}</span>}
+              </div>
+            </div>
 
-            <input
-              type="text"
-              name="phone"
-              placeholder="Your Phone Number"
-              value={formData.phone}
-              onChange={handleChange}
-            />
-            {errors.phone && <span className="error">{errors.phone}</span>}
+            <div className="form-group">
+              <label htmlFor="phone">Phone Number</label>
+              <input
+                type="text"
+                id="phone"
+                name="phone"
+                placeholder="Your Phone Number"
+                value={formData.phone}
+                onChange={handleChange}
+                required
+              />
+              {errors.phone && <span className="error-message">{errors.phone}</span>}
+            </div>
 
-            <input
-              type="text"
-              name="subject"
-              placeholder="Subject"
-              value={formData.subject}
-              onChange={handleChange}
-            />
-            {errors.subject && <span className="error">{errors.subject}</span>}
+            <div className="form-group">
+              <label htmlFor="subject">Subject</label>
+              <input
+                type="text"
+                id="subject"
+                name="subject"
+                placeholder="Subject"
+                value={formData.subject}
+                onChange={handleChange}
+                required
+              />
+              {errors.subject && <span className="error-message">{errors.subject}</span>}
+            </div>
 
-            <textarea
-              name="content"
-              rows="6"
-              placeholder="Your Message"
-              value={formData.content}
-              onChange={handleChange}
-            />
-            {errors.content && <span className="error">{errors.content}</span>}
+            <div className="form-group">
+              <label htmlFor="content">Message</label>
+              <textarea
+                id="content"
+                name="content"
+                rows="6"
+                placeholder="Your Message"
+                value={formData.content}
+                onChange={handleChange}
+                required
+              ></textarea>
+              {errors.content && <span className="error-message">{errors.content}</span>}
+            </div>
 
             <button type="submit">Submit</button>
           </form>
         </div>
-
-        <div className="contact-info">
-          <h2>Contact Information</h2>
-          <p><strong>Phone:</strong> 9322342225</p>
-          <p><strong>Email:</strong> lisbon.ferrao@gmail.com</p>
-          <p><strong>Organization:</strong> Green Dharti</p>
-          <p><strong>Address:</strong> Mary Villa, Badalepada, Giriz, Vasai West</p>
-        </div>
-      </div>
+      </section>
     </div>
   );
 };
