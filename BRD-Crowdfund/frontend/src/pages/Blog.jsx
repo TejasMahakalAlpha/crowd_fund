@@ -18,6 +18,7 @@ const Blog = () => {
     const fetchBlogs = async () => {
       try {
         const res = await PublicApi.getBlogs();
+        console.log(res)
         setBlogs(res.data);
       } catch (err) {
         console.error("Error fetching blogs:", err);
