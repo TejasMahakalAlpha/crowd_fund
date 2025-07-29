@@ -6,8 +6,6 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 const Blog = () => {
   const [blogs, setBlogs] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(true);
   const [expandedBlogIds, setExpandedBlogIds] = useState([]); // <-- NEW
 
   const getImageUrl = (relativePath) => {
@@ -22,9 +20,7 @@ const Blog = () => {
         setBlogs(res.data);
       } catch (err) {
         console.error("Error fetching blogs:", err);
-        setError("Oops! Could not load blog posts. Please try again later.");
-      } finally {
-        setLoading(false);
+
       }
     };
     fetchBlogs();

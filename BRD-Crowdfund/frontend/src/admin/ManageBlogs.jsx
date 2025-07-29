@@ -139,21 +139,29 @@ const ManageBlogs = () => {
     try {
       if (editingBlogId) {
         const updateData = { ...formData };
-        delete updateData.image; // backend likely doesn’t support image update in PUT
-        await AdminApi.updateBlog(editingBlogId, updateData); // Send JSON
+        delete updateData.image; // assuming image not handled in PUT
+        await AdminApi.updateBlog(editingBlogId, updateData);
         Swal.fire("Updated", "Blog updated successfully", "success");
       } else {
-        await AdminApi.createBlog(data); // Send FormData with image
-        Swal.fire("Added", "Blog updated successfully", "success");
+        await AdminApi.createBlog(data);
+        Swal.fire("Added", "Blog created successfully", "success");
       }
       setEditingBlogId(null);
-
       setFormData(initialFormData);
       fetchBlogs();
     } catch (error) {
       console.error('Error saving blog:', error);
+
+      // Optional: extract server-side validation message if available
+      let message = "Something went wrong while saving the blog.";
+      if (error.response && error.response.data && error.response.data.message) {
+        message = error.response.data.message;
+      }
+
+      Swal.fire("Error", message, "error");
     }
   };
+
 
   const handleEdit = (blog) => {
     setEditingBlogId(blog.id);
