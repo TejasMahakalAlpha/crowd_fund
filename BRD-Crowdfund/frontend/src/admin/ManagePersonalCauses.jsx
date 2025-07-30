@@ -2,9 +2,10 @@
 import React, { useEffect, useState, useContext } from "react";
 import { AdminApi } from "../services/api"; // Ensure AdminApi is correctly imported
 import Swal from "sweetalert2";
- import "./ManagePersonalCauses.css"; 
+import "./ManagePersonalCauses.css"; 
 // CSS for this component
 import { AuthContext } from "../../src/context/AuthContext"; // Import AuthContext for admin name
+import { Link } from "react-router-dom"; // Import Link for navigation
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
@@ -19,7 +20,6 @@ const getFileUrl = (relativePath) => {
 
   return `${API_BASE}/api/documents/${category}/${filename}`;
 };
-
 
 const ManagePersonalCauses = () => {
   const [submissions, setSubmissions] = useState([]);
@@ -197,13 +197,21 @@ const ManagePersonalCauses = () => {
     }
   };
 
+  // NEW: Handler for the modification form fields inside the modal
+  const handleModificationChange = (e) => {
+    const { name, value } = e.target;
+    setModifiedCauseDetails(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
+
   if (loading) return <div className="loading-message">Loading personal cause submissions...</div>;
   if (error) return <div className="error-message">{error}</div>;
 
   return (
     <div className="manage-personal-causes-container">
       <h2>Manage Personal Cause Submissions</h2>
-
       <div className="filter-controls">
         <label htmlFor="status-filter">Filter by Status:</label>
         <select
@@ -218,7 +226,6 @@ const ManagePersonalCauses = () => {
           <option value="ALL">All</option>
         </select>
       </div>
-
       <div className="submissions-list">
         {submissions.length === 0 ? (
           <p className="no-submissions-message">No {filterStatus.toLowerCase()} submissions found.</p>
@@ -235,21 +242,12 @@ const ManagePersonalCauses = () => {
               <p><strong>Target Amount:</strong> ₹{submission.targetAmount?.toLocaleString()}</p>
               <p><strong>Location:</strong> {submission.location || 'N/A'}</p>
               <p><strong>Submitted On:</strong> {new Date(submission.createdAt).toLocaleDateString()}</p>
-
+              
+              {/* UPDATED: Card actions now cleaner */}
               <div className="card-actions">
                 <button className="view-details-btn" onClick={() => handleViewDetails(submission)}>
-                  View Details
+                  View Details & Manage
                 </button>
-                {submission.status === 'PENDING' || submission.status === 'UNDER_REVIEW' ? (
-                  <>
-                    <button className="approve-btn" onClick={() => handleViewDetails(submission)}>
-                      Approve
-                    </button>
-                    <button className="reject-btn" onClick={() => handleViewDetails(submission)}>
-                      Reject
-                    </button>
-                  </>
-                ) : null}
                 <button className="delete-btn" onClick={() => handleDelete(submission.id)}>
                   Delete
                 </button>
@@ -259,12 +257,11 @@ const ManagePersonalCauses = () => {
         )}
       </div>
 
+      {/* UPDATED: Modal now contains the form and action buttons */}
       {showDetailsModal && selectedSubmission && (
         <div className="modal-overlay">
           <div className="modal-content">
-            <button className="modal-close-btn" onClick={handleCloseDetailsModal}>
-              &times;
-            </button>
+            <button className="modal-close-btn" onClick={handleCloseDetailsModal}>&times;</button>
             <h3>Submission Details: {selectedSubmission.title}</h3>
             <div className="details-section">
                 <p><strong>Status:</strong> <span className={`status-badge ${selectedSubmission.status.toLowerCase()}`}>{selectedSubmission.status.replace('_', ' ')}</span></p>
@@ -280,37 +277,77 @@ const ManagePersonalCauses = () => {
                 <p><strong>Submitter Message:</strong> {selectedSubmission.submitterMessage || 'N/A'}</p>
                 <p><strong>Admin Notes:</strong> {selectedSubmission.adminNotes || 'None'}</p>
                 {selectedSubmission.status === 'APPROVED' && selectedSubmission.approvedBy && (
-                    <p><strong>Approved By:</strong> {selectedSubmission.approvedBy} on {new Date(selectedSubmission.approvedAt).toLocaleString()}</p>
+                  <p><strong>Approved By:</strong> {selectedSubmission.approvedBy} on {new Date(selectedSubmission.approvedAt).toLocaleString()}</p>
                 )}
                 {selectedSubmission.status === 'REJECTED' && selectedSubmission.rejectedAt && (
-                    <p><strong>Rejected On:</strong> {new Date(selectedSubmission.rejectedAt).toLocaleString()}</p>
+                  <p><strong>Rejected On:</strong> {new Date(selectedSubmission.rejectedAt).toLocaleString()}</p>
                 )}
             </div>
-
             <div className="files-section">
                 <h4>Attached Files:</h4>
                 {selectedSubmission.imageUrl ? (
-                    <div className="file-item">
-                        <strong>Cause Image:</strong>
-                        <img src={getFileUrl(selectedSubmission.imageUrl)} alt="Cause Image" className="detail-image-preview" />
-                        <a href={getFileUrl(selectedSubmission.imageUrl)} target="_blank" rel="noopener noreferrer" className="download-link">View Image</a>
-                        <a href={`${getFileUrl(selectedSubmission.imageUrl)}/download`} className="download-link">Download Image</a>
-                    </div>
+                  <div className="file-item">
+                    <strong>Cause Image:</strong>
+                    <img src={getFileUrl(selectedSubmission.imageUrl)} alt="Cause Image" className="detail-image-preview" />
+                    <a href={getFileUrl(selectedSubmission.imageUrl)} target="_blank" rel="noopener noreferrer" className="download-link">View Image</a>
+                    <a href={`${getFileUrl(selectedSubmission.imageUrl)}/download`} className="download-link">Download Image</a>
+                  </div>
                 ) : <p>No Cause Image provided.</p>}
-
                 {selectedSubmission.proofDocumentUrl ? (
-                    <div className="file-item">
-                        <strong>Proof Document:</strong>
-                        <p>{selectedSubmission.proofDocumentName || selectedSubmission.proofDocumentUrl.split('/').pop()}</p>
-                        {selectedSubmission.proofDocumentType?.toLowerCase() === 'pdf' ? (
-                            <iframe src={getFileUrl(selectedSubmission.proofDocumentUrl)} width="100%" height="300px" title="Proof Document"></iframe>
-                        ) : (
-                            <img src={getFileUrl(selectedSubmission.proofDocumentUrl)} alt="Proof Document" className="detail-image-preview" />
-                        )}
-                        <a href={getFileUrl(selectedSubmission.proofDocumentUrl)} target="_blank" rel="noopener noreferrer" className="download-link">View Document</a>
-                        <a href={`${getFileUrl(selectedSubmission.proofDocumentUrl)}/download`} className="download-link">Download Document</a>
-                    </div>
+                  <div className="file-item">
+                    <strong>Proof Document:</strong>
+                    <p>{selectedSubmission.proofDocumentName || selectedSubmission.proofDocumentUrl.split('/').pop()}</p>
+                    {selectedSubmission.proofDocumentType?.toLowerCase() === 'pdf' ? (
+                      <iframe src={getFileUrl(selectedSubmission.proofDocumentUrl)} width="100%" height="300px" title="Proof Document"></iframe>
+                    ) : (
+                      <img src={getFileUrl(selectedSubmission.proofDocumentUrl)} alt="Proof Document" className="detail-image-preview" />
+                    )}
+                    <a href={getFileUrl(selectedSubmission.proofDocumentUrl)} target="_blank" rel="noopener noreferrer" className="download-link">View Document</a>
+                    <a href={`${getFileUrl(selectedSubmission.proofDocumentUrl)}/download`} className="download-link">Download Document</a>
+                  </div>
                 ) : <p>No Proof Document provided.</p>}
+            </div>
+
+            {/* NEW: Section for Admin to modify cause details before approval */}
+            {(selectedSubmission.status === 'PENDING' || selectedSubmission.status === 'UNDER_REVIEW') && (
+              <div className="modification-section">
+                <h4>Modify Details Before Approval (Optional)</h4>
+                <div className="form-group">
+                  <label>Title</label>
+                  <input type="text" name="modifiedTitle" value={modifiedCauseDetails.modifiedTitle} onChange={handleModificationChange} />
+                </div>
+                <div className="form-group">
+                  <label>Short Description</label>
+                  <input type="text" name="modifiedShortDescription" value={modifiedCauseDetails.modifiedShortDescription} onChange={handleModificationChange} />
+                </div>
+                <div className="form-group">
+                  <label>Category</label>
+                  <input type="text" name="modifiedCategory" value={modifiedCauseDetails.modifiedCategory} onChange={handleModificationChange} />
+                </div>
+                <div className="form-group">
+                  <label>Location</label>
+                  <input type="text" name="modifiedLocation" value={modifiedCauseDetails.modifiedLocation} onChange={handleModificationChange} />
+                </div>
+                 <div className="form-group">
+                  <label>Full Description</label>
+                  <textarea name="modifiedDescription" value={modifiedCauseDetails.modifiedDescription} onChange={handleModificationChange} rows="4"></textarea>
+                </div>
+              </div>
+            )}
+
+            {/* NEW: Modal action buttons are now here */}
+            <div className="modal-actions">
+              {(selectedSubmission.status === 'PENDING' || selectedSubmission.status === 'UNDER_REVIEW') && (
+                <>
+                  <button className="approve-btn" onClick={handleApprove}>Approve</button>
+                  <button className="reject-btn" onClick={handleReject}>Reject</button>
+                </>
+              )}
+              {selectedSubmission.status === 'APPROVED' && (
+                <Link to={`/causes/${selectedSubmission.id}`} target="_blank" rel="noopener noreferrer">
+                  <button className="view-on-site-btn">View on Site</button>
+                </Link>
+              )}
             </div>
           </div>
         </div>
