@@ -5,7 +5,10 @@ import Swal from "sweetalert2";
 import "./ManagePersonalCauses.css"; 
 // CSS for this component
 import { AuthContext } from "../../src/context/AuthContext"; // Import AuthContext for admin name
-import { Link } from "react-router-dom"; // Import Link for navigation
+// UPDATED: Added useNavigate
+import { Link, useNavigate } from "react-router-dom"; 
+// NEW: Import a back arrow icon
+import { IoArrowBack } from "react-icons/io5";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
@@ -22,6 +25,9 @@ const getFileUrl = (relativePath) => {
 };
 
 const ManagePersonalCauses = () => {
+  // NEW: Initialize the useNavigate hook
+  const navigate = useNavigate();
+
   const [submissions, setSubmissions] = useState([]);
   const [filterStatus, setFilterStatus] = useState("PENDING"); // Default filter
   const [loading, setLoading] = useState(true);
@@ -197,7 +203,6 @@ const ManagePersonalCauses = () => {
     }
   };
 
-  // NEW: Handler for the modification form fields inside the modal
   const handleModificationChange = (e) => {
     const { name, value } = e.target;
     setModifiedCauseDetails(prevState => ({
@@ -206,12 +211,25 @@ const ManagePersonalCauses = () => {
     }));
   };
 
+  // NEW: Function to handle going back
+  const handleGoBack = () => {
+    navigate(-1); // This navigates to the previous page in history
+  };
+
   if (loading) return <div className="loading-message">Loading personal cause submissions...</div>;
   if (error) return <div className="error-message">{error}</div>;
 
   return (
     <div className="manage-personal-causes-container">
-      <h2>Manage Personal Cause Submissions</h2>
+      {/* UPDATED: Added a header wrapper for the button and title */}
+      <div className="page-header">
+        <button onClick={handleGoBack} className="back-button">
+          <IoArrowBack size={20} />
+          <span>Back</span>
+        </button>
+        <h2>Manage Personal Cause Submissions</h2>
+      </div>
+
       <div className="filter-controls">
         <label htmlFor="status-filter">Filter by Status:</label>
         <select
@@ -226,6 +244,7 @@ const ManagePersonalCauses = () => {
           <option value="ALL">All</option>
         </select>
       </div>
+
       <div className="submissions-list">
         {submissions.length === 0 ? (
           <p className="no-submissions-message">No {filterStatus.toLowerCase()} submissions found.</p>
@@ -243,7 +262,6 @@ const ManagePersonalCauses = () => {
               <p><strong>Location:</strong> {submission.location || 'N/A'}</p>
               <p><strong>Submitted On:</strong> {new Date(submission.createdAt).toLocaleDateString()}</p>
               
-              {/* UPDATED: Card actions now cleaner */}
               <div className="card-actions">
                 <button className="view-details-btn" onClick={() => handleViewDetails(submission)}>
                   View Details & Manage
@@ -257,7 +275,6 @@ const ManagePersonalCauses = () => {
         )}
       </div>
 
-      {/* UPDATED: Modal now contains the form and action buttons */}
       {showDetailsModal && selectedSubmission && (
         <div className="modal-overlay">
           <div className="modal-content">
@@ -308,7 +325,6 @@ const ManagePersonalCauses = () => {
                 ) : <p>No Proof Document provided.</p>}
             </div>
 
-            {/* NEW: Section for Admin to modify cause details before approval */}
             {(selectedSubmission.status === 'PENDING' || selectedSubmission.status === 'UNDER_REVIEW') && (
               <div className="modification-section">
                 <h4>Modify Details Before Approval (Optional)</h4>
@@ -334,8 +350,6 @@ const ManagePersonalCauses = () => {
                 </div>
               </div>
             )}
-
-            {/* NEW: Modal action buttons are now here */}
             <div className="modal-actions">
               {(selectedSubmission.status === 'PENDING' || selectedSubmission.status === 'UNDER_REVIEW') && (
                 <>
