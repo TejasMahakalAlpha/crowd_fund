@@ -196,6 +196,7 @@ const ManageBlogs = () => {
       ...blog,
       publishedAt: blog.publishedAt ? blog.publishedAt.split('T')[0] : '',
       image: null,
+
     });
     setErrors({});
   };
