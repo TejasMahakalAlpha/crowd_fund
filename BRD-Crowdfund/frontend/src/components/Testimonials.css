@@ -1,187 +1,176 @@
 /* src/components/Testimonials.css */
 
 .testimonials-section {
-  background: 
-    url('../assets/testimonials_background.avif'); /* ⭐ CONFIRM: This image path is correct and file exists in public/ ⭐ */
+  background: url('../assets/testimonials_background.avif');
   background-size: cover;
   background-position: center;
-  background-repeat: no-repeat;
-  position: relative; 
-  padding: 80px 20px; 
-  color: #333; 
-  overflow: hidden; 
+  position: relative;
+  padding: 80px 0;
+  color: #333;
+  overflow: hidden;
 }
 
-/* Background Overlay for the section */
 .testimonials-background-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(255, 255, 255, 0.8); /* White overlay with 80% opacity */
-    z-index: 1; 
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.8);
+  z-index: 1;
 }
 
-.testimonials-content-wrapper { 
-    position: relative;
-    z-index: 2; 
-    max-width: 1200px; 
-    margin: 0 auto; 
-    text-align: center; 
-    display: flex; 
-    flex-direction: column; 
-    align-items: center; 
+.testimonials-content-wrapper {
+  position: relative;
+  z-index: 2;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 20px;
 }
 
 .section-title {
-  font-size: 2.8rem; 
-  margin-bottom: 50px; 
-  /* color: #34495e;  */
-  color:black;
+  font-size: 2.8rem;
+  margin-bottom: 50px;
+  color: black;
   font-weight: 700;
-  text-align: center; 
-  width: 100%; 
+  text-align: center;
+  width: 100%;
+  /* FIX: Ensures title appears on top of the cards */
+  position: relative;
+  z-index: 5;
 }
 
-.highlight-word { 
-    color: #4dc2c2; 
-    font-weight: 800;
+.highlight-word {
+  color: #4dc2c2;
+  font-weight: 800;
 }
 
-.testimonial-cards {
+/* === DESKTOP LAYOUT (Normal Staggered View) === */
+.testimonial-cards-desktop {
   display: flex;
-  flex-wrap: wrap; 
-  justify-content: center; 
-  gap: 30px; 
+  justify-content: center;
+  gap: 30px;
   max-width: 1100px;
-  margin: 0 auto;
-  align-items: flex-start; /* Align cards to the top of their flex line for staggering */
+  align-items: flex-start;
 }
 
+.testimonial-cards-desktop .testimonial-card {
+  flex: 0 0 calc(33.33% - 20px);
+  max-width: 300px;
+}
+
+/* Staggered effect for desktop */
+.testimonial-cards-desktop .testimonial-card:nth-child(1),
+.testimonial-cards-desktop .testimonial-card:nth-child(3) {
+  margin-top: 50px;
+}
+
+.testimonial-cards-desktop .testimonial-card:nth-child(2) {
+  margin-top: -50px;
+}
+
+/* === MOBILE/TABLET LAYOUT (Swiper Slider) === */
+.testimonial-swiper {
+  width: 100vw; /* Takes full viewport width */
+  max-width: 1200px;
+}
+
+.swiper-slide {
+  height: auto; /* Important for content of different heights */
+  padding: 10px 0 20px 0;
+}
+
+
+/* === CARD STYLING (Applies to both views) === */
 .testimonial-card {
   background: #ffffff;
-  padding: 30px; 
+  padding: 30px;
   border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15); 
-  max-width: 300px; /* ⭐ Adjusted max-width slightly to encourage wrapping ⭐ */
-  text-align: left; 
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  text-align: left;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  position: relative; 
-  box-sizing: border-box; 
-  flex: 0 0 calc(33.33% - 20px); /* 3 cards per row with gap */
+  box-sizing: border-box;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .testimonial-card:hover {
-  transform: translateY(-8px); 
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-}
-
-/* ⭐ Staggered Layout for cards (Bech wala card Upar) - Exactly as per Screenshot 2025-07-29 113630.png ⭐ */
-.testimonial-cards .testimonial-card:nth-child(1),
-.testimonial-cards .testimonial-card:nth-child(3) {
-    margin-top: 50px; /* First and Third card lower/default position */
-}
-
-.testimonial-cards .testimonial-card:nth-child(2) {
-    margin-top: -50px; /* Middle card UP */
+  transform: translateY(-8px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
 }
 
 .quote {
   font-size: 1rem;
   line-height: 1.6;
-  color: #333; 
-  margin-bottom: 25px; 
-  font-style: italic; 
+  color: #333;
+  margin-bottom: 25px;
+  font-style: italic;
+  flex-grow: 1;
 }
 
-/* Author Info Styling */
 .author-info {
-    display: flex;
-    align-items: flex-start; /* ⭐ Changed to flex-start for top alignment of avatar/text ⭐ */
-    gap: 15px; 
-    margin-top: 15px; 
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  margin-top: 15px;
 }
 
 .author-avatar {
-    width: 60px; 
-    height: 60px;
-    border-radius: 50%; 
-    object-fit: cover;
-    border: 2px solid #4dc2c2; 
-    flex-shrink: 0; 
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #4dc2c2;
+  flex-shrink: 0;
 }
 
 .author-details {
-    display: flex;
-    flex-direction: column;
-    text-align: left;
-    flex-grow: 1; /* Allow details to take remaining width */
-    /* max-width: 200px; ⭐ Optional: set max-width here if tagline still not wrapping ⭐ */
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  flex-grow: 1;
 }
 
 .author-name {
-    font-weight: bold;
-    color: #00796b; 
-    font-size: 1.1rem; 
-    margin: 0; 
+  font-weight: bold;
+  color: #00796b;
+  font-size: 1.1rem;
+  margin: 0;
 }
 
-.author-tagline { 
-    font-size: 0.85rem;
-    color: #777; 
-    margin: 0;
-    line-height: 1.3;
-    white-space: normal; /* Ensure text wraps */
-    overflow-wrap: break-word; /* Break long words if necessary */
+.author-tagline {
+  font-size: 0.85rem;
+  color: #777;
+  margin: 0;
+  line-height: 1.3;
 }
 
-/* Responsive Adjustments (no major changes from previous, ensures mobile compatibility) */
+
+/* === GENERAL RESPONSIVE STYLES === */
 @media (max-width: 992px) {
-  .testimonial-cards {
-    gap: 25px; 
-    align-items: stretch; /* Remove staggering when less than 3 columns */
+  /* On tablet, the desktop view (if shown) would stack */
+  .testimonial-cards-desktop {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
   }
-  .testimonial-card {
-    flex: 0 0 calc(50% - 20px); 
-    max-width: 450px; 
-  }
-  /* Remove staggered margins on smaller screens */
-  .testimonial-cards .testimonial-card:nth-child(1),
-  .testimonial-cards .testimonial-card:nth-child(2),
-  .testimonial-cards .testimonial-card:nth-child(3) {
-    margin-top: 0; 
-  }
-  .section-title {
-    font-size: 2.5rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .testimonials-section {
-    padding: 60px 15px; 
-  }
-  .section-title {
-    font-size: 2.2rem;
-    margin-bottom: 40px;
-  }
-  .testimonial-cards {
-    flex-direction: column; 
-    gap: 20px; 
-  }
-  .testimonial-card {
-    max-width: 100%; 
-    flex: 0 0 auto; 
-  }
-  .testimonial-card:hover {
-    transform: none; 
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+  .testimonial-cards-desktop .testimonial-card {
+    max-width: 450px;
+    margin-top: 0 !important; /* Remove staggering on tablet */
   }
 }
 
 @media (max-width: 480px) {
   .testimonials-section {
-    padding: 40px 10px;
+    padding: 40px 0;
+  }
+  .testimonials-content-wrapper {
+    padding: 0 10px;
   }
   .section-title {
     font-size: 1.8rem;
@@ -189,20 +178,5 @@
   }
   .testimonial-card {
     padding: 20px;
-    border-radius: 10px;
-  }
-  .quote {
-    font-size: 0.95rem;
-    margin-bottom: 20px;
-  }
-  .author-avatar {
-    width: 50px;
-    height: 50px;
-  }
-  .author-name {
-    font-size: 1rem;
-  }
-  .author-tagline {
-    font-size: 0.8rem;
   }
 }
