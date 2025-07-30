@@ -2,18 +2,23 @@
 .stats-section {
   background: #004d40;
   color: white;
-  padding: 60px 20px;
+  padding: 60px 0; /* Changed to 0 horizontal padding for scroller */
   text-align: center;
-  overflow-y: auto;
-
 }
 
-.stats-grid {
+/* --- DESKTOP VIEW (Grid Layout) --- */
+/* This is the default style for screens wider than 768px */
+.stats-scroller {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 30px;
-  max-width: 1000px;
+  max-width: 1100px;
   margin: 0 auto;
+  padding: 0 20px; /* Add padding here for desktop */
+}
+
+.stats-track {
+  display: contents; /* Allows grid to control the cards directly */
 }
 
 .stat-card {
@@ -40,6 +45,49 @@
   color: #c8e6c9;
 }
 
-::-webkit-scrollbar {
-  display: none;
+
+/* --- MOBILE VIEW (Auto-Scrolling Marquee) --- */
+/* This activates on screens 768px or smaller */
+@media (max-width: 768px) {
+  .stats-scroller {
+    display: block; /* Disable the grid */
+    max-width: 100%;
+    overflow: hidden;
+    padding: 0; /* Remove padding for edge-to-edge scroll */
+    -webkit-mask-image: linear-gradient(to right, transparent, white 10%, white 90%, transparent);
+    mask-image: linear-gradient(to right, transparent, white 10%, white 90%, transparent);
+  }
+
+  .stats-track {
+    display: flex; /* Use flexbox for horizontal layout */
+    width: max-content; /* Make the track as wide as its content */
+    gap: 20px;
+    /* The animation magic happens here */
+    animation: scroll 30s linear infinite;
+  }
+
+  .stats-track:hover {
+    animation-play-state: paused; /* Pause animation on hover */
+  }
+
+  .stat-card {
+    flex-shrink: 0; /* Prevent cards from shrinking */
+    width: 200px; /* Give cards a fixed width */
+  }
+
+  .stat-card:hover {
+    transform: none; /* Disable hover effect on mobile */
+    background: #00695c;
+  }
+}
+
+/* The animation definition */
+@keyframes scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    /* Move the track to the left by half its width */
+    transform: translateX(-50%);
+  }
 }
