@@ -92,8 +92,8 @@ export const AdminApi = {
   // Admin Blog Endpoints (Confirmed by Swagger to be under /admin/)
   getAllBlogs: () => AdminApiInstance.get(`blogs`, { headers: AdminApi._authHeader() }),
   getBlogById: (id) => AdminApiInstance.get(`blogs/${id}`, { headers: AdminApi._authHeader() }),
-  createBlog: (data) => AdminApiInstance.post(`blogs/with-image`, data, { headers: AdminApi._authHeader() }),
-  updateBlog: (id, data) => AdminApiInstance.put(`blogs/${id}`, data, { headers: AdminApi._authHeader() }),
+  createBlog: (data) => AdminApiInstance.post(`blogs/with-image`, data, { headers: AdminApi._authHeader(), "Content-Type": "multipart/form-data", }),
+  updateBlog: (id, data) => AdminApiInstance.put(`blogs/${id}`, data, { headers: AdminApi._authHeader(), "Content-Type": "multipart/form-data", }),
   deleteBlog: (id) => AdminApiInstance.delete(`blogs/${id}`, { headers: AdminApi._authHeader() }),
   publishBlog: (id) => AdminApiInstance.post(`blogs/${id}/publish`, { headers: AdminApi._authHeader() }),
   unpublishBlog: (id) => AdminApiInstance.post(`blogs/${id}/unpublish`, { headers: AdminApi._authHeader() }),

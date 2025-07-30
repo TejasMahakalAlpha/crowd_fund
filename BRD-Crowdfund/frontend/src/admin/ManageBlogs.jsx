@@ -127,32 +127,58 @@ const ManageBlogs = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!validateForm()) return;
 
     const data = new FormData();
-    Object.entries(formData).forEach(([key, val]) => {
-      if (val !== null && val !== undefined) {
-        data.append(key, typeof val === 'boolean' ? String(val) : val);
-      }
-    });
+
+    // Manually append each field from formData
+    data.append('title', formData.title);
+    data.append('subtitle', formData.subtitle);
+    data.append('slug', formData.slug);
+    data.append('content', formData.content);
+    data.append('author', formData.author);
+    data.append('authorEmail', formData.authorEmail);
+    data.append('status', formData.status);
+    data.append('publishedAt', formData.publishedAt);
+    data.append('tags', formData.tags);
+    data.append('isFeatured', String(formData.isFeatured));    // boolean as string
+    data.append('allowComments', String(formData.allowComments));  // boolean as string
+
+    // Append image only if present
+    if (formData.image) {
+      data.append('image', formData.image);
+    }
 
     try {
       if (editingBlogId) {
-        const updateData = { ...formData };
-        delete updateData.image; // assuming image not handled in PUT
+        // Assuming update does not support image upload, so send JSON object without image
+        const updateData = {
+          title: formData.title,
+          subtitle: formData.subtitle,
+          slug: formData.slug,
+          content: formData.content,
+          author: formData.author,
+          authorEmail: formData.authorEmail,
+          status: formData.status,
+          publishedAt: formData.publishedAt,
+          tags: formData.tags,
+          isFeatured: formData.isFeatured,
+          allowComments: formData.allowComments,
+        };
         await AdminApi.updateBlog(editingBlogId, updateData);
         Swal.fire("Updated", "Blog updated successfully", "success");
       } else {
         await AdminApi.createBlog(data);
         Swal.fire("Added", "Blog created successfully", "success");
       }
+
       setEditingBlogId(null);
       setFormData(initialFormData);
       fetchBlogs();
     } catch (error) {
       console.error('Error saving blog:', error);
 
-      // Optional: extract server-side validation message if available
       let message = "Something went wrong while saving the blog.";
       if (error.response && error.response.data && error.response.data.message) {
         message = error.response.data.message;
@@ -218,8 +244,8 @@ const ManageBlogs = () => {
 
         <input name="authorEmail" placeholder="Author Email" type="email" value={formData.authorEmail} onChange={handleChange} />
         {errors.authorEmail && <p className="error">{errors.authorEmail}</p>}
-
-        {/* <select name="status" value={formData.status} onChange={handleChange}>
+        {/* 
+        <select name="status" value={formData.status} onChange={handleChange}>
           <option value="DRAFT">DRAFT</option>
           <option value="PUBLISHED">PUBLISHED</option>
         </select> */}

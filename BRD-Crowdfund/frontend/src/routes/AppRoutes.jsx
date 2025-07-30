@@ -59,9 +59,9 @@ const AppRoutes = () => {
         <Route path="/events" element={<Events />} />
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/blog" element={<Blog />} />
-        <Route path="/blogs/:slugOrId" element={<BlogDetails />} />
+        <Route path="/blogs/:slugOrId" element={<BlogDetails />} /> {/* ⭐ BlogDetails route added from conflict ⭐ */}
         <Route path="/volunteer" element={<VolunteerForm />} />
-        <Route path="/submit-cause" element={<SubmitCause />} /> {/* ⭐ UNCOMMENTED: SubmitCause route */}
+        <Route path="/submit-cause" element={<SubmitCause />} /> {/* ⭐ UNCOMMENTED SubmitCause route ⭐ */}
 
         {/* 🔒 Admin Routes - protected by authentication */}
         <Route path="/admin/login" element={<Login />} />
@@ -74,7 +74,7 @@ const AppRoutes = () => {
         <Route path="/admin/manage-volunteers" element={<ProtectedRoute element={<ManageVolunteers />} />} />
         <Route path="/admin/manage-events" element={<ProtectedRoute element={<ManageEvents />} />} />
         <Route path="/admin/manage-contacts" element={<ProtectedRoute element={<ManageContacts />} />} />
-        <Route path="/admin/manage-personal-causes" element={<ProtectedRoute element={<ManagePersonalCauses />} />} /> {/* ⭐ UNCOMMENTED: ManagePersonalCauses route */}
+        <Route path="/admin/manage-personal-causes" element={<ProtectedRoute element={<ManagePersonalCauses />} />} /> {/* ⭐ UNCOMMENTED ManagePersonalCauses route ⭐ */}
       </Routes>
 
       {/* Footer is shown only if it's NOT an admin route */}
