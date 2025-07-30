@@ -45,7 +45,7 @@ const Events = () => {
     <div className="events-page">
       <section className="events-hero">
         <h1>Upcoming Events</h1>
-        <p>Join us in making a difference through impactful initiatives and events.</p>
+     <p>Join us in making a difference through impactful initiatives and events.</p>
       </section>
 
       {loading && <p className="loading-text">Loading events...</p>}
