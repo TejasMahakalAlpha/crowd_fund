@@ -55,8 +55,8 @@ const SubmitCause = () => {
         if (!value.trim()) return "Description is required";
         return "";
       case 'shortDescription':
-         if (value.length > 100) return "Short description cannot exceed 100 characters";
-         return "";
+        if (value.length > 100) return "Short description cannot exceed 100 characters";
+        return "";
       case 'targetAmount':
         if (!value) return "Target amount is required";
         if (isNaN(Number(value)) || Number(value) <= 0) return "Target amount must be a positive number";
@@ -70,8 +70,9 @@ const SubmitCause = () => {
         if (!/\S+@\S+\.\S+/.test(value)) return "Invalid email format";
         return "";
       case 'submitterPhone':
-        if (value && !/^\d{1,10}$/.test(value)) return "Phone number must be up to 10 digits";
-        if (value && value.length !== 10) return "Phone number must be exactly 10 digits";
+        // UPDATED: Phone number is now required
+        if (!value.trim()) return "Phone number is required";
+        if (!/^\d{10}$/.test(value)) return "Phone number must be exactly 10 digits";
         return "";
       case 'endDate':
         if (value && isNaN(new Date(value).getTime())) return "Invalid end date/time format";
@@ -165,6 +166,8 @@ const SubmitCause = () => {
     if (!formData.targetAmount) newErrors.targetAmount = "Target amount is required";
     if (!formData.submitterEmail.trim()) newErrors.submitterEmail = "Your email is required";
     if (!formData.submitterName.trim()) newErrors.submitterName = "Your name is required";
+    // UPDATED: Added check for phone number
+    if (!formData.submitterPhone.trim()) newErrors.submitterPhone = "Phone number is required";
     
     // File upload checks
     if (!imageFile) newErrors.image = "A display image for the cause is required";
@@ -205,7 +208,6 @@ const SubmitCause = () => {
     }
   };
 
-  // The JSX for the form is completely unchanged
   return (
     <div className="submit-cause-container">
       <h2>Submit Your Personal Cause</h2>
@@ -271,8 +273,9 @@ const SubmitCause = () => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="submitterPhone">Your Phone Number</label>
-          <input type="text" id="submitterPhone" name="submitterPhone" value={formData.submitterPhone} onChange={handleChange} placeholder="Enter your 10-digit mobile number" />
+          {/* UPDATED: Added required star and attribute */}
+          <label htmlFor="submitterPhone">Your Phone Number <span className="required-star">*</span></label>
+          <input type="text" id="submitterPhone" name="submitterPhone" value={formData.submitterPhone} onChange={handleChange} placeholder="Enter your 10-digit mobile number" required/>
           {errors.submitterPhone && <p className="error-message">{errors.submitterPhone}</p>}
         </div>
 
