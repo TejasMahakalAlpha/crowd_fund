@@ -1,4 +1,3 @@
-// src/components/StatsSection.jsx
 import React from 'react';
 import './StatsSection.css';
 
@@ -12,11 +11,9 @@ const statsData = [
 const StatsSection = () => {
   return (
     <section className="stats-section">
-      {/* UPDATED: Changed the container structure */}
       <div className="stats-scroller">
         <div className="stats-track">
-          {/* We map over the data twice for a seamless loop */}
-          {[...statsData, ...statsData].map((stat, index) => (
+          {statsData.map((stat, index) => (
             <div className="stat-card" key={`${stat.label}-${index}`}>
               <div className="stat-value">{stat.value}</div>
               <div className="stat-label">{stat.label}</div>
