@@ -70,7 +70,7 @@ const Testimonials = () => {
       <div className="testimonials-background-overlay"></div>
       <div className="testimonials-content-wrapper">
         <h2 className="section-title">Here’s what people say about <span className="highlight-word">give</span></h2>
-        
+
         {isDesktop ? (
           // --- RENDER THIS ON DESKTOP ---
           <div className="testimonial-cards-desktop">

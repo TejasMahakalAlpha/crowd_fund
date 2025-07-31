@@ -57,8 +57,8 @@ const VolunteerForm = () => {
     else if (!formData.skills.trim()) newErrors.skills = "Skills is required"
 
     if (formData.skills.trim() && !isTextOnly(formData.skills)) {
-  newErrors.skills = "Only letters and spaces allowed";
-}
+      newErrors.skills = "Only letters and spaces allowed";
+    }
 
 
     // Validate availability
@@ -124,7 +124,7 @@ const VolunteerForm = () => {
           <input type="email" name="email" placeholder="Email Address" value={formData.email} onChange={handleChange} />
           {renderError("email")}
 
-          <input type="tel" name="phone" placeholder="Phone Number" value={formData.phone} onChange={handleChange} />
+          <input type="tel" name="phone" placeholder="Phone Number" maxLength={10} pattern="\d*" value={formData.phone} onChange={handleChange} />
           {renderError("phone")}
 
           <input type="text" name="address" placeholder="Address" value={formData.address} onChange={handleChange} />

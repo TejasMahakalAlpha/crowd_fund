@@ -192,6 +192,7 @@ const ManageVolunteers = () => {
           type="tel"
           name="phone"
           placeholder="Phone"
+          maxLength={10}
           value={formData.phone}
           onChange={handleChange}
         />

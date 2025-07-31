@@ -15,6 +15,7 @@ import Contact from '../pages/Contact';
 import Events from '../pages/Events';
 import Gallery from '../pages/Gallery';
 import Blog from '../pages/Blog';
+import BlogDetails from '../pages/BlogDetails';
 import VolunteerForm from '../pages/VolunteerForm';
 import SubmitCause from '../pages/SubmitCause';     // ⭐ UNCOMMENTED: SubmitCause import
 import WhatsApp from '../components/WhatsApp';
@@ -30,7 +31,6 @@ import ManageVolunteers from '../admin/ManageVolunteers';
 import ManageEvents from '../admin/ManageEvents';
 import ManageContacts from "../admin/ManageContacts";
 import ManagePersonalCauses from '../admin/ManagePersonalCauses'; // ⭐ UNCOMMENTED: ManagePersonalCauses import
-import BlogDetails from '../pages/BlogDetails';
 
 
 const AppRoutes = () => {
@@ -59,7 +59,7 @@ const AppRoutes = () => {
         <Route path="/events" element={<Events />} />
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/blog" element={<Blog />} />
-        <Route path="/blogs/:slugOrId" element={<BlogDetails />} /> {/* ⭐ BlogDetails route added from conflict ⭐ */}
+        <Route path="/blog/:slug" element={<BlogDetails />} />
         <Route path="/volunteer" element={<VolunteerForm />} />
         <Route path="/submit-cause" element={<SubmitCause />} /> {/* ⭐ UNCOMMENTED SubmitCause route ⭐ */}
 

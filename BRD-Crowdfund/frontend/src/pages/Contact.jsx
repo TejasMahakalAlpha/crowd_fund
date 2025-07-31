@@ -7,7 +7,7 @@ import Swal from 'sweetalert2'; // Already imported
 
 // ⭐ Import images for the layout ⭐
 import contactHeroBg from "../assets/contact/contact_form-hero.webp";
- // Path to your hero background image
+// Path to your hero background image
 import contactIllustration from '../assets/contact/contact_form_second.png'; // Path to your contact illustration image
 
 const Contact = () => {
@@ -171,6 +171,7 @@ const Contact = () => {
                 type="text"
                 id="phone"
                 name="phone"
+                maxLength={10}
                 placeholder="Your Phone Number"
                 value={formData.phone}
                 onChange={handleChange}

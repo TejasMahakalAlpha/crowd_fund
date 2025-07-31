@@ -1,7 +1,7 @@
 // src/admin/ManageDonations.jsx
 import React, { useEffect, useState } from "react";
 import "./ManageDonations.css"; // ⭐ Ensure this CSS file exists and is correctly linked
-import { AdminApi, PublicApi } from "../services/api"; 
+import { AdminApi, PublicApi } from "../services/api";
 import { toast } from "react-toastify"; // Assuming you have react-toastify setup for notifications
 import { useNavigate } from "react-router-dom";
 
@@ -15,7 +15,7 @@ const ManageDonations = () => {
     amount: "", // Amount in Rupees for form input
     message: "",
     causeId: "",
-    currency: "", 
+    currency: "",
     paymentMethod: "",
   });
   const navigate = useNavigate();
@@ -28,7 +28,7 @@ const ManageDonations = () => {
   const fetchDonations = async () => {
     try {
       // ⭐ CRITICAL FIX: Changed to AdminApi.getAllDonationsAdmin()
-      const res = await AdminApi.getAllDonationsAdmin(); 
+      const res = await AdminApi.getAllDonationsAdmin();
       setDonations(res.data || []);
       console.log("Fetched donations for admin:", res.data); // For debugging
     } catch (err) {
@@ -51,14 +51,14 @@ const ManageDonations = () => {
         donorName: formData.donorName,
         donorEmail: formData.donorEmail,
         donorPhone: formData.donorPhone,
-        amount: amountInPaisa, 
+        amount: amountInPaisa,
         message: formData.message,
         causeId: formData.causeId ? parseInt(formData.causeId) : null, // Send null if empty, otherwise parse
         currency: formData.currency || "INR", // Default to INR if not provided
         paymentMethod: formData.paymentMethod || "MANUAL", // Default to MANUAL
         // Add other required fields by backend for manual donation if any (e.g., status, paymentId, orderId)
         // For manual entry, status might directly be COMPLETED, paymentId/orderId might be generated/N/A
-        status: "COMPLETED", 
+        status: "COMPLETED",
         paymentId: "MANUAL_" + Date.now(),
         orderId: "MANUAL_ORDER_" + Date.now(),
       };
@@ -66,7 +66,7 @@ const ManageDonations = () => {
       // Assuming PublicApi.donate corresponds to a public endpoint to add donations directly (not via Razorpay)
       // If this requires admin authentication, it should be an AdminApi call, not PublicApi.donate
       await PublicApi.donate(payload); // This calls /api/public/donate
-      
+
       toast.success("Donation added successfully");
 
       setFormData({
@@ -92,7 +92,7 @@ const ManageDonations = () => {
   const handleDelete = async (id) => {
     try {
       // Ensure AdminApi has a deleteDonation method mapped to /admin/donations/{id}
-      await AdminApi.deleteDonation(id); 
+      await AdminApi.deleteDonation(id);
       toast.success("Donation deleted");
       fetchDonations(); // Refresh the list after deletion
     } catch (err) {
@@ -130,6 +130,7 @@ const ManageDonations = () => {
           type="text"
           name="donorPhone"
           placeholder="Phone Number"
+          maxLength={10}
           value={formData.donorPhone}
           onChange={handleChange}
         />

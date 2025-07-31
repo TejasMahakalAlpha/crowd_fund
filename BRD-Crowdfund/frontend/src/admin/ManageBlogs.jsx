@@ -13,9 +13,9 @@ const initialFormData = {
   author: '',
   authorEmail: '',
   status: 'DRAFT',
-  publishedAt: '',
+  // publishedAt: '',
   tags: '',
-  isFeatured: false,
+  isFeatured: true,
   allowComments: true,
 };
 
@@ -33,7 +33,6 @@ const ManageBlogs = () => {
   const fetchBlogs = async () => {
     try {
       const res = await AdminApi.getAllBlogs();
-      console.log(res.data)
       if (Array.isArray(res.data)) {
         setBlogs(res.data);
       } else {
@@ -140,7 +139,7 @@ const ManageBlogs = () => {
     data.append('author', formData.author);
     data.append('authorEmail', formData.authorEmail);
     data.append('status', formData.status);
-    data.append('publishedAt', formData.publishedAt);
+    // data.append('publishedAt', formData.publishedAt);
     data.append('tags', formData.tags);
     data.append('isFeatured', String(formData.isFeatured));    // boolean as string
     data.append('allowComments', String(formData.allowComments));  // boolean as string
@@ -152,21 +151,7 @@ const ManageBlogs = () => {
 
     try {
       if (editingBlogId) {
-        // Assuming update does not support image upload, so send JSON object without image
-        const updateData = {
-          title: formData.title,
-          subtitle: formData.subtitle,
-          slug: formData.slug,
-          content: formData.content,
-          author: formData.author,
-          authorEmail: formData.authorEmail,
-          status: formData.status,
-          publishedAt: formData.publishedAt,
-          tags: formData.tags,
-          isFeatured: formData.isFeatured,
-          allowComments: formData.allowComments,
-        };
-        await AdminApi.updateBlog(editingBlogId, updateData);
+        const res = await AdminApi.updateBlog(editingBlogId, data);
         Swal.fire("Updated", "Blog updated successfully", "success");
       } else {
         await AdminApi.createBlog(data);
@@ -189,17 +174,25 @@ const ManageBlogs = () => {
   };
 
 
-  const handleEdit = (blog) => {
-    setEditingBlogId(blog.id);
-    setFormData({
-      ...initialFormData,
-      ...blog,
-      publishedAt: blog.publishedAt ? blog.publishedAt.split('T')[0] : '',
-      image: null,
-
-    });
-    setErrors({});
+  const handleEdit = async (id) => {
+    try {
+      const res = await AdminApi.getBlogById(id);
+      console.log(res)
+      const blog = res.data;
+      setEditingBlogId(blog.id);
+      setFormData({
+        ...initialFormData,
+        ...blog,
+        publishedAt: blog.publishedAt ? blog.publishedAt.split('T')[0] : '',
+        image: null,
+      });
+      setErrors({});
+    } catch (error) {
+      console.error("Error fetching blog for edit:", error);
+      Swal.fire("Error", "Failed to fetch blog details", "error");
+    }
   };
+
 
   const handleDelete = async (id) => {
     const result = await Swal.fire({
@@ -245,11 +238,11 @@ const ManageBlogs = () => {
 
         <input name="authorEmail" placeholder="Author Email" type="email" value={formData.authorEmail} onChange={handleChange} />
         {errors.authorEmail && <p className="error">{errors.authorEmail}</p>}
-        {/* 
+
         <select name="status" value={formData.status} onChange={handleChange}>
           <option value="DRAFT">DRAFT</option>
           <option value="PUBLISHED">PUBLISHED</option>
-        </select> */}
+        </select>
 
         {/* <input name="publishedAt" type="date" value={formData.publishedAt} onChange={handleChange} />
         {errors.publishedAt && <p className="error">{errors.publishedAt}</p>} */}
@@ -280,7 +273,7 @@ const ManageBlogs = () => {
               <p>{new Date(blog.createdAt).toLocaleDateString()}</p>
             </div>
             <div className="actions">
-              <button onClick={() => handleEdit(blog)}>Edit</button>
+              <button onClick={() => handleEdit(blog.id)}>Edit</button>
               <button onClick={() => handleDelete(blog.id)}>Delete</button>
               {blog.status === 'PUBLISHED' ? (
                 <button onClick={() => handleUnpublish(blog.id)}>Unpublish</button>
