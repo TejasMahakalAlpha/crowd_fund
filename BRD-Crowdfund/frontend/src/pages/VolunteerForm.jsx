@@ -18,63 +18,91 @@ const VolunteerForm = () => {
 
   const [errors, setErrors] = useState({});
 
-  const isTextOnly = (str) => /^[A-Za-z\s]+$/.test(str);
-  const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  const isValidPhone = (phone) => /^\d{10}$/.test(phone);
+  // Function to validate a single field in real-time
+  const validateField = (name, value) => {
+    const isTextOnly = (str) => /^[A-Za-z\s]*$/.test(str);
+    const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    const isValidPhone = (phone) => /^\d{10}$/.test(phone);
 
+    switch (name) {
+      case "firstName":
+        if (!value.trim()) return "First name is required";
+        if (!isTextOnly(value)) return "Only letters and spaces allowed";
+        return "";
+      case "lastName":
+        if (!value.trim()) return "Last name is required";
+        if (!isTextOnly(value)) return "Only letters and spaces allowed";
+        return "";
+      case "email":
+        if (!value.trim()) return "Email is required";
+        if (!isValidEmail(value)) return "Invalid email address";
+        return "";
+      case "phone":
+        if (!value.trim()) return "Phone number is required";
+        if (!isValidPhone(value)) return "Phone must be 10 digits";
+        return "";
+      case "address":
+        if (!value.trim()) return "Address is required";
+        if (value.trim().length < 10) return "Minimum 10 characters required";
+        return "";
+      case "skills":
+        if (!value.trim()) return "Skills is required";
+        if (!isTextOnly(value)) return "Only letters and spaces allowed";
+        return "";
+      case "availability":
+        if (!value.trim()) return "Availability is required";
+        return "";
+      case "experience":
+        if (!value.trim()) return "Experience is required";
+        if (value.trim().length < 10) return "Minimum 10 characters required";
+        return "";
+      case "motivation":
+        if (!value.trim()) return "Motivation is required";
+        if (value.trim().length < 10) return "Minimum 10 characters required";
+        return "";
+      default:
+        return "";
+    }
+  };
+
+  // Updated handleChange to filter input and validate in real-time
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    setErrors({ ...errors, [e.target.name]: "" });
+    const { name, value } = e.target;
+    let processedValue = value;
+
+    // Filter input based on field name
+    if (name === "firstName" || name === "lastName" || name === "skills") {
+      processedValue = value.replace(/[^A-Za-z\s]/g, '');
+    } else if (name === "phone") {
+      processedValue = value.replace(/[^0-9]/g, '').slice(0, 10);
+    }
+
+    setFormData({ ...formData, [name]: processedValue });
+    
+    // Validate the field and update the error message
+    const error = validateField(name, processedValue);
+    setErrors({ ...errors, [name]: error });
+  };
+
+  // This function validates the entire form on submission
+  const validateForm = () => {
+    const newErrors = {};
+    Object.keys(formData).forEach(key => {
+        const error = validateField(key, formData[key]);
+        if (error) {
+            newErrors[key] = error;
+        }
+    });
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const newErrors = {};
-
-    // Validate firstName
-    if (!formData.firstName.trim()) newErrors.firstName = "First name is required";
-    else if (!isTextOnly(formData.firstName)) newErrors.firstName = "Only letters and spaces allowed";
-
-    // Validate lastName
-    if (!formData.lastName.trim()) newErrors.lastName = "Last name is required";
-    else if (!isTextOnly(formData.lastName)) newErrors.lastName = "Only letters and spaces allowed";
-
-    // Validate email
-    if (!formData.email.trim()) newErrors.email = "Email is required";
-    else if (!isValidEmail(formData.email)) newErrors.email = "Invalid email address";
-
-    // Validate phone
-    if (!formData.phone.trim()) newErrors.phone = "Phone number is required";
-    else if (!isValidPhone(formData.phone)) newErrors.phone = "Phone must be 10 digits";
-
-    // Validate address
-    if (!formData.address.trim()) newErrors.address = "Address is required";
-    else if (formData.address.trim().length < 10) newErrors.address = "Minimum 10 characters required";
-
-    // Validate skills (optional but must be valid if entered)
-
-    if (!isTextOnly(formData.skills)) newErrors.skills = "Only letters and spaces allowed";
-    else if (!formData.skills.trim()) newErrors.skills = "Skills is required"
-
-    if (formData.skills.trim() && !isTextOnly(formData.skills)) {
-      newErrors.skills = "Only letters and spaces allowed";
-    }
-
-
-    // Validate availability
-    if (!formData.availability.trim()) newErrors.availability = "Availability is required";
-
-    // Validate experience
-    if (!formData.experience.trim()) newErrors.experience = "Experience is required";
-    else if (formData.experience.trim().length < 10) newErrors.experience = "Minimum 10 characters required";
-
-    // Validate motivation
-    if (!formData.motivation.trim()) newErrors.motivation = "Motivation is required";
-    else if (formData.motivation.trim().length < 10) newErrors.motivation = "Minimum 10 characters required";
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
+    
+    if (!validateForm()) {
+        Swal.fire("Validation Error", "Please correct the errors before submitting.", "error");
+        return;
     }
 
     try {
@@ -114,7 +142,7 @@ const VolunteerForm = () => {
 
       <div className="volunteer-container">
         <h2>Volunteer Application Form</h2>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} noValidate>
           <input type="text" name="firstName" placeholder="First Name" value={formData.firstName} onChange={handleChange} />
           {renderError("firstName")}
 
@@ -124,7 +152,7 @@ const VolunteerForm = () => {
           <input type="email" name="email" placeholder="Email Address" value={formData.email} onChange={handleChange} />
           {renderError("email")}
 
-          <input type="tel" name="phone" placeholder="Phone Number" maxLength={10} pattern="\d*" value={formData.phone} onChange={handleChange} />
+          <input type="text" name="phone" placeholder="Phone Number" value={formData.phone} onChange={handleChange} />
           {renderError("phone")}
 
           <input type="text" name="address" placeholder="Address" value={formData.address} onChange={handleChange} />

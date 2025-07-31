@@ -45,17 +45,67 @@ const SubmitCause = () => {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // handleChange and handleFileChange are unchanged
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-    if (errors[name]) {
-      setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
+  // Real-time validation function for a single field
+  const validateField = (name, value) => {
+    switch (name) {
+      case 'title':
+        if (!value.trim()) return "Title is required";
+        return "";
+      case 'description':
+        if (!value.trim()) return "Description is required";
+        return "";
+      case 'shortDescription':
+         if (value.length > 100) return "Short description cannot exceed 100 characters";
+         return "";
+      case 'targetAmount':
+        if (!value) return "Target amount is required";
+        if (isNaN(Number(value)) || Number(value) <= 0) return "Target amount must be a positive number";
+        return "";
+      case 'submitterName':
+        if (!value.trim()) return "Your name is required";
+        if (!/^[A-Za-z\s]*$/.test(value)) return "Name can only contain alphabets and spaces";
+        return "";
+      case 'submitterEmail':
+        if (!value.trim()) return "Your email is required";
+        if (!/\S+@\S+\.\S+/.test(value)) return "Invalid email format";
+        return "";
+      case 'submitterPhone':
+        if (value && !/^\d{1,10}$/.test(value)) return "Phone number must be up to 10 digits";
+        if (value && value.length !== 10) return "Phone number must be exactly 10 digits";
+        return "";
+      case 'endDate':
+        if (value && isNaN(new Date(value).getTime())) return "Invalid end date/time format";
+        if (value && new Date(value) <= new Date()) return "End date must be in the future";
+        return "";
+      default:
+        return "";
     }
   };
+
+  // Updated handleChange to include real-time validation
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    let processedValue = value;
+
+    // Real-time input filtering
+    if (name === "submitterName") {
+        processedValue = value.replace(/[^A-Za-z\s]/g, ''); // Allow only letters and spaces
+    } else if (name === "submitterPhone") {
+        processedValue = value.replace(/[^0-9]/g, '').slice(0, 10); // Allow only numbers, max 10 digits
+    } else if (name === "targetAmount") {
+        processedValue = value.replace(/[^0-9]/g, ''); // Allow only numbers
+    }
+
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: processedValue,
+    }));
+    
+    // Set error for the field being changed
+    const error = validateField(name, processedValue);
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: error }));
+  };
+
 
   const handleFileChange = (e) => {
     const { name } = e.target;
@@ -97,48 +147,28 @@ const SubmitCause = () => {
     setErrors(newErrors);
   };
 
+  // This function validates the entire form on submission
   const validateForm = () => {
     const newErrors = {};
+    
+    // Validate all text fields
+    Object.keys(formData).forEach(key => {
+        const error = validateField(key, formData[key]);
+        if (error) {
+            newErrors[key] = error;
+        }
+    });
 
-    // Required fields
+    // Final check for required fields that might be empty
     if (!formData.title.trim()) newErrors.title = "Title is required";
     if (!formData.description.trim()) newErrors.description = "Description is required";
     if (!formData.targetAmount) newErrors.targetAmount = "Target amount is required";
     if (!formData.submitterEmail.trim()) newErrors.submitterEmail = "Your email is required";
+    if (!formData.submitterName.trim()) newErrors.submitterName = "Your name is required";
     
-    // UPDATED: Stricter validation for Name
-    if (!formData.submitterName.trim()) {
-      newErrors.submitterName = "Your name is required";
-    } else if (!/^[A-Za-z\s]+$/.test(formData.submitterName)) {
-      newErrors.submitterName = "Name can only contain alphabets and spaces";
-    }
-
-    // UPDATED: Stricter validation for Phone Number
-    if (formData.submitterPhone && !/^\d{10}$/.test(formData.submitterPhone)) {
-        newErrors.submitterPhone = "Phone number must be exactly 10 digits";
-    }
-
     // File upload checks
     if (!imageFile) newErrors.image = "A display image for the cause is required";
     if (!proofDocumentFile) newErrors.proofDocument = "A supporting proof document is required";
-    
-    // Other format validations (rest of the function is the same)
-    if (formData.targetAmount && (isNaN(Number(formData.targetAmount)) || Number(formData.targetAmount) <= 0)) {
-      newErrors.targetAmount = "Target amount must be a positive number";
-    }
-    if (formData.submitterEmail && !/\S+@\S+\.\S+/.test(formData.submitterEmail)) {
-      newErrors.submitterEmail = "Invalid email format";
-    }
-    if (formData.endDate) {
-        if (isNaN(new Date(formData.endDate).getTime())) {
-            newErrors.endDate = "Invalid end date/time format";
-        } else if (new Date(formData.endDate) <= new Date()) {
-            newErrors.endDate = "End date must be in the future";
-        }
-    }
-    if (formData.shortDescription && formData.shortDescription.length > 100) {
-        newErrors.shortDescription = "Short description cannot exceed 100 characters";
-    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -207,7 +237,7 @@ const SubmitCause = () => {
 
         <div className="form-group">
           <label htmlFor="targetAmount">Target Amount (₹) <span className="required-star">*</span></label>
-          <input type="number" id="targetAmount" name="targetAmount" value={formData.targetAmount} onChange={handleChange} placeholder="e.g., 50000" step="1" min="1" required />
+          <input type="text" id="targetAmount" name="targetAmount" value={formData.targetAmount} onChange={handleChange} placeholder="e.g., 50000" required />
           {errors.targetAmount && <p className="error-message">{errors.targetAmount}</p>}
         </div>
 
@@ -242,7 +272,7 @@ const SubmitCause = () => {
 
         <div className="form-group">
           <label htmlFor="submitterPhone">Your Phone Number</label>
-          <input type="tel" id="submitterPhone" name="submitterPhone" value={formData.submitterPhone} onChange={handleChange} placeholder="Enter your 10-digit mobile number" />
+          <input type="text" id="submitterPhone" name="submitterPhone" value={formData.submitterPhone} onChange={handleChange} placeholder="Enter your 10-digit mobile number" />
           {errors.submitterPhone && <p className="error-message">{errors.submitterPhone}</p>}
         </div>
 

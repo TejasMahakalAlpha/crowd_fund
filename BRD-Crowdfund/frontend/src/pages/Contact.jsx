@@ -21,42 +21,108 @@ const Contact = () => {
 
   const [errors, setErrors] = useState({});
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    setErrors({ ...errors, [e.target.name]: '' }); // Clear error as user types
+  // Function to validate a single field
+  const validateField = (name, value) => {
+    const isTextOnly = (str) => /^[A-Za-z\s]*$/.test(str);
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phoneRegex = /^[0-9]*$/;
+
+    switch (name) {
+      case 'name':
+        if (!value.trim()) return 'Name is required';
+        if (!isTextOnly(value)) return "Only letters and spaces are allowed";
+        return '';
+      case 'email':
+        if (!value.trim()) return 'Email is required';
+        if (!emailRegex.test(value)) return 'Invalid email format';
+        return '';
+      case 'phone':
+        if (!value.trim()) return 'Phone number is required';
+        if (!phoneRegex.test(value)) return 'Only numbers are allowed';
+        if (value.length !== 10) return 'Phone number must be 10 digits';
+        return '';
+      case 'subject':
+        if (!value.trim()) return 'Subject is required';
+        if (value.trim().length < 10) return "Minimum 10 characters required";
+        return '';
+      case 'content':
+        if (!value.trim()) return 'Message content is required';
+        if (value.trim().length < 10) return "Minimum 10 characters required";
+        return '';
+      default:
+        return '';
+    }
   };
 
-  const validate = () => {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    
+    // For phone number, only allow numbers and limit to 10 digits
+    if (name === 'phone') {
+        const numericValue = value.replace(/[^0-9]/g, '');
+        setFormData({ ...formData, [name]: numericValue.slice(0, 10) });
+        const error = validateField(name, numericValue.slice(0, 10));
+        setErrors({ ...errors, [name]: error });
+    } 
+    // For name, only allow text
+    else if (name === 'name') {
+        const textValue = value.replace(/[^A-Za-z\s]/g, '');
+        setFormData({ ...formData, [name]: textValue });
+        const error = validateField(name, textValue);
+        setErrors({ ...errors, [name]: error });
+    }
+    else {
+        setFormData({ ...formData, [name]: value });
+        // Validate the field on change and update errors state
+        const error = validateField(name, value);
+        setErrors({ ...errors, [name]: error });
+    }
+  };
+
+  // This function validates the entire form on submission
+  const validateForm = () => {
     const newErrors = {};
-    const isTextOnly = (str) => /^[A-Za-z\s]+$/.test(str);
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const phoneRegex = /^[0-9]{10}$/;
-
-    if (!formData.name.trim()) newErrors.name = 'Name is required';
-    else if (!isTextOnly(formData.name)) newErrors.name = "Only letters and spaces allowed";
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
-    } else if (!emailRegex.test(formData.email)) {
-      newErrors.email = 'Invalid email format';
-    }
-    if (!formData.phone.trim()) {
-      newErrors.phone = 'Phone number is required';
-    } else if (!phoneRegex.test(formData.phone)) {
-      newErrors.phone = 'Phone number must be 10 digits';
-    }
-    if (!formData.subject.trim()) newErrors.subject = 'Subject is required';
-    else if (formData.subject.trim().length < 10) newErrors.subject = "Minimum 10 characters required";
-
-    if (!formData.content.trim()) { newErrors.content = 'Message content is required'; }
-    else if (formData.content.trim().length < 10) { newErrors.content = "Minimum 10 characters required"; }
+    Object.keys(formData).forEach(key => {
+        // Use the blur-style validation logic for submit
+        const value = formData[key];
+        let error = '';
+        switch (key) {
+            case 'name':
+                if (!value.trim()) error = 'Name is required';
+                else if (!/^[A-Za-z\s]+$/.test(value)) error = "Only letters and spaces allowed";
+                break;
+            case 'email':
+                if (!value.trim()) error = 'Email is required';
+                else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) error = 'Invalid email format';
+                break;
+            case 'phone':
+                if (!value.trim()) error = 'Phone number is required';
+                else if (!/^[0-9]{10}$/.test(value)) error = 'Phone number must be 10 digits';
+                break;
+            case 'subject':
+                if (!value.trim()) error = 'Subject is required';
+                else if (value.trim().length < 10) error = "Minimum 10 characters required";
+                break;
+            case 'content':
+                if (!value.trim()) error = 'Message content is required';
+                else if (value.trim().length < 10) error = "Minimum 10 characters required";
+                break;
+            default:
+                break;
+        }
+        if (error) {
+            newErrors[key] = error;
+        }
+    });
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!validate()) return;
+    if (!validateForm()) return;
 
     try {
       Swal.fire({
@@ -171,7 +237,6 @@ const Contact = () => {
                 type="text"
                 id="phone"
                 name="phone"
-                maxLength={10}
                 placeholder="Your Phone Number"
                 value={formData.phone}
                 onChange={handleChange}
