@@ -19,6 +19,7 @@ import BlogDetails from '../pages/BlogDetails';
 import VolunteerForm from '../pages/VolunteerForm';
 import SubmitCause from '../pages/SubmitCause';     // ⭐ UNCOMMENTED: SubmitCause import
 import WhatsApp from '../components/WhatsApp';
+import CauseDetails from '../components/CausesDetails';
 
 
 // Admin Pages
@@ -54,7 +55,8 @@ const AppRoutes = () => {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/causes" element={<Causes />} />
-        <Route path="/causes/:id" element={<ManageCauses />} />
+        <Route path="/causes/:id" element={<CauseDetails />} />
+        {/* <Route path="/causes/:id" element={<ManageCauses />} /> */}
         <Route path="/contact" element={<Contact />} />
         <Route path="/events" element={<Events />} />
         <Route path="/gallery" element={<Gallery />} />

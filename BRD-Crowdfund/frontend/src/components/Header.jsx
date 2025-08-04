@@ -12,7 +12,7 @@ const Header = () => {
     <header className="main-header">
       <div className="container">
         <div className="logo">
-          <NavLink to="/" onClick={closeMenu}>Donar-box</NavLink>
+          <NavLink to="/" onClick={closeMenu}>Green Dharti</NavLink>
         </div>
 
         {/* Hamburger Icon */}
