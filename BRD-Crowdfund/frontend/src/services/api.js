@@ -72,6 +72,8 @@ export const AdminApi = {
   getAllCauses: () => AdminApiInstance.get(`causes`, { headers: AdminApi._authHeader() }),
   getCausesById: (id) => AdminApiInstance.get(`causes/${id}`, { headers: AdminApi._authHeader() }),
   createCauses: (data) => AdminApiInstance.post(`causes/with-image`, data, { headers: AdminApi._authHeader() }),
+    createCauses: (data) => AdminApiInstance.post(`causes/with-video`, data, { headers: AdminApi._authHeader() }),
+
   updateCauses: (id, data) => AdminApiInstance.put(`causes/${id}/with-image`, data, { headers: AdminApi._authHeader() }),
   deleteCauses: (id) => AdminApiInstance.delete(`causes/${id}`, { headers: AdminApi._authHeader() }),
 
