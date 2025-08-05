@@ -55,7 +55,7 @@ const Causes = () => {
 
       const res = await PaymentApi.createDonationAndOrder(donorDetailsPayload);
       const { orderId, razorpayKeyId, amount, currency } = res.data;
-      
+
       if (!orderId || !razorpayKeyId) {
         throw new Error("Payment setup failed.");
       }
@@ -69,7 +69,7 @@ const Causes = () => {
         order_id: orderId,
         handler: async (response) => {
           Swal.fire("🎉 Payment Successful!", `Thank you for your generous contribution!`, "success");
-          fetchCauses(); 
+          fetchCauses();
         },
         prefill: { name: donorDetails.name, email: donorDetails.email, contact: donorDetails.phone },
         theme: { color: "#0f172a" },
@@ -112,9 +112,9 @@ const Causes = () => {
 
   const handleDonate = async (cause) => {
     const { value: amount } = await Swal.fire({
-        title: `Donate to ${cause.title}`, input: "number", inputLabel: "Amount (INR)",
-        inputPlaceholder: "e.g., 500", showCancelButton: true, confirmButtonText: "Next",
-        inputValidator: (value) => { if (!value || value <= 0) return "Please enter a valid amount"; }
+      title: `Donate to ${cause.title}`, input: "number", inputLabel: "Amount (INR)",
+      inputPlaceholder: "e.g., 500", showCancelButton: true, confirmButtonText: "Next",
+      inputValidator: (value) => { if (!value || value <= 0) return "Please enter a valid amount"; }
     });
     if (amount) {
       collectDonorDetails(Number(amount) * 100, cause);
@@ -161,9 +161,9 @@ const Causes = () => {
             <p><strong>End Date:</strong> {causeToView.endDate ? new Date(causeToView.endDate).toLocaleDateString() : "N/A"}</p>
             <p><strong>Raised:</strong> ₹{Number(causeToView.currentAmount).toLocaleString()} of ₹{Number(causeToView.targetAmount).toLocaleString()}</p>
           </div>
-          <button 
-            className="donate-btn" 
-            style={{marginTop: '1.5rem', width: '100%'}} 
+          <button
+            className="donate-btn"
+            style={{ marginTop: '1.5rem', width: '100%' }}
             onClick={() => handleDonate(causeToView)}
             disabled={isPaymentProcessing || !isScriptLoaded}
           >
@@ -197,8 +197,8 @@ const Causes = () => {
                     </p>
                     <p>{cause.shortDescription}</p>
                   </div>
-                  <button 
-                    className="donate-btn" 
+                  <button
+                    className="donate-btn"
                     onClick={() => handleDonate(cause)}
                     disabled={isPaymentProcessing || !isScriptLoaded}
                   >

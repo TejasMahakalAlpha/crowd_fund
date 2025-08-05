@@ -12,9 +12,10 @@ body, html {
   /* ⭐ Background image removed from here ⭐ */
   background-color: #f0f8ff; /* Default background color for the section */
   color: #333; /* Default text color (can be overridden by .hero-text-content) */
-  padding: 0; /* ⭐ No padding on hero section itself ⭐ */
+  padding-top: 0; /* ⭐ No padding on hero section itself ⭐ */
+  margin-top: 80px;
   position: relative; 
-  min-height: 550px; /* Adjust min-height if needed */
+  min-height: auto; /* Adjust min-height if needed */
   display: flex; /* Make it a flex container to hold the main content wrapper */
   align-items: center; /* Center content vertically */
   justify-content: center; /* Center content horizontally */

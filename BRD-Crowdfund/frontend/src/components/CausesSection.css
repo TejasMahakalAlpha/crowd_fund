@@ -19,7 +19,7 @@
 /* === Main Section Layout === */
 .causes-section {
   background: var(--background-light);
-  padding: 0 20px 60px 20px;
+   padding: 40px 20px;
   text-align: center;
 }
 
@@ -27,7 +27,7 @@
   font-size: clamp(2rem, 5vw, 2.5rem);
   color: var(--primary-dark);
   /* UPDATED: Reduced margin from 50px to 30px to decrease gap */
-  margin-bottom: 30px;
+  margin-bottom: 10px;
   font-weight: 700;
 }
 
@@ -210,11 +210,11 @@
 @media (max-width: 480px) {
   .causes-section {
     /* Mobile par side se kam padding */
-    padding: 0 15px 40px 15px;
+    padding:  15px  15px;
   }
 
   .section-title {
-    margin-bottom: 25px; /* Mobile par title ke neeche kam gap */
+    margin-bottom: 20px; /* Mobile par title ke neeche kam gap */
   }
 
   .cause-card {
