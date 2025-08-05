@@ -71,10 +71,17 @@ export const AdminApi = {
   // Causes
   getAllCauses: () => AdminApiInstance.get(`causes`, { headers: AdminApi._authHeader() }),
   getCausesById: (id) => AdminApiInstance.get(`causes/${id}`, { headers: AdminApi._authHeader() }),
-  createCauses: (data) => AdminApiInstance.post(`causes/with-image`, data, { headers: AdminApi._authHeader() }),
-    createCauses: (data) => AdminApiInstance.post(`causes/with-video`, data, { headers: AdminApi._authHeader() }),
+  // createCauses: (data) => AdminApiInstance.post(`causes/with-image`, data, { headers: AdminApi._authHeader() }),
+  //   createCauses: (data) => AdminApiInstance.post(`causes/with-video`, data, { headers: AdminApi._authHeader() }),
 
-  updateCauses: (id, data) => AdminApiInstance.put(`causes/${id}/with-image`, data, { headers: AdminApi._authHeader() }),
+  // updateCauses: (id, data) => AdminApiInstance.put(`causes/${id}/with-image`, data, { headers: AdminApi._authHeader() }),
+  // PURANE WALE KO IN NAYE FUNCTIONS SE BADAL DEIN
+
+createCauseWithImage: (data) => AdminApiInstance.post(`causes/with-image`, data, { headers: { ...AdminApi._authHeader(), 'Content-Type': 'multipart/form-data' } }),
+createCauseWithVideo: (data) => AdminApiInstance.post(`causes/with-video`, data, { headers: { ...AdminApi._authHeader(), 'Content-Type': 'multipart/form-data' } }),
+
+updateCauseWithImage: (id, data) => AdminApiInstance.put(`causes/${id}/with-image`, data, { headers: { ...AdminApi._authHeader(), 'Content-Type': 'multipart/form-data' } }),
+updateCauseWithVideo: (id, data) => AdminApiInstance.put(`causes/${id}/with-video`, data, { headers: { ...AdminApi._authHeader(), 'Content-Type': 'multipart/form-data' } }),
   deleteCauses: (id) => AdminApiInstance.delete(`causes/${id}`, { headers: AdminApi._authHeader() }),
 
   // Volunteers
