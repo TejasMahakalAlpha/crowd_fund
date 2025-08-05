@@ -44,51 +44,63 @@ const ManageCauses = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleUpdate = (id) => {
-    const causeToEdit = causes.find((cause) => cause.id === id || cause._id === id);
-    if (causeToEdit) {
-      setFormData({
-        title: causeToEdit.title || "",
-        shortDescription: causeToEdit.shortDescription || "",
-        description: causeToEdit.description || "",
-        category: causeToEdit.category || "",
-        location: causeToEdit.location || "",
-        targetAmount: causeToEdit.targetAmount || "",
-        endDate: causeToEdit.endDate ? new Date(causeToEdit.endDate).toISOString().slice(0, 10) : "",
-        status: causeToEdit.status || "ACTIVE",
-      });
-      setImagePreview(causeToEdit.imageUrl ? getImageUrl(causeToEdit.imageUrl) : null);
-      
-      if (causeToEdit.imageUrl) {
+  const handleUpdate = (causeToEdit) => {
+    setFormData({
+      title: causeToEdit.title || "",
+      shortDescription: causeToEdit.shortDescription || "",
+      description: causeToEdit.description || "",
+      category: causeToEdit.category || "",
+      location: causeToEdit.location || "",
+      targetAmount: causeToEdit.targetAmount || "",
+      endDate: causeToEdit.endDate ? new Date(causeToEdit.endDate).toISOString().slice(0, 10) : "",
+      status: causeToEdit.status || "ACTIVE",
+    });
+
+    // Pehle se maujood image/video ka preview set karein
+    if (causeToEdit.imageUrl) {
+        setImagePreview(getImageUrl(causeToEdit.imageUrl));
         const isVideo = /\.(mp4|webm|mov)$/i.test(causeToEdit.imageUrl);
         setDisplayFileType(isVideo ? 'video' : 'image');
-      } else {
+    } else {
+        setImagePreview(null);
         setDisplayFileType('');
-      }
-
-      setEditId(id);
-      setIsEditing(true);
-      window.scrollTo({ top: 0, behavior: "smooth" });
     }
+    
+    setEditId(causeToEdit.id || causeToEdit._id);
+    setIsEditing(true);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  // --- YEH FUNCTION THEEK KIYA GAYA HAI ---
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const form = new FormData();
+    const formPayload = new FormData();
     for (const key in formData) {
-      form.append(key, formData[key]);
+      formPayload.append(key, formData[key]);
     }
     if (imageFile) {
-      form.append("image", imageFile);
+      formPayload.append("image", imageFile); // File ko 'image' key ke saath bhejein
     }
+
     try {
       if (isEditing) {
-        await AdminApi.updateCauses(editId, form);
+        // UPDATE LOGIC
+        if (displayFileType === 'video') {
+            await AdminApi.updateCauseWithVideo(editId, formPayload);
+        } else {
+            await AdminApi.updateCauseWithImage(editId, formPayload);
+        }
         Swal.fire("Updated", "Cause updated successfully", "success");
       } else {
-        await AdminApi.createCauses(form);
+        // CREATE LOGIC
+        if (displayFileType === 'video') {
+            await AdminApi.createCauseWithVideo(formPayload);
+        } else {
+            await AdminApi.createCauseWithImage(formPayload);
+        }
         Swal.fire("Success", "Cause created successfully", "success");
       }
+      // Reset form
       setFormData({ title: "", shortDescription: "", description: "", category: "", location: "", targetAmount: "", endDate: "", status: "ACTIVE" });
       setImageFile(null);
       setImagePreview(null);
@@ -97,6 +109,7 @@ const ManageCauses = () => {
       setEditId(null);
       fetchCauses();
     } catch (err) {
+      console.error("Submit error:", err.response ? err.response.data : err);
       Swal.fire("Error", "Failed to submit cause", "error");
     }
   };
@@ -173,7 +186,7 @@ const ManageCauses = () => {
             <input type="date" name="endDate" placeholder="End Date" value={formData.endDate} onChange={handleChange}/>
             
             <label>Display Image or Video:</label>
-            <input type="file" accept="image/*,video/*" onChange={handleImageChange} />
+            <input type="file" accept="image/*,video/*" onChange={handleImageChange} key={imageFile || ''} />
             
             {imagePreview && (
               <div className="preview-container" style={{ marginTop: "10px" }}>
@@ -198,7 +211,7 @@ const ManageCauses = () => {
                   <p><strong>Status:</strong> {cause.status}</p>
                 </div>
                 <div className="cause-actions">
-                  <button className="edit-button" onClick={() => handleUpdate(cause.id || cause._id)}>Edit</button>
+                  <button className="edit-button" onClick={() => handleUpdate(cause)}>Edit</button>
                   <button className="delete-button" onClick={() => handleDelete(cause.id || cause._id)}>Delete</button>
                   <button className="copy-button" onClick={() => handleShowSingleCause(cause)}>View</button>
                 </div>
