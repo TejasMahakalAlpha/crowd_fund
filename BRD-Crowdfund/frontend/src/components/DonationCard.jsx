@@ -353,7 +353,7 @@ const DonationCard = () => {
         ))}
       </div>
 
-      <h3>Total Donations: ₹{(totalAmount / 100).toLocaleString()}</h3>
+      {/* <h3>Total Donations: ₹{(totalAmount / 100).toLocaleString()}</h3> */}
     </section>
   );
 };
