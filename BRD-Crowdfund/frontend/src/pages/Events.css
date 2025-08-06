@@ -36,110 +36,7 @@
   padding: 20px;
 }
 
-/* ⭐ Donation Options Section ⭐ */
-.donation-options-section {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 30px;
-  max-width: 1200px;
-  margin: 60px auto;
-  padding: 0 20px;
-}
-
-.donation-option-card {
-  background: #ffffff;
-  border: 1px solid #e0e0e0;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-  padding: 25px;
-  flex: 1 1 280px;
-  max-width: 350px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.donation-option-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-}
-
-.donation-option-icon {
-  width: 60px;
-  height: 60px;
-  margin-bottom: 15px;
-  object-fit: contain;
-}
-
-.donation-option-card h3 {
-  font-size: 1.3rem;
-  color: #004d40;
-  margin-bottom: 10px;
-}
-
-.donation-option-card p {
-  font-size: 0.95rem;
-  color: #666;
-  line-height: 1.5;
-}
-
-/* ⭐ Featured Cause Section ⭐ */
-.featured-cause-section {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  max-width: 1200px;
-  margin: 60px auto;
-  background: #e6f7ff;
-  border-radius: 12px;
-  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-}
-
-.featured-image-container {
-  flex: 1 1 40%;
-  max-width: 500px;
-  height: 350px;
-  overflow: hidden;
-  border-top-left-radius: 12px;
-  border-bottom-left-radius: 12px;
-}
-
-.featured-cause-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.featured-text-content {
-  flex: 1 1 50%;
-  max-width: 650px;
-  padding: 30px;
-  box-sizing: border-box;
-  text-align: left;
-}
-
-.featured-title {
-  font-size: 2.2rem;
-  color: #004d40;
-  margin-bottom: 15px;
-  font-weight: 700;
-  line-height: 1.3;
-}
-
-.featured-description {
-  font-size: 1rem;
-  color: #555;
-  line-height: 1.6;
-}
-
-/* ⭐ Existing Events Section ⭐ */
+/* Existing Events Section */
 .section-title {
   font-size: 2.5rem;
   color: #004d40;
@@ -155,8 +52,8 @@
 }
 
 .events-list {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
   gap: 30px;
 }
 
@@ -205,7 +102,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start; /* Changed from space-between */
   align-items: flex-start;
   text-align: left;
 }
@@ -231,21 +128,27 @@
   margin-bottom: 15px;
 }
 
-.event-thumbnails {
-  display: flex;
-  gap: 10px;
-  margin-top: 15px;
-  flex-wrap: wrap;
+/* --- NEW: Styles for the main event image --- */
+.event-image-container {
+  width: 100%;
+  margin-top: auto; /* Pushes the image to the bottom */
+  padding-top: 15px; /* Adds space above the image */
 }
 
-.event-thumbnail {
-  width: 80px;
-  height: 80px;
+.event-main-image {
+  width: 100%;
+  height: 200px;
   object-fit: cover;
   border-radius: 8px;
   border: 1px solid #ddd;
-  flex-shrink: 0;
 }
+
+
+/* --- REMOVED: Thumbnail styles are no longer needed --- */
+/*
+.event-thumbnails { ... }
+.event-thumbnail { ... }
+*/
 
 .join-btn {
   background-color: #26a69a;
@@ -265,37 +168,6 @@
 
 /* MEDIA QUERIES */
 @media (max-width: 992px) {
-  .donation-options-section {
-    flex-direction: column;
-    gap: 20px;
-  }
-  .donation-option-card {
-    max-width: 450px;
-  }
-
-  .featured-cause-section {
-    flex-direction: column;
-  }
-
-  .featured-image-container {
-    max-width: 100%;
-    height: 300px;
-    border-radius: 12px;
-  }
-
-  .featured-text-content {
-    max-width: 100%;
-    text-align: center;
-  }
-
-  .featured-title {
-    font-size: 1.8rem;
-  }
-
-  .featured-description {
-    font-size: 0.9rem;
-  }
-
   .events-list-wrapper {
     padding: 0 15px 40px;
   }
@@ -337,34 +209,6 @@
     font-size: 1rem;
   }
 
-  .donation-options-section {
-    margin: 40px auto;
-  }
-
-  .donation-option-card {
-    padding: 20px;
-  }
-
-  .donation-option-card h3 {
-    font-size: 1.1rem;
-  }
-
-  .donation-option-card p {
-    font-size: 0.85rem;
-  }
-
-  .featured-cause-section {
-    margin: 40px auto;
-  }
-
-  .featured-image-container {
-    height: 250px;
-  }
-
-  .featured-title {
-    font-size: 1.6rem;
-  }
-
   .section-title {
     font-size: 2rem;
     margin-top: 40px;
@@ -372,7 +216,11 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 550px) {
+  .events-list {
+    grid-template-columns: 1fr;
+  }
+
   .events-hero {
     padding: 30px 10px;
   }
@@ -383,28 +231,6 @@
 
   .events-hero p {
     font-size: 0.9rem;
-  }
-
-  .donation-options-section {
-    gap: 15px;
-    margin: 30px auto;
-  }
-
-  .donation-option-card {
-    padding: 15px;
-  }
-
-  .donation-option-card h3 {
-    font-size: 1rem;
-  }
-
-  .featured-cause-section {
-    margin: 30px auto;
-    border-radius: 8px;
-  }
-
-  .featured-image-container {
-    height: 200px;
   }
 
   .section-title {
@@ -424,9 +250,8 @@
   .event-details-col .event-description {
     font-size: 0.85rem;
   }
-
-  .event-thumbnail {
-    width: 50px;
-    height: 50px;
+  
+  .event-main-image {
+    height: 160px; /* Adjust height for smaller screens */
   }
 }
