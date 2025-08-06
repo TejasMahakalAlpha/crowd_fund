@@ -310,28 +310,25 @@ const CausesSection = () => {
 
             return (
               <div className="cause-card" key={causeId || index}>
-                
+
                 {/* --- YEH FINAL CORRECTED LOGIC HAI --- */}
-                {cause.imageUrl && (
-                  // Yeh line check karti hai ki 'imageUrl' mein video ka extension hai ya nahi
-                  /\.(mp4|webm|mov)$/i.test(cause.imageUrl) ? (
-                    <video 
-                      src={getImageUrl(cause.imageUrl)} 
-                      className="cause-image" 
-                      autoPlay 
-                      loop 
-                      muted 
-                      playsInline 
-                    />
-                  ) : (
-                    <img 
-                      src={getImageUrl(cause.imageUrl)} 
-                      alt={cause.title} 
-                      className="cause-image" 
-                    />
-                  )
+                {cause.mediaType === 'VIDEO' ? (
+                  <video
+                    src={getImageUrl(cause.videoUrl)}
+                    className="modal-image"
+                    controls
+                    autoPlay
+                    muted
+                  />
+                ) : (
+                  <img
+                    src={getImageUrl(cause.imageUrl)}
+                    alt={cause.title}
+                    className="modal-image"
+                  />
                 )}
-                
+
+
                 <h3
                   className="cause-title"
                   onClick={() => {
@@ -348,7 +345,7 @@ const CausesSection = () => {
                   ₹{raised.toLocaleString()} donated of ₹{goal.toLocaleString()} goal
                 </p>
                 <p className="description">{cause.description}</p>
-                
+
                 <div className="cause-actions">
                   <button
                     className="donate-btn"
@@ -376,24 +373,23 @@ const CausesSection = () => {
           <div className="modal-content" onClick={e => e.stopPropagation()}>
             <button className="close-btn" onClick={() => setModalOpen(false)}>×</button>
             <h2 className="modal-title">{selectedCause.title?.toUpperCase()}</h2>
-            
+
             {/* --- MODAL KE LIYE BHI FINAL CORRECTED LOGIC --- */}
-            {selectedCause.imageUrl && (
-              /\.(mp4|webm|mov)$/i.test(selectedCause.imageUrl) ? (
-                <video 
-                  src={getImageUrl(selectedCause.imageUrl)} 
-                  className="modal-image" 
-                  controls 
-                  autoPlay 
-                />
-              ) : (
-                <img 
-                  src={getImageUrl(selectedCause.imageUrl)} 
-                  alt={selectedCause.title} 
-                  className="modal-image" 
-                />
-              )
+            {selectedCause.mediaType === 'VIDEO' ? (
+              <video
+                src={getImageUrl(selectedCause.videoUrl)}
+                className="modal-image"
+                controls
+                autoPlay
+              />
+            ) : (
+              <img
+                src={getImageUrl(selectedCause.imageUrl)}
+                alt={selectedCause.title}
+                className="modal-image"
+              />
             )}
+
 
             <div className="modal-details">
               <p><strong>Category:</strong> {selectedCause.category}</p>

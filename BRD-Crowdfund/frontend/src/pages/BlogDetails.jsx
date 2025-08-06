@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { PublicApi } from "../services/api";
 import "./BlogDetails.css"; // ✅ Import the CSS
+import { FaEye } from "react-icons/fa";
+
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
@@ -28,13 +30,18 @@ const BlogDetails = () => {
         };
         fetchBlog();
     }, [slug]);
-
+    { console.log(blog) }
     if (loading) return <p style={{ textAlign: "center" }}>Loading blog...</p>;
     if (error) return <p style={{ textAlign: "center", color: "red" }}>{error}</p>;
     if (!blog) return <p style={{ textAlign: "center" }}>Blog not found</p>;
 
     return (
         <div className="blog-container">
+            <h1 className="blog-title">{blog.title}</h1>
+            {blog.subtitle && <h3 className="blog-subtitle">{blog.subtitle}</h3>}
+            <p className="blog-meta">
+                By <strong>{blog.author}</strong> | {new Date(blog.createdAt).toLocaleDateString()} | <FaEye /> {blog.viewCount}
+            </p>
             {blog.featuredImage && (
                 <img
                     src={getImageUrl(blog.featuredImage)}
@@ -43,12 +50,7 @@ const BlogDetails = () => {
                     className="blog-image"
                 />
             )}
-            <h1 className="blog-title">{blog.title}</h1>
-            {blog.subtitle && <h3 className="blog-subtitle">{blog.subtitle}</h3>}
-            <p className="blog-meta">
-                By <strong>{blog.author}</strong> | {new Date(blog.createdAt).toLocaleDateString()}
-            </p>
-            <hr className="blog-hr" />
+
             <div
                 className="blog-content"
                 dangerouslySetInnerHTML={{ __html: blog.content }}

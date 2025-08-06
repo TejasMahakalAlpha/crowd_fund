@@ -18,7 +18,7 @@ const ManageCauses = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const [imageFile, setImageFile] = useState(null);
   const [displayFileType, setDisplayFileType] = useState('');
-  const [causeToView, setCauseToView] = useState(null); 
+  const [causeToView, setCauseToView] = useState(null);
 
   const getImageUrl = (relativePath) => {
     return `${API_BASE}/api/images/${relativePath}`;
@@ -56,20 +56,20 @@ const ManageCauses = () => {
       status: causeToEdit.status || "ACTIVE",
     });
 
-    // Pehle se maujood image/video ka preview set karein
-    if (causeToEdit.imageUrl) {
-        setImagePreview(getImageUrl(causeToEdit.imageUrl));
-        const isVideo = /\.(mp4|webm|mov)$/i.test(causeToEdit.imageUrl);
-        setDisplayFileType(isVideo ? 'video' : 'image');
+    const mediaPath = causeToEdit.mediaType === "VIDEO" ? causeToEdit.videoUrl : causeToEdit.imageUrl;
+    if (mediaPath) {
+      setImagePreview(getImageUrl(mediaPath));
+      setDisplayFileType(causeToEdit.mediaType === "VIDEO" ? "video" : "image");
     } else {
-        setImagePreview(null);
-        setDisplayFileType('');
+      setImagePreview(null);
+      setDisplayFileType('');
     }
-    
+
     setEditId(causeToEdit.id || causeToEdit._id);
     setIsEditing(true);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
+
 
   // --- YEH FUNCTION THEEK KIYA GAYA HAI ---
   const handleSubmit = async (e) => {
@@ -79,24 +79,25 @@ const ManageCauses = () => {
       formPayload.append(key, formData[key]);
     }
     if (imageFile) {
-      formPayload.append("image", imageFile); // File ko 'image' key ke saath bhejein
+      formPayload.append(displayFileType === 'video' ? "video" : "image", imageFile);
     }
 
+    console.log(displayFileType)
     try {
       if (isEditing) {
         // UPDATE LOGIC
         if (displayFileType === 'video') {
-            await AdminApi.updateCauseWithVideo(editId, formPayload);
+          await AdminApi.updateCauseWithVideo(editId, formPayload);
         } else {
-            await AdminApi.updateCauseWithImage(editId, formPayload);
+          await AdminApi.updateCauseWithImage(editId, formPayload);
         }
         Swal.fire("Updated", "Cause updated successfully", "success");
       } else {
         // CREATE LOGIC
         if (displayFileType === 'video') {
-            await AdminApi.createCauseWithVideo(formPayload);
+          await AdminApi.createCauseWithVideo(formPayload);
         } else {
-            await AdminApi.createCauseWithImage(formPayload);
+          await AdminApi.createCauseWithImage(formPayload);
         }
         Swal.fire("Success", "Cause created successfully", "success");
       }
@@ -113,7 +114,7 @@ const ManageCauses = () => {
       Swal.fire("Error", "Failed to submit cause", "error");
     }
   };
-  
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -144,7 +145,7 @@ const ManageCauses = () => {
       }
     }
   };
-  
+
   const handleShowSingleCause = (cause) => {
     setCauseToView(cause);
   };
@@ -158,18 +159,27 @@ const ManageCauses = () => {
           </button>
           <h2>Cause Details</h2>
           <div className="cause-item">
-              <h3>{causeToView.title}</h3>
-              <p><strong>Description:</strong> {causeToView.description}</p>
-              <p><strong>Target Amount:</strong> ₹{causeToView.targetAmount?.toLocaleString()}</p>
-              {causeToView.imageUrl && (
-                <div className="media-container" style={{ marginTop: "10px" }}>
-                  { /\.(mp4|webm|mov)$/i.test(causeToView.imageUrl) ? (
-                    <video src={getImageUrl(causeToView.imageUrl)} controls style={{ width: "100%", maxWidth: "400px", borderRadius: "8px" }} />
-                  ) : (
-                    <img src={getImageUrl(causeToView.imageUrl)} alt={causeToView.title} style={{ width: "100%", maxWidth: "400px", borderRadius: "8px" }}/>
-                  )}
-                </div>
-              )}
+            <h3>{causeToView.title}</h3>
+            <p><strong>Description:</strong> {causeToView.description}</p>
+            <p><strong>Target Amount:</strong> ₹{causeToView.targetAmount?.toLocaleString()}</p>
+            {(causeToView.imageUrl || causeToView.videoUrl) && (
+              <div className="media-container" style={{ marginTop: "10px" }}>
+                {causeToView.mediaType === "VIDEO" ? (
+                  <video
+                    src={getImageUrl(causeToView.videoUrl)}
+                    controls
+                    style={{ width: "100%", maxWidth: "400px", borderRadius: "8px" }}
+                  />
+                ) : (
+                  <img
+                    src={getImageUrl(causeToView.imageUrl)}
+                    alt={causeToView.title}
+                    style={{ width: "100%", maxWidth: "400px", borderRadius: "8px" }}
+                  />
+                )}
+              </div>
+            )}
+
           </div>
         </div>
       ) : (
@@ -177,17 +187,17 @@ const ManageCauses = () => {
           <button onClick={() => navigate(-1)} className="back-button">← Back</button>
           <h2>Manage Causes</h2>
           <form className="cause-form" onSubmit={handleSubmit} noValidate>
-            <input type="text" name="title" placeholder="Cause Title" value={formData.title} onChange={handleChange}/>
-            <textarea name="description" placeholder="Description" value={formData.description} onChange={handleChange} rows={3}/>
-            <input type="number" name="targetAmount" placeholder="Target Amount" value={formData.targetAmount} onChange={handleChange} min="1"/>
-            <input type="text" name="shortDescription" placeholder="Short Description" value={formData.shortDescription} onChange={handleChange}/>
-            <input type="text" name="category" placeholder="Category" value={formData.category} onChange={handleChange}/>
-            <input type="text" name="location" placeholder="Location" value={formData.location} onChange={handleChange}/>
-            <input type="date" name="endDate" placeholder="End Date" value={formData.endDate} onChange={handleChange}/>
-            
+            <input type="text" name="title" placeholder="Cause Title" value={formData.title} onChange={handleChange} />
+            <textarea name="description" placeholder="Description" value={formData.description} onChange={handleChange} rows={3} />
+            <input type="number" name="targetAmount" placeholder="Target Amount" value={formData.targetAmount} onChange={handleChange} min="1" />
+            <input type="text" name="shortDescription" placeholder="Short Description" value={formData.shortDescription} onChange={handleChange} />
+            <input type="text" name="category" placeholder="Category" value={formData.category} onChange={handleChange} />
+            <input type="text" name="location" placeholder="Location" value={formData.location} onChange={handleChange} />
+            <input type="date" name="endDate" placeholder="End Date" value={formData.endDate} onChange={handleChange} />
+
             <label>Display Image or Video:</label>
             <input type="file" accept="image/*,video/*" onChange={handleImageChange} key={imageFile || ''} />
-            
+
             {imagePreview && (
               <div className="preview-container" style={{ marginTop: "10px" }}>
                 {displayFileType === 'image' && (

@@ -166,9 +166,23 @@
   width: 100px; /* Fixed width for consistency */
   text-align: center;
 }
-
 .delete-button:hover {
   background: #b71c1c;
+}
+.copy-button{
+background: #c6c328; /* Red color for Delete */
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s;
+  font-weight: 500;
+  width: 100px; /* Fixed width for consistency */
+  text-align: center;
+}
+.copy-button:hover{
+  background:hsl(from #c6c328);
 }
 
 /* Optional: Responsive adjustments for smaller screens */

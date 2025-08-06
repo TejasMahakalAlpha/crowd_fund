@@ -187,6 +187,7 @@ const ManageBlogs = () => {
         image: null,
       });
       setErrors({});
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (error) {
       console.error("Error fetching blog for edit:", error);
       Swal.fire("Error", "Failed to fetch blog details", "error");
