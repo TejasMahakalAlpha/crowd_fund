@@ -302,14 +302,33 @@ const ManagePersonalCauses = () => {
             </div>
             <div className="files-section">
               <h4>Attached Files:</h4>
-              {selectedSubmission.imageUrl ? (
+              {selectedSubmission.imageUrl || selectedSubmission.videoUrl ? (
                 <div className="file-item">
-                  <strong>Cause Image:</strong>
-                  <img src={getFileUrl(selectedSubmission.imageUrl)} alt="Cause Image" className="detail-image-preview" />
-                  <a href={getFileUrl(selectedSubmission.imageUrl)} target="_blank" rel="noopener noreferrer" className="download-link">View Image</a>
-                  <a href={`${getFileUrl(selectedSubmission.imageUrl)}/download`} className="download-link">Download Image</a>
+                  <strong>Cause Image/Video:</strong>
+                  {(() => {
+                    const mediaUrl = selectedSubmission.videoUrl || selectedSubmission.imageUrl;
+                    const url = getFileUrl(mediaUrl);
+                    const isVideo = /\.(mp4|webm|mov)$/i.test(mediaUrl);
+
+                    return isVideo ? (
+                      <>
+                        <video src={url} controls className="detail-image-preview" />
+                        <a href={url} target="_blank" rel="noopener noreferrer" className="download-link">View Video</a>
+                        <a href={`${url}/download`} className="download-link">Download Video</a>
+                      </>
+                    ) : (
+                      <>
+                        <img src={url} alt="Cause Image" className="detail-image-preview" />
+                        <a href={url} target="_blank" rel="noopener noreferrer" className="download-link">View Image</a>
+                        <a href={`${url}/download`} className="download-link">Download Image</a>
+                      </>
+                    );
+                  })()}
                 </div>
-              ) : <p>No Cause Image provided.</p>}
+              ) : (
+                <p>No Cause Image/Video provided.</p>
+              )}
+
               {selectedSubmission.proofDocumentUrl ? (
                 <div className="file-item">
                   <strong>Proof Document:</strong>
