@@ -235,8 +235,8 @@ const Causes = () => {
               const causeId = cause.id || cause._id;
               return (
                 <div className="cause-box" key={causeId}>
-                  <div onClick={() => handleShowSingleCause(cause)} style={{ cursor: 'pointer' }}>
-
+                  {/* --- UPDATED: onClick handler and style removed from this div --- */}
+                  <div>
                     {cause.mediaType === 'VIDEO' ? (
                       <video
                         src={getImageUrl(cause.videoUrl)}
