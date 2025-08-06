@@ -2,11 +2,11 @@
 import React, { useEffect, useState, useContext } from "react";
 import { AdminApi } from "../services/api"; // Ensure AdminApi is correctly imported
 import Swal from "sweetalert2";
-import "./ManagePersonalCauses.css"; 
+import "./ManagePersonalCauses.css";
 // CSS for this component
 import { AuthContext } from "../../src/context/AuthContext"; // Import AuthContext for admin name
 // UPDATED: Added useNavigate
-import { Link, useNavigate } from "react-router-dom"; 
+import { Link, useNavigate } from "react-router-dom";
 // NEW: Import a back arrow icon
 import { IoArrowBack } from "react-icons/io5";
 
@@ -18,8 +18,8 @@ const getFileUrl = (relativePath) => {
   const parts = relativePath.split('/');
   if (parts.length < 2) return null;
 
-  const category = parts[0]; 
-  const filename = parts.slice(1).join('/'); 
+  const category = parts[0];
+  const filename = parts.slice(1).join('/');
 
   return `${API_BASE}/api/documents/${category}/${filename}`;
 };
@@ -123,11 +123,11 @@ const ManagePersonalCauses = () => {
         const payload = {
           adminNotes: result.value.notes,
           approvedBy: adminName,
-          ...modifiedCauseDetails 
+          ...modifiedCauseDetails
         };
-        await AdminApi.approvePersonalCauseSubmission(selectedSubmission.id, payload); 
+        await AdminApi.approvePersonalCauseSubmission(selectedSubmission.id, payload);
         Swal.fire("Approved!", "Cause approved successfully.", "success");
-        fetchSubmissions(); 
+        fetchSubmissions();
         handleCloseDetailsModal();
       } catch (err) {
         console.error("Error approving submission:", err);
@@ -162,16 +162,16 @@ const ManagePersonalCauses = () => {
         return { notes };
       }
     });
-
+    console.log(selectedSubmission)
     if (result.isConfirmed) {
       try {
         const payload = {
           adminNotes: result.value.notes,
-          approvedBy: adminName, 
+          approvedBy: adminName,
         };
-        await AdminApi.rejectPersonalCauseSubmission(selectedSubmission.id, payload); 
+        await AdminApi.rejectPersonalCauseSubmission(selectedSubmission.id, payload);
         Swal.fire("Rejected!", "Cause rejected successfully.", "success");
-        fetchSubmissions(); 
+        fetchSubmissions();
         handleCloseDetailsModal();
       } catch (err) {
         console.error("Error rejecting submission:", err);
@@ -193,7 +193,7 @@ const ManagePersonalCauses = () => {
 
     if (result.isConfirmed) {
       try {
-        await AdminApi.deletePersonalCauseSubmission(id); 
+        await AdminApi.deletePersonalCauseSubmission(id);
         Swal.fire("Deleted!", "The submission has been deleted.", "success");
         fetchSubmissions();
       } catch (err) {
@@ -218,7 +218,7 @@ const ManagePersonalCauses = () => {
 
   if (loading) return <div className="loading-message">Loading personal cause submissions...</div>;
   if (error) return <div className="error-message">{error}</div>;
-
+  console.log
   return (
     <div className="manage-personal-causes-container">
       {/* UPDATED: Added a header wrapper for the button and title */}
@@ -261,7 +261,7 @@ const ManagePersonalCauses = () => {
               <p><strong>Target Amount:</strong> ₹{submission.targetAmount?.toLocaleString()}</p>
               <p><strong>Location:</strong> {submission.location || 'N/A'}</p>
               <p><strong>Submitted On:</strong> {new Date(submission.createdAt).toLocaleDateString()}</p>
-              
+
               <div className="card-actions">
                 <button className="view-details-btn" onClick={() => handleViewDetails(submission)}>
                   View Details & Manage
@@ -281,48 +281,49 @@ const ManagePersonalCauses = () => {
             <button className="modal-close-btn" onClick={handleCloseDetailsModal}>&times;</button>
             <h3>Submission Details: {selectedSubmission.title}</h3>
             <div className="details-section">
-                <p><strong>Status:</strong> <span className={`status-badge ${selectedSubmission.status.toLowerCase()}`}>{selectedSubmission.status.replace('_', ' ')}</span></p>
-                <p><strong>Submitted By:</strong> {selectedSubmission.submitterName} ({selectedSubmission.submitterEmail})</p>
-                <p><strong>Phone:</strong> {selectedSubmission.submitterPhone || 'N/A'}</p>
-                <p><strong>Submitted On:</strong> {new Date(selectedSubmission.createdAt).toLocaleString()}</p>
-                <p><strong>Short Description:</strong> {selectedSubmission.shortDescription || 'N/A'}</p>
-                <p><strong>Description:</strong> {selectedSubmission.description}</p>
-                <p><strong>Target Amount:</strong> ₹{selectedSubmission.targetAmount?.toLocaleString()}</p>
-                <p><strong>Category:</strong> {selectedSubmission.category || 'N/A'}</p>
-                <p><strong>Location:</strong> {selectedSubmission.location || 'N/A'}</p>
-                <p><strong>End Date:</strong> {selectedSubmission.endDate ? new Date(selectedSubmission.endDate).toLocaleString() : 'N/A'}</p>
-                <p><strong>Submitter Message:</strong> {selectedSubmission.submitterMessage || 'N/A'}</p>
-                <p><strong>Admin Notes:</strong> {selectedSubmission.adminNotes || 'None'}</p>
-                {selectedSubmission.status === 'APPROVED' && selectedSubmission.approvedBy && (
-                  <p><strong>Approved By:</strong> {selectedSubmission.approvedBy} on {new Date(selectedSubmission.approvedAt).toLocaleString()}</p>
-                )}
-                {selectedSubmission.status === 'REJECTED' && selectedSubmission.rejectedAt && (
-                  <p><strong>Rejected On:</strong> {new Date(selectedSubmission.rejectedAt).toLocaleString()}</p>
-                )}
+              <p><strong>Status:</strong> <span className={`status-badge ${selectedSubmission.status.toLowerCase()}`}>{selectedSubmission.status.replace('_', ' ')}</span></p>
+              <p><strong>Submitted By:</strong> {selectedSubmission.submitterName} ({selectedSubmission.submitterEmail})</p>
+              <p><strong>Phone:</strong> {selectedSubmission.submitterPhone || 'N/A'}</p>
+              <p><strong>Submitted On:</strong> {new Date(selectedSubmission.createdAt).toLocaleString()}</p>
+              <p><strong>Short Description:</strong> {selectedSubmission.shortDescription || 'N/A'}</p>
+              <p><strong>Description:</strong> {selectedSubmission.description}</p>
+              <p><strong>Target Amount:</strong> ₹{selectedSubmission.targetAmount?.toLocaleString()}</p>
+              <p><strong>Category:</strong> {selectedSubmission.category || 'N/A'}</p>
+              <p><strong>Location:</strong> {selectedSubmission.location || 'N/A'}</p>
+              <p><strong>End Date:</strong> {selectedSubmission.endDate ? new Date(selectedSubmission.endDate).toLocaleString() : 'N/A'}</p>
+              <p><strong>Submitter Message:</strong> {selectedSubmission.submitterMessage || 'N/A'}</p>
+              <p><strong>Admin Notes:</strong> {selectedSubmission.adminNotes || 'None'}</p>
+              {selectedSubmission.status === 'APPROVED' && selectedSubmission.approvedBy && (
+                <p><strong>Approved By:</strong> {selectedSubmission.approvedBy} on {new Date(selectedSubmission.approvedAt).toLocaleString()}</p>
+              )}
+              {selectedSubmission.status === 'REJECTED' && selectedSubmission.rejectedAt && (
+                <p><strong>Rejected On:</strong> {new Date(selectedSubmission.rejectedAt).toLocaleString()}</p>
+              )}
             </div>
             <div className="files-section">
-                <h4>Attached Files:</h4>
-                {selectedSubmission.imageUrl ? (
-                  <div className="file-item">
-                    <strong>Cause Image:</strong>
-                    <img src={getFileUrl(selectedSubmission.imageUrl)} alt="Cause Image" className="detail-image-preview" />
-                    <a href={getFileUrl(selectedSubmission.imageUrl)} target="_blank" rel="noopener noreferrer" className="download-link">View Image</a>
-                    <a href={`${getFileUrl(selectedSubmission.imageUrl)}/download`} className="download-link">Download Image</a>
-                  </div>
-                ) : <p>No Cause Image provided.</p>}
-                {selectedSubmission.proofDocumentUrl ? (
-                  <div className="file-item">
-                    <strong>Proof Document:</strong>
-                    <p>{selectedSubmission.proofDocumentName || selectedSubmission.proofDocumentUrl.split('/').pop()}</p>
-                    {selectedSubmission.proofDocumentType?.toLowerCase() === 'pdf' ? (
-                      <iframe src={getFileUrl(selectedSubmission.proofDocumentUrl)} width="100%" height="300px" title="Proof Document"></iframe>
-                    ) : (
-                      <img src={getFileUrl(selectedSubmission.proofDocumentUrl)} alt="Proof Document" className="detail-image-preview" />
-                    )}
-                    <a href={getFileUrl(selectedSubmission.proofDocumentUrl)} target="_blank" rel="noopener noreferrer" className="download-link">View Document</a>
-                    <a href={`${getFileUrl(selectedSubmission.proofDocumentUrl)}/download`} className="download-link">Download Document</a>
-                  </div>
-                ) : <p>No Proof Document provided.</p>}
+              <h4>Attached Files:</h4>
+              {selectedSubmission.imageUrl ? (
+                <div className="file-item">
+                  <strong>Cause Image:</strong>
+                  <img src={getFileUrl(selectedSubmission.imageUrl)} alt="Cause Image" className="detail-image-preview" />
+                  <a href={getFileUrl(selectedSubmission.imageUrl)} target="_blank" rel="noopener noreferrer" className="download-link">View Image</a>
+                  <a href={`${getFileUrl(selectedSubmission.imageUrl)}/download`} className="download-link">Download Image</a>
+                </div>
+              ) : <p>No Cause Image provided.</p>}
+              {selectedSubmission.proofDocumentUrl ? (
+                <div className="file-item">
+                  <strong>Proof Document:</strong>
+
+                  <p>{selectedSubmission.proofDocumentName || selectedSubmission.proofDocumentUrl.split('/').pop()}</p>
+                  {selectedSubmission.proofDocumentType?.toLowerCase() === 'pdf' ? (
+                    <iframe src={getFileUrl(selectedSubmission.proofDocumentUrl)} width="100%" height="300px" title="Proof Document"></iframe>
+                  ) : (
+                    <img src={getFileUrl(selectedSubmission.proofDocumentUrl)} alt="Proof Document" className="detail-image-preview" />
+                  )}
+                  <a href={getFileUrl(selectedSubmission.proofDocumentUrl)} target="_blank" rel="noopener noreferrer" className="download-link">View Document</a>
+                  <a href={`${getFileUrl(selectedSubmission.proofDocumentUrl)}/download`} className="download-link">Download Document</a>
+                </div>
+              ) : <p>No Proof Document provided.</p>}
             </div>
 
             {(selectedSubmission.status === 'PENDING' || selectedSubmission.status === 'UNDER_REVIEW') && (
@@ -344,7 +345,7 @@ const ManagePersonalCauses = () => {
                   <label>Location</label>
                   <input type="text" name="modifiedLocation" value={modifiedCauseDetails.modifiedLocation} onChange={handleModificationChange} />
                 </div>
-                 <div className="form-group">
+                <div className="form-group">
                   <label>Full Description</label>
                   <textarea name="modifiedDescription" value={modifiedCauseDetails.modifiedDescription} onChange={handleModificationChange} rows="4"></textarea>
                 </div>

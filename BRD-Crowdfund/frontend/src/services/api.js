@@ -26,24 +26,26 @@ export const PublicApi = {
   getEventById: (id) => PublicApiInstance.get(`events/${id}`),
   getDonation: () => PublicApiInstance.get(`donations`),
   getCauses: () => PublicApiInstance.get(`causes`),
-  
+
   // 👇 **सिर्फ इस लाइन को ठीक किया गया है**
-  getCauseById: (id) => PublicApiInstance.get(`causes/${id}`), 
-  
+  getCauseById: (id) => PublicApiInstance.get(`causes/${id}`),
+
   getAllDonations: () => PublicApiInstance.get(`donations`),
 
   getBlogs: () => PublicApiInstance.get(`blogs`),
   getBlogById: (slug) => PublicApiInstance.get(`blogs/${slug}`),
 
-  submitPersonalCauseJson: (data) => API.post(`/api/personal-cause-submissions`, data, {
-    headers: { 'Content-Type': 'application/json' }
-  }),
-  submitPersonalCauseWithImage: (formData) => API.post(`/api/personal-cause-submissions/with-image`, formData, {
-    headers: { 'Content-Type': 'multipart/form-data' }
-  }),
-  submitPersonalCauseWithFiles: (formData) => API.post(`/api/personal-cause-submissions/with-files`, formData, {
-    headers: { 'Content-Type': 'multipart/form-data' }
-  }),
+  submitCauseWithImageVideoAndDocumnent: (data) => API.post(`/api/personal-cause-submissions/submit`, data, { headers: { 'Content-Type': 'multipart/form-data' } }),
+
+  // submitPersonalCauseJson: (data) => API.post(`/api/personal-cause-submissions`, data, {
+  //   headers: { 'Content-Type': 'application/json' }
+  // }),
+  // submitPersonalCauseWithImage: (formData) => API.post(`/api/personal-cause-submissions/with-image`, formData, {
+  //   headers: { 'Content-Type': 'multipart/form-data' }
+  // }),
+  // submitPersonalCauseWithFiles: (formData) => API.post(`/api/personal-cause-submissions/with-files`, formData, {
+  //   headers: { 'Content-Type': 'multipart/form-data' }
+  // }),
   getUserSubmissionsByEmail: (email) => API.get(`/api/personal-cause-submissions/by-email/${encodeURIComponent(email)}`),
 };
 
@@ -77,11 +79,11 @@ export const AdminApi = {
   // updateCauses: (id, data) => AdminApiInstance.put(`causes/${id}/with-image`, data, { headers: AdminApi._authHeader() }),
   // PURANE WALE KO IN NAYE FUNCTIONS SE BADAL DEIN
 
-createCauseWithImage: (data) => AdminApiInstance.post(`causes/with-image`, data, { headers: { ...AdminApi._authHeader(), 'Content-Type': 'multipart/form-data' } }),
-createCauseWithVideo: (data) => AdminApiInstance.post(`causes/with-video`, data, { headers: { ...AdminApi._authHeader(), 'Content-Type': 'multipart/form-data' } }),
+  createCauseWithImage: (data) => AdminApiInstance.post(`causes/with-image`, data, { headers: { ...AdminApi._authHeader(), 'Content-Type': 'multipart/form-data' } }),
+  createCauseWithVideo: (data) => AdminApiInstance.post(`causes/with-video`, data, { headers: { ...AdminApi._authHeader(), 'Content-Type': 'multipart/form-data' } }),
 
-updateCauseWithImage: (id, data) => AdminApiInstance.put(`causes/${id}/with-image`, data, { headers: { ...AdminApi._authHeader(), 'Content-Type': 'multipart/form-data' } }),
-updateCauseWithVideo: (id, data) => AdminApiInstance.put(`causes/${id}/with-video`, data, { headers: { ...AdminApi._authHeader(), 'Content-Type': 'multipart/form-data' } }),
+  updateCauseWithImage: (id, data) => AdminApiInstance.put(`causes/${id}/with-image`, data, { headers: { ...AdminApi._authHeader(), 'Content-Type': 'multipart/form-data' } }),
+  updateCauseWithVideo: (id, data) => AdminApiInstance.put(`causes/${id}/with-video`, data, { headers: { ...AdminApi._authHeader(), 'Content-Type': 'multipart/form-data' } }),
   deleteCauses: (id) => AdminApiInstance.delete(`causes/${id}`, { headers: AdminApi._authHeader() }),
 
   // Volunteers
