@@ -1,13 +1,9 @@
 /* src/components/Header.css */
 
-/* --- FONT IMPORT ADDED --- */
-@import url('https://fonts.googleapis.com/css2?family=Lora:wght@700&family=Montserrat:wght@500;600&display=swap');
-
-
 /* ⭐ IMPORTANT: Agar tumhare global CSS mein 'overflow: hidden' hai (html, body, #root, .App par),
-    toh use 'overflow-y: scroll;' ya 'overflow: visible;' mein change karna padega.
-    'position: fixed' ko aisi constraints ki wajah se problem nahi hoti,
-    lekin yeh achhi practice hai.
+   toh use 'overflow-y: scroll;' ya 'overflow: visible;' mein change karna padega.
+   'position: fixed' ko aisi constraints ki wajah se problem nahi hoti,
+   lekin yeh achhi practice hai.
 */
 
 .main-header {
@@ -34,7 +30,6 @@
 
 /* Logo */
 .logo a {
-  font-family: 'Lora', serif; /* FONT STYLE ADDED */
   font-size: 2rem; 
   font-weight: 700; 
   color: #333; 
@@ -47,7 +42,6 @@
 }
 
 .phone-number {
-  font-family: 'Montserrat', sans-serif; /* FONT STYLE ADDED */
   color: #333; 
   font-weight: 600; 
   text-decoration: none;
@@ -68,7 +62,6 @@
 }
 
 .nav-links a, p { /* p tag included if you use it in nav links */
-  font-family: 'Montserrat', sans-serif; /* FONT STYLE ADDED */
   color: #333; 
   text-decoration: none;
   font-weight: 500; 
@@ -106,7 +99,6 @@
 }
 
 .mega-menu-content a {
-  font-family: 'Montserrat', sans-serif; /* FONT STYLE ADDED */
   display: block;
   padding: 10px 15px;
   color: #333; 
