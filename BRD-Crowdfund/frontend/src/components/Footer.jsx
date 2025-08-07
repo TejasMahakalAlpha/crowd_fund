@@ -1,54 +1,67 @@
 // src/components/Footer.jsx
 import React from 'react';
+import { Link } from 'react-router-dom'; // Assuming you use React Router for navigation
 import './Footer.css';
 
+// Import icons from react-icons
+import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn } from 'react-icons/fa';
+import { FiMapPin, FiPhone, FiMail } from 'react-icons/fi';
+
 const Footer = () => {
-  return (
-    <footer className="main-footer">
-      <div className="footer-container">
-        {/* ⭐ 1st Column: Brand/Logo ⭐ */}
-        <div className="footer-col brand-col">
-            <div className="footer-logo">
-                {/* Assuming you have a logo icon or text */}
-                <i className="fas fa-hand-holding-heart footer-icon"></i> {/* Example icon, replace if you have specific logo icon */}
-                <h3>Donor-box</h3>
-            </div>
-          <p className="brand-tagline">simply dummy text of the printing and typesetting industry. lorem ipsum has been the industry standard</p>
-        </div>
+  return (
+    <footer className="main-footer-v2">
+      <div className="footer-container-v2">
+        {/* Column 1: Brand & Socials */}
+        <div className="footer-col about-col">
+          <h3 className="footer-logo">Green Dharti</h3>
+          <p className="footer-tagline">
+            Empowering communities to fund, support, and scale meaningful environmental projects across India.
+          </p>
+          <div className="footer-social">
+            <a href="#" aria-label="Facebook"><FaFacebookF /></a>
+            <a href="#" aria-label="Twitter"><FaTwitter /></a>
+            <a href="#" aria-label="Instagram"><FaInstagram /></a>
+            <a href="#" aria-label="LinkedIn"><FaLinkedinIn /></a>
+          </div>
+        </div>
 
-        {/* ⭐ 2nd Column: Contact Info ⭐ */}
-        <div className="footer-col contact-info-col">
-            <i className="fas fa-phone footer-icon"></i> {/* Phone icon */}
-          <h4>Contact Info</h4>
-          <p>9322342225</p>
-        </div>
+        {/* Column 2: Quick Links */}
+        <div className="footer-col links-col">
+          <h3 className="footer-heading">Quick Links</h3>
+          <ul>
+            <li><Link to="/about">About Us</Link></li>
+            <li><Link to="/causes">Our Causes</Link></li>
+            <li><Link to="/events">Events</Link></li>
+            <li><Link to="/gallery">Gallery</Link></li>
+            <li><Link to="/volunteer">Volunteer</Link></li>
+          </ul>
+        </div>
 
-        {/* ⭐ 3rd Column: Email Address ⭐ */}
-        <div className="footer-col email-col">
-            <i className="fas fa-envelope footer-icon"></i> {/* Email icon */}
-          <h4>Email Address</h4>
-          <p>Lisbon.ferrao@gmail.com</p>
-        </div>
+        {/* Column 3: Contact Info */}
+        <div className="footer-col contact-col">
+          <h3 className="footer-heading">Get in Touch</h3>
+          <ul>
+            <li>
+              <FiMapPin className="contact-icon" />
+              <span>Mary Villa, Badalepada, Giriz, Vasai West</span>
+            </li>
+            <li>
+              <FiPhone className="contact-icon" />
+              <a href="tel:9322342225">9322342225</a>
+            </li>
+            <li>
+              <FiMail className="contact-icon" />
+              <a href="mailto:Lisbon.ferrao@gmail.com">Lisbon.ferrao@gmail.com</a>
+            </li>
+          </ul>
+        </div>
+      </div>
 
-        {/* ⭐ 4th Column: Organization ⭐ */}
-        <div className="footer-col organization-col">
-            <i className="fas fa-building footer-icon"></i> {/* Organization icon */}
-          <h4>Organization</h4>
-          <p>Green Dharti</p>
-        </div>
-
-        {/* ⭐ 5th Column: Address (separated from contact info) ⭐ */}
-        <div className="footer-col address-col">
-            <i className="fas fa-map-marker-alt footer-icon"></i> {/* Location icon */}
-            <h4>Address</h4>
-            <p>Address: Mary Villa, Badalepada, Giriz Vasai West</p>
-        </div>
-
-      </div>
-
-      {/* ⭐ REMOVED: footer-social and footer-bottom sections (not in screenshot) ⭐ */}
-    </footer>
-  );
+      <div className="footer-bottom">
+        <p>&copy; {new Date().getFullYear()} Green Dharti. All Rights Reserved.</p>
+      </div>
+    </footer>
+  );
 };
 
 export default Footer;
