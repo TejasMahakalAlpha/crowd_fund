@@ -2,6 +2,9 @@
 import React, { useContext } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 
+// ⭐ 1. IMPORT THE SCROLLTOTOP COMPONENT
+import ScrollToTop from '../components/ScrollToTop';
+
 // Context for authentication
 import { AuthContext } from '../context/AuthContext';
 
@@ -17,7 +20,7 @@ import Gallery from '../pages/Gallery';
 import Blog from '../pages/Blog';
 import BlogDetails from '../pages/BlogDetails';
 import VolunteerForm from '../pages/VolunteerForm';
-import SubmitCause from '../pages/SubmitCause';     // ⭐ UNCOMMENTED: SubmitCause import
+import SubmitCause from '../pages/SubmitCause';
 import WhatsApp from '../components/WhatsApp';
 import CauseDetails from '../components/CausesDetails';
 
@@ -31,7 +34,7 @@ import ManageDonations from '../admin/ManageDonations';
 import ManageVolunteers from '../admin/ManageVolunteers';
 import ManageEvents from '../admin/ManageEvents';
 import ManageContacts from "../admin/ManageContacts";
-import ManagePersonalCauses from '../admin/ManagePersonalCauses'; // ⭐ UNCOMMENTED: ManagePersonalCauses import
+import ManagePersonalCauses from '../admin/ManagePersonalCauses';
 
 
 const AppRoutes = () => {
@@ -46,6 +49,9 @@ const AppRoutes = () => {
 
   return (
     <>
+      {/* ⭐ 2. ADD THE COMPONENT HERE AT THE TOP */}
+      <ScrollToTop />
+
       {/* Header is shown only if it's NOT an admin route */}
       {!isAdminRoute && <Header />}
 
@@ -56,14 +62,13 @@ const AppRoutes = () => {
         <Route path="/about" element={<About />} />
         <Route path="/causes" element={<Causes />} />
         <Route path="/causes/:id" element={<CauseDetails />} />
-        {/* <Route path="/causes/:id" element={<ManageCauses />} /> */}
         <Route path="/contact" element={<Contact />} />
         <Route path="/events" element={<Events />} />
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:slug" element={<BlogDetails />} />
         <Route path="/volunteer" element={<VolunteerForm />} />
-        <Route path="/submit-cause" element={<SubmitCause />} /> {/* ⭐ UNCOMMENTED SubmitCause route ⭐ */}
+        <Route path="/submit-cause" element={<SubmitCause />} />
 
         {/* 🔒 Admin Routes - protected by authentication */}
         <Route path="/admin/login" element={<Login />} />
@@ -76,7 +81,7 @@ const AppRoutes = () => {
         <Route path="/admin/manage-volunteers" element={<ProtectedRoute element={<ManageVolunteers />} />} />
         <Route path="/admin/manage-events" element={<ProtectedRoute element={<ManageEvents />} />} />
         <Route path="/admin/manage-contacts" element={<ProtectedRoute element={<ManageContacts />} />} />
-        <Route path="/admin/manage-personal-causes" element={<ProtectedRoute element={<ManagePersonalCauses />} />} /> {/* ⭐ UNCOMMENTED ManagePersonalCauses route ⭐ */}
+        <Route path="/admin/manage-personal-causes" element={<ProtectedRoute element={<ManagePersonalCauses />} />} />
       </Routes>
 
       {/* Footer is shown only if it's NOT an admin route */}
