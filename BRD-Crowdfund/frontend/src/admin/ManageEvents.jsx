@@ -343,8 +343,8 @@ const ManageEvents = () => {
                   style={{ width: "100%", maxWidth: "300px", marginTop: "10px" }}
                 />
               )}
-              <button onClick={() => handleDelete(event.id)}>Delete</button>
-              <button onClick={() => handleEdit(event.id)}>Edit</button>
+              <button className="delete-btn" onClick={() => handleDelete(event.id)}>Delete</button>
+              <button className="edit-btn" onClick={() => handleEdit(event.id)}>Edit</button>
 
             </div>
           ))

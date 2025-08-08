@@ -18,8 +18,8 @@ const About = () => {
       <section className="about-mission">
         <h2>Our Mission</h2>
         <p>
-          Green Dharti is committed to creating a just, sustainable, and compassionate world. 
-          We drive positive change through impactful causes — from education and environment 
+          Green Dharti is committed to creating a just, sustainable, and compassionate world.
+          We drive positive change through impactful causes — from education and environment
           to health and community welfare.
         </p>
       </section>
@@ -37,8 +37,9 @@ const About = () => {
       <section className="about-story">
         <h2>Our Journey</h2>
         <p>
-          Since our beginning, we’ve empowered thousands of people through grassroots campaigns, 
-          educational programs, environmental drives, and volunteerism. And this is just the start.
+          Founded by Lisbon Ferrao, our platform empowers communities to fund, support, and scale meaningful environmental projects across India’s coastal and urban regions.
+          Lisbon’s journey began when he discovered his children playing amid beach litter in Mumbai. Shocked by this, he and his wife Zsuzsanna Salda turned their weekend beach visits into clean‑up efforts.
+          That led to founding Vasai Beach Cleaners, which has removed hundreds of tons of plastic waste from seven beaches since 2017—sometimes uncovering tragedies, like a seabird , turtles , dolphins washed ashore in a pile of trash, underscoring the urgency of change
         </p>
       </section>
     </div>

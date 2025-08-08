@@ -332,17 +332,53 @@ const ManagePersonalCauses = () => {
               {selectedSubmission.proofDocumentUrl ? (
                 <div className="file-item">
                   <strong>Proof Document:</strong>
-
                   <p>{selectedSubmission.proofDocumentName || selectedSubmission.proofDocumentUrl.split('/').pop()}</p>
-                  {selectedSubmission.proofDocumentType?.toLowerCase() === 'pdf' ? (
-                    <iframe src={getFileUrl(selectedSubmission.proofDocumentUrl)} width="100%" height="300px" title="Proof Document"></iframe>
-                  ) : (
-                    <img src={getFileUrl(selectedSubmission.proofDocumentUrl)} alt="Proof Document" className="detail-image-preview" />
-                  )}
-                  <a href={getFileUrl(selectedSubmission.proofDocumentUrl)} target="_blank" rel="noopener noreferrer" className="download-link">View Document</a>
-                  <a href={`${getFileUrl(selectedSubmission.proofDocumentUrl)}/download`} className="download-link">Download Document</a>
+
+                  {(() => {
+                    const docUrl = getFileUrl(selectedSubmission.proofDocumentUrl);
+                    const ext = selectedSubmission.proofDocumentUrl.split('.').pop().toLowerCase();
+
+                    if (ext === "pdf") {
+                      return (
+                        <iframe
+                          src={docUrl}
+                          width="100%"
+                          height="300px"
+                          title="Proof Document"
+                        />
+                      );
+                    } else if (["jpg", "jpeg", "png", "webp"].includes(ext)) {
+                      return (
+                        <img
+                          src={docUrl}
+                          alt="Proof Document"
+                          className="detail-image-preview"
+                        />
+                      );
+                    } else {
+                      return <p>Unsupported document format.</p>;
+                    }
+                  })()}
+
+                  <a
+                    href={getFileUrl(selectedSubmission.proofDocumentUrl)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="download-link"
+                  >
+                    View Document
+                  </a>
+                  <a
+                    href={`${getFileUrl(selectedSubmission.proofDocumentUrl)}/download`}
+                    className="download-link"
+                  >
+                    Download Document
+                  </a>
                 </div>
-              ) : <p>No Proof Document provided.</p>}
+              ) : (
+                <p>No Proof Document provided.</p>
+              )}
+
             </div>
 
             {(selectedSubmission.status === 'PENDING' || selectedSubmission.status === 'UNDER_REVIEW') && (
