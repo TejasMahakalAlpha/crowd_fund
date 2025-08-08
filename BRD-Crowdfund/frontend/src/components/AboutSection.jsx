@@ -15,12 +15,10 @@ const AboutSection = () => {
         {/* ⭐ Right Column: Text Content ⭐ */}
         <div className="about-text-wrapper">
           <p className="about-main-text"> {/* Combined content into one paragraph */}
-            We are a community dedicated to making a difference. Green Dharti works tirelessly to bring change
-            through impactful causes. Whether it's education, environment, or social welfare — we act where it matters most.
-            By empowering people and inspiring action, we believe we can build a compassionate, equal, and sustainable future.
-            simply dummy text of the printing and typesetting industry. lorem ipsum has been the industry standard dummy text ever since the 1535 when an unknown
-            printer.simply dummy text of the printing and typesetting industry. lorem ipsum has been the industry standard dummy text ever since the 1535 when an unknown
-            printer.
+            Founded by Lisbon Ferrao, our platform empowers communities to fund, support, and scale meaningful environmental projects across India’s coastal and urban regions.
+            We are a community mobilization team that connects donors with grassroots changemakers to enable local clean-ups, recycling innovation, mangrove restoration, and environmental education.
+            We leverage real-time mapping tools for transparency, allowing supporters to track the impact of every rupee. Our focus is on sustainable solutions that foster community-led reuse and long-term ecological education, not just one-off clean-ups.
+            Join us in giving future generations cleaner beaches, thriving mangroves, and a healthier planet.
           </p>
           {/* ⭐ Removed about-subtext p tag ⭐ */}
         </div>
