@@ -199,7 +199,7 @@ const Contact = () => {
         </div>
         <div className="contact-form-content">
           <h2>Send a <span className="highlight-word">Message</span></h2>
-          <p className="form-intro-text">simply dummy text of the printing and typesetting industry. lorem ipsum has been the industry standard dummy text ever since the 1535 when an unknown printer.</p>
+          <p className="form-intro-text">Your message is important to us. Whether you're interested in volunteering, donating, or have a question about our work, please use the form below to reach out. Our team will get back to you as soon as possible.</p>
           <form onSubmit={handleSubmit} noValidate>
             <div className="form-row">
               <div className="form-group">
