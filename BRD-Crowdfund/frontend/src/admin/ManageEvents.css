@@ -207,38 +207,46 @@
     width: 100%;
   }
 }
-.edit-btn {
-  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-  color: #fff;
+.cause-actions {
+  display: flex;
+  flex-direction: column; /* Stack buttons vertically */
+  gap: 10px; /* Space between Edit and Delete buttons */
+  align-items: flex-end; /* Align buttons to the right within their container */
+  /* margin-left: auto; Removed this as flex-direction column doesn't need it the same way */
+  flex-shrink: 0; /* Prevent buttons from shrinking if space is tight */
+}
+
+/* ⭐ NEW: Specific style for Edit button */
+.edit-button {
+  background: #2196F3; /* Blue color for Edit */
+  color: white;
   border: none;
+  padding: 8px 16px; /* Good padding */
   border-radius: 6px;
-  padding: 8px 16px;
-  font-size: 0.9rem;
-  font-weight: 600;
   cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background 0.3s;
+  font-weight: 500;
+  width: 100px; /* Fixed width for consistency */
+  text-align: center;
 }
 
-.edit-btn:hover {
-  background: linear-gradient(135deg, #00c6fb 0%, #005bea 100%);
-  transform: scale(1.03);
+.edit-button:hover {
+  background: #1976D2; /* Darker blue on hover */
 }
 
-.delete-btn {
-  background: linear-gradient(135deg, #f85032 0%, #e73827 100%);
-  color: #fff;
+/* ⭐ MODIFIED: Style for Delete button */
+.delete-button {
+  background: #c62828; /* Red color for Delete */
+  color: white;
   border: none;
-  border-radius: 6px;
   padding: 8px 16px;
-  font-size: 0.9rem;
-  font-weight: 600;
+  border-radius: 6px;
   cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background 0.3s;
+  font-weight: 500;
+  width: 100px; /* Fixed width for consistency */
+  text-align: center;
 }
-
-.delete-btn:hover {
-  background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
-  transform: scale(1.03);
+.delete-button:hover {
+  background: #b71c1c;
 }

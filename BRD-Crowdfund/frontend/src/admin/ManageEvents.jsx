@@ -323,7 +323,7 @@ const ManageEvents = () => {
               <h3>{event.title}</h3>
               <p>{new Date(event.eventDate).toLocaleString()}</p>
               <p>{event.shortDescription}</p>
-              <p>{event.description}</p>
+
               <p>
                 <strong>Location:</strong> {event.location}
               </p>
@@ -333,19 +333,18 @@ const ManageEvents = () => {
               <p>
                 <strong>Max Participants:</strong> {event.maxParticipants}
               </p>
-              <p>
-                <strong>Current Participants:</strong> {event.currentParticipants}
-              </p>
-              {event.imageUrl && (
+
+              {/* {event.imageUrl && (
                 <img
                   src={getImageUrl(event.imageUrl)}
                   alt={event.imageUrl}
                   style={{ width: "100%", maxWidth: "300px", marginTop: "10px" }}
                 />
-              )}
-              <button className="delete-btn" onClick={() => handleDelete(event.id)}>Delete</button>
-              <button className="edit-btn" onClick={() => handleEdit(event.id)}>Edit</button>
-
+              )} */}
+              <div className="event-actions">
+                <button className="edit-button" onClick={() => handleEdit(cause)}>Edit</button>
+                <button className="delete-button" onClick={() => handleDelete(cause.id || cause._id)}>Delete</button>
+              </div>
             </div>
           ))
         ) : (

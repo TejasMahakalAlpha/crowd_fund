@@ -6,12 +6,12 @@ const AboutSection = () => {
   return (
     <section className="about-section" id="about">
       <div className="container about-flex-container"> {/* ⭐ Added new class for flex layout ⭐ */}
-        
+
         {/* ⭐ Left Column: Title ⭐ */}
         <div className="about-title-wrapper">
-          <h2 className="section-title">Who <span className="highlight-text">We Are?</span></h2> {/* ⭐ Added span for highlight ⭐ */}
+          <h2 className="section-title">Who <span className="highlight-text">Are We?</span></h2> {/* ⭐ Added span for highlight ⭐ */}
         </div>
-        
+
         {/* ⭐ Right Column: Text Content ⭐ */}
         <div className="about-text-wrapper">
           <p className="about-main-text"> {/* Combined content into one paragraph */}
