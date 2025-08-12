@@ -23,7 +23,7 @@
 
 .blog-grid {
   display: flex;
-  flex-wrap: wrap;             /* ✅ allows wrapping on smaller screens */
+  flex-wrap: wrap;
   justify-content: center;
   gap: 30px;
   padding: 60px 20px;
@@ -39,10 +39,12 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  width: calc(33.33% - 30px);   /* ✅ 3 per row with gap */
+  width: calc(33.33% - 30px);
   max-width: 450px;
-  min-width: 280px;             /* ✅ prevent too small */
+  min-width: 280px;
   margin-bottom: 30px;
+  display: flex; /* Added for better layout */
+  flex-direction: column; /* Added for better layout */
 }
 
 
@@ -60,6 +62,9 @@
 
 .blog-content {
   padding: 1.5rem;
+  display: flex; /* Added for better layout */
+  flex-direction: column; /* Added for better layout */
+  flex-grow: 1; /* Allows footer elements to stick to the bottom */
 }
 
 .blog-content h3 {
@@ -77,7 +82,47 @@
 .blog-slug {
   color: #777;
   font-size: 0.85rem;
+  flex-grow: 1; /* Pushes the share button down */
 }
+
+/* --- ✅ NEW STYLES FOR SHARE BUTTON --- */
+.share-container {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.share-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #f0fdfa;
+  color: #004d40;
+  border: 1px solid #b2dfdb;
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.share-button:hover {
+  background-color: #e0f2f1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+/* --- END OF NEW STYLES --- */
+
+
+@media (max-width: 1024px) {
+  .blog-box {
+    width: calc(50% - 30px);  /* 2 per row */
+  }
+}
+
 @media (max-width: 768px) {
   .blog-page {
     padding: 1rem;
@@ -97,6 +142,12 @@
 
   .blog-image {
     height: 180px;
+  }
+}
+
+@media (max-width: 600px) {
+  .blog-box {
+    width: 100%;             /* 1 per row */
   }
 }
 
@@ -128,16 +179,5 @@
 
   .blog-image {
     height: 150px;
-  }
-}
-@media (max-width: 1024px) {
-  .blog-box {
-    width: calc(50% - 30px);  /* 2 per row */
-  }
-}
-
-@media (max-width: 600px) {
-  .blog-box {
-    width: 100%;              /* 1 per row */
   }
 }
