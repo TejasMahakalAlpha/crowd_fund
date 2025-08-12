@@ -19,14 +19,13 @@
 /* === Main Section Layout === */
 .causes-section {
   background: var(--background-light);
-   padding: 40px 20px;
+  padding: 40px 20px;
   text-align: center;
 }
 
 .section-title {
   font-size: clamp(2rem, 5vw, 2.5rem);
   color: var(--primary-dark);
-  /* UPDATED: Reduced margin from 50px to 30px to decrease gap */
   margin-bottom: 10px;
   font-weight: 700;
 }
@@ -56,7 +55,7 @@
   box-shadow: var(--shadow-heavy);
 }
 
-.cause-image {
+.modal-image {
   width: 100%;
   height: 200px;
   object-fit: cover;
@@ -134,33 +133,29 @@
   cursor: not-allowed;
 }
 
-.copy-link-wrapper {
+.share-btn {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-light);
+  padding: 8px 10px;
+  border-radius: var(--border-radius-sm);
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
   display: flex;
   align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
-.copy-icon {
-  font-size: 1.6rem;
-  color: var(--text-light);
-  cursor: pointer;
-  transition: color 0.3s ease, transform 0.2s ease;
-  margin-left: 10px;
-}
-
-.copy-icon:hover {
+.share-btn:hover {
+  background-color: var(--background-light);
   color: var(--primary-color);
-  transform: scale(1.1);
+  border-color: var(--primary-color);
 }
 
-.copied-message {
-  margin-left: 8px;
-  font-size: 0.9rem;
-  color: #27ae60;
-  font-weight: bold;
-}
 
 /* === Modal Styling === */
-/* ... (Modal styles are unchanged, but kept for completeness) ... */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -175,6 +170,7 @@
   animation: fadeIn 0.3s ease;
 }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
 .modal-content {
   background: var(--white);
   border-radius: var(--border-radius-md);
@@ -188,36 +184,33 @@
   animation: slideUp 0.4s ease-out;
 }
 @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
 .modal-title { font-size: 1.8rem; color: var(--primary-color); margin-bottom: 20px; text-align: center; font-weight: 700; }
-.modal-image { width: 100%; max-height: 300px; object-fit: cover; border-radius: var(--border-radius-sm); margin-bottom: 20px; }
+
 .modal-details p { margin: 10px 0; font-size: 1rem; color: var(--text-light); line-height: 1.7; }
 .modal-details p strong { color: var(--text-dark); }
 .close-btn { position: absolute; top: 15px; right: 15px; background: transparent; border: none; font-size: 2rem; color: #95a5a6; cursor: pointer; transition: color 0.3s ease; }
 .close-btn:hover { color: #e74c3c; }
 
 
-/* =========== NEW: Responsive Adjustments =========== */
-
-/* For Tablets */
+/* =========== Responsive Adjustments =========== */
 @media (max-width: 768px) {
   .causes-grid {
-    gap: 20px; /* Thoda kam gap tablets par */
+    gap: 20px;
   }
 }
 
-/* For Mobile Phones */
 @media (max-width: 480px) {
   .causes-section {
-    /* Mobile par side se kam padding */
-    padding:  15px  15px;
+    padding: 15px 15px;
   }
 
   .section-title {
-    margin-bottom: 20px; /* Mobile par title ke neeche kam gap */
+    margin-bottom: 20px;
   }
 
   .cause-card {
-    padding: 15px; /* Mobile par card ke andar kam padding */
+    padding: 15px;
   }
 
   .cause-title {
