@@ -102,7 +102,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start; /* Changed from space-between */
+  justify-content: flex-start;
   align-items: flex-start;
   text-align: left;
 }
@@ -126,13 +126,14 @@
   font-size: 0.95rem;
   line-height: 1.5;
   margin-bottom: 15px;
+  flex-grow: 1; /* ✅ Ensures space between description and elements below */
 }
 
-/* --- NEW: Styles for the main event image --- */
+/* Styles for the main event image */
 .event-image-container {
   width: 100%;
-  margin-top: auto; /* Pushes the image to the bottom */
-  padding-top: 15px; /* Adds space above the image */
+  margin-top: auto;
+  padding-top: 15px;
 }
 
 .event-main-image {
@@ -143,28 +144,36 @@
   border: 1px solid #ddd;
 }
 
+/* ✅ 5. Add NEW STYLES for the share button, copied from Blog.css */
+.share-container {
+  width: 100%; /* Ensures container takes full width of the column */
+  margin-top: auto; /* Pushes the button to the bottom of the text content */
+  padding-top: 10px; /* Space above the button */
+  display: flex;
+  justify-content: flex-start; /* Aligns button to the left */
+  align-items: center;
+}
 
-/* --- REMOVED: Thumbnail styles are no longer needed --- */
-/*
-.event-thumbnails { ... }
-.event-thumbnail { ... }
-*/
-
-.join-btn {
-  background-color: #26a69a;
-  color: #fff;
-  padding: 10px 18px;
-  border: none;
-  border-radius: 6px;
-  font-weight: bold;
+.share-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #f0fdfa;
+  color: #004d40;
+  border: 1px solid #b2dfdb;
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin-top: 15px;
+  transition: background-color 0.3s, box-shadow 0.3s;
 }
 
-.join-btn:hover {
-  background-color: #00796b;
+.share-button:hover {
+  background-color: #e0f2f1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
+/* --- END OF NEW STYLES --- */
 
 /* MEDIA QUERIES */
 @media (max-width: 992px) {
@@ -194,6 +203,11 @@
   .event-details-col .event-description {
     text-align: center;
   }
+  
+  /* ✅ Center share button on smaller screens */
+  .share-container {
+      justify-content: center;
+  }
 }
 
 @media (max-width: 768px) {
@@ -208,35 +222,11 @@
   .events-hero p {
     font-size: 1rem;
   }
-
-  .section-title {
-    font-size: 2rem;
-    margin-top: 40px;
-    margin-bottom: 30px;
-  }
 }
 
 @media (max-width: 550px) {
   .events-list {
     grid-template-columns: 1fr;
-  }
-
-  .events-hero {
-    padding: 30px 10px;
-  }
-
-  .events-hero h1 {
-    font-size: 1.8rem;
-  }
-
-  .events-hero p {
-    font-size: 0.9rem;
-  }
-
-  .section-title {
-    font-size: 1.8rem;
-    margin-top: 30px;
-    margin-bottom: 25px;
   }
 
   .event-date-col .month-day {
@@ -250,8 +240,8 @@
   .event-details-col .event-description {
     font-size: 0.85rem;
   }
-  
+    
   .event-main-image {
-    height: 160px; /* Adjust height for smaller screens */
+    height: 160px;
   }
 }

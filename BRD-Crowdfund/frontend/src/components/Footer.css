@@ -1,4 +1,4 @@
-/* src/components/Footer.css - FINAL CORRECTED FILE */
+/* src/components/Footer.css */
 
 /* --- FONT & VARIABLES (for consistency) --- */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Lora:wght@700&display=swap');
@@ -52,11 +52,14 @@
 }
 
 /* --- BRAND & SOCIALS COLUMN --- */
-.footer-logo {
-  font-family: var(--font-logo);
-  font-size: 2rem;
-  color: var(--heading-text);
-  margin-bottom: 20px;
+
+/* ❌ Removed the old .footer-logo style for the text */
+
+/* ✅ Added new style for the logo image */
+.footer-logo-img {
+  width: 150px; /* You can adjust the width of the logo here */
+  height: auto;   /* Maintains the aspect ratio */
+  margin-bottom: 20px; /* Keeps the spacing same as before */
 }
 
 .footer-tagline {
@@ -122,7 +125,7 @@
 
 /* --- BOTTOM BAR --- */
 .footer-bottom {
-  background-color: var(--dark-bg); /* ⭐ FIX: Explicitly set background color */
+  background-color: var(--dark-bg);
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   margin-top: 60px;
   padding: 25px 0;
@@ -145,5 +148,10 @@
   }
   .contact-col li {
     justify-content: center;
+  }
+  /* Center the logo on mobile */
+  .footer-logo-img {
+      margin-left: auto;
+      margin-right: auto;
   }
 }

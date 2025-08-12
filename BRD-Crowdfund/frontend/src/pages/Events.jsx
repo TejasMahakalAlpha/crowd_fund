@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { PublicApi } from "../services/api";
 import "./Events.css";
+import { FaShareAlt } from 'react-icons/fa'; // ✅ 1. Import the share icon
+
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 const Events = () => {
@@ -8,11 +10,37 @@ const Events = () => {
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(true);
 
-    // --- UPDATED: Function updated to match your EventsSection.jsx file ---
     const getImageUrl = (relativePath) => {
         if (!relativePath) return "";
-        // This path is based on the reference file you provided.
-        return `${API_BASE}/api/images/${relativePath}`; 
+        return `${API_BASE}/api/images/${relativePath}`;
+    };
+
+    // ✅ 2. Add the handleShare function from Blog.jsx
+    const handleShare = async (e, title, url, summary) => {
+        e.stopPropagation(); // Prevents other click events on the card
+
+        const shareData = {
+            title: title,
+            text: summary,
+            url: url,
+        };
+
+        if (navigator.share) {
+            try {
+                await navigator.share(shareData);
+            } catch (error) {
+                console.error('Error sharing:', error);
+            }
+        } else {
+            // Fallback for desktop browsers
+            try {
+                await navigator.clipboard.writeText(url);
+                alert('Link copied to clipboard!');
+            } catch (error) {
+                console.error('Failed to copy link:', error);
+                alert('Sharing not supported. Link could not be copied.');
+            }
+        }
     };
 
     useEffect(() => {
@@ -64,6 +92,10 @@ const Events = () => {
                             });
                             const endTime = "";
                             const fullTimeRange = `${dayOfWeek} ${time}${endTime ? ' - ' + endTime : ''}`;
+                            
+                            // ✅ 3. Define the URL for the specific event to be shared
+                            const eventUrl = `${window.location.origin}/events/${event._id}`;
+
 
                             return (
                                 <div className="event-card" key={event.id || event._id || index}>
@@ -76,7 +108,18 @@ const Events = () => {
                                         <p className="event-datetime">{fullTimeRange}</p>
                                         <h3 className="event-title">{event.title}</h3>
                                         <p className="event-description">{event.description}</p>
-                                        
+
+                                        {/* ✅ 4. Add the Share Button JSX here */}
+                                        <div className="share-container">
+                                            <button
+                                                onClick={(e) => handleShare(e, event.title, eventUrl, event.description)}
+                                                className="share-button"
+                                                title="Share this event"
+                                            >
+                                                <FaShareAlt /> Share
+                                            </button>
+                                        </div>
+
                                         {event.imageUrl && (
                                             <div className="event-image-container">
                                                 <img
