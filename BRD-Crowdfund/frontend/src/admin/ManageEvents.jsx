@@ -342,8 +342,8 @@ const ManageEvents = () => {
                 />
               )} */}
               <div className="event-actions">
-                <button className="edit-button" onClick={() => handleEdit(cause)}>Edit</button>
-                <button className="delete-button" onClick={() => handleDelete(cause.id || cause._id)}>Delete</button>
+                <button className="edit-button" onClick={() => handleEdit(event.id)}>Edit</button>
+                <button className="delete-button" onClick={() => handleDelete(event.id || event._id)}>Delete</button>
               </div>
             </div>
           ))
