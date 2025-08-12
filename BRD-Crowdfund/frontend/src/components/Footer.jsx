@@ -1,7 +1,12 @@
 // src/components/Footer.jsx
 import React from 'react';
-import { Link } from 'react-router-dom'; // Assuming you use React Router for navigation
+import { Link } from 'react-router-dom';
 import './Footer.css';
+
+// ✅ 1. Import your logo file
+// Make sure the path is correct based on your project structure.
+// This path assumes your Footer.jsx is in 'src/components/' and your logo is in 'src/assets/header/'.
+import logo from '../assets/header/crowdfund_logo.png'; 
 
 // Import icons from react-icons
 import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn } from 'react-icons/fa';
@@ -13,7 +18,10 @@ const Footer = () => {
       <div className="footer-container-v2">
         {/* Column 1: Brand & Socials */}
         <div className="footer-col about-col">
-          <h3 className="footer-logo">Green Dharti</h3>
+
+          {/* 👉 2. Replaced the <h3> text with the <img> tag for your logo */}
+          <img src={logo} alt="Green Dharti Logo" className="footer-logo-img" />
+
           <p className="footer-tagline">
             Empowering communities to fund, support, and scale meaningful environmental projects across India.
           </p>
