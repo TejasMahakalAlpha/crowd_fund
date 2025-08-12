@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
 import { PublicApi, PaymentApi } from "../services/api";
 import "./CausesSection.css";
 import Swal from "sweetalert2";
