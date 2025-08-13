@@ -23,6 +23,11 @@ import VolunteerForm from '../pages/VolunteerForm';
 import SubmitCause from '../pages/SubmitCause';
 import WhatsApp from '../components/WhatsApp';
 import CauseDetails from '../components/CausesDetails';
+import EventDetailPage from '../components/EventDetailPage';
+
+
+
+
 
 
 // Admin Pages
@@ -77,6 +82,8 @@ const AppRoutes = () => {
         <Route path="/blog/:slug" element={<BlogDetails />} />
         <Route path="/volunteer" element={<VolunteerForm />} />
         <Route path="/submit-cause" element={<SubmitCause />} />
+       <Route path="/events/:eventSlug" element={<EventDetailPage />} />
+
 
         {/* 🔒 Admin Routes - protected by authentication */}
         <Route path="/admin/login" element={<Login />} />
