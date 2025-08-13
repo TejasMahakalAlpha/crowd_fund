@@ -1,5 +1,5 @@
 // src/routes/AppRoutes.jsx
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 
 // ⭐ 1. IMPORT THE SCROLLTOTOP COMPONENT
@@ -46,6 +46,14 @@ const AppRoutes = () => {
   const ProtectedRoute = ({ element }) => {
     return isLoggedIn ? element : <Navigate to="/admin/login" replace />;
   };
+
+  useEffect(() => {
+    if (!isAdminRoute) {
+      document.body.style.paddingTop = "60px"; // match your header height
+    } else {
+      document.body.style.paddingTop = "0";
+    }
+  }, [isAdminRoute]);
 
   return (
     <>

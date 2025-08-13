@@ -73,3 +73,7 @@
 .volunteer-container button:hover {
   background-color: #00796b;
 }
+textarea {
+  resize: none;
+  overflow-y: auto; /* keep scroll bar if needed */
+}

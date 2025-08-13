@@ -12,8 +12,7 @@ body, html {
   /* ⭐ Background image removed from here ⭐ */
   background-color: #f0f8ff; /* Default background color for the section */
   color: #333; /* Default text color (can be overridden by .hero-text-content) */
-  padding-top: 0; /* ⭐ No padding on hero section itself ⭐ */
-  margin-top: 80px;
+  padding-top: 10px; /* ⭐ No padding on hero section itself ⭐ */
   position: relative; 
   min-height: auto; /* Adjust min-height if needed */
   display: flex; /* Make it a flex container to hold the main content wrapper */
