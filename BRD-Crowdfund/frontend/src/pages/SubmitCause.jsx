@@ -36,10 +36,12 @@ const SubmitCause = () => {
     submitterPhone: "",
     submitterMessage: "",
   });
-  const [mediaFile, setMediaFile] = useState(null);
-  const [mediaPreview, setMediaPreview] = useState(null);
-  const [proofDocumentFile, setProofDocumentFile] = useState(null);
-  const [proofDocumentPreview, setProofDocumentPreview] = useState(null);
+  const [mediaFiles, setMediaFiles] = useState([]);             // array of selected media files
+  const [mediaPreviews, setMediaPreviews] = useState([]);       // array of URLs for preview
+
+  const [proofDocumentFiles, setProofDocumentFiles] = useState([]);  // array of selected docs
+  const [proofDocumentPreviews, setProofDocumentPreviews] = useState([]); // array of preview URLs or nulls
+
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -125,14 +127,13 @@ const SubmitCause = () => {
   };
 
   const handleFileChange = (e) => {
-    const { name } = e.target;
-    const file = e.target.files[0];
+    const { name, files } = e.target;
     const newErrors = { ...errors };
 
     if (name === "media") {
-      if (!file) {
-        setMediaFile(null);
-        setMediaPreview(null);
+      if (!files.length) {
+        setMediaFiles([]);
+        setMediaPreviews([]);
         newErrors.media = "";
         setErrors(newErrors);
         return;
@@ -140,49 +141,95 @@ const SubmitCause = () => {
 
       const allowedImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
       const allowedVideoTypes = ['video/mp4', 'video/webm', 'video/ogg'];
-
       const maxImageSize = 5 * 1024 * 1024;  // 5MB
       const maxVideoSize = 20 * 1024 * 1024; // 20MB
 
       let fileErrors = [];
+      const validFiles = [];
+      const previews = [];
 
-      if (allowedImageTypes.includes(file.type)) {
-        if (file.size > maxImageSize) fileErrors.push("Image must be less than 5MB");
-      } else if (allowedVideoTypes.includes(file.type)) {
-        if (file.size > maxVideoSize) fileErrors.push("Video must be less than 20MB");
-      } else {
-        fileErrors.push("File must be an image (JPG, PNG, GIF, WebP) or a video (MP4, WebM, Ogg)");
+      for (let file of files) {
+        if (allowedImageTypes.includes(file.type)) {
+          if (file.size > maxImageSize) {
+            fileErrors.push(`Image "${file.name}" must be less than 5MB`);
+            continue;
+          }
+        } else if (allowedVideoTypes.includes(file.type)) {
+          if (file.size > maxVideoSize) {
+            fileErrors.push(`Video "${file.name}" must be less than 20MB`);
+            continue;
+          }
+        } else {
+          fileErrors.push(`File "${file.name}" must be an image (JPG, PNG, GIF, WebP) or a video (MP4, WebM, Ogg)`);
+          continue;
+        }
+
+        validFiles.push(file);
+        previews.push(URL.createObjectURL(file));
       }
 
       if (fileErrors.length > 0) {
         newErrors.media = fileErrors.join(", ");
-        setMediaFile(null);
-        setMediaPreview(null);
+        setMediaFiles([]);
+        setMediaPreviews([]);
         e.target.value = null;
       } else {
         newErrors.media = "";
-        setMediaFile(file);
-        setMediaPreview(URL.createObjectURL(file));
+        setMediaFiles(validFiles);
+        setMediaPreviews(previews);
       }
     } else if (name === "proofDocument") {
-      const fileErrors = validateFile(file, "document");
+      if (!files.length) {
+        setProofDocumentFiles([]);
+        setProofDocumentPreviews([]);
+        newErrors.proofDocument = "";
+        setErrors(newErrors);
+        return;
+      }
+
+      const docTypes = [
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'image/jpeg',
+        'image/png'
+      ];
+
+      let fileErrors = [];
+      const validFiles = [];
+      const previews = [];
+
+      for (let file of files) {
+        if (!docTypes.includes(file.type)) {
+          fileErrors.push(`Document "${file.name}" must be PDF, DOC, DOCX, JPG, or PNG`);
+          continue;
+        }
+        if (file.size > 10 * 1024 * 1024) {
+          fileErrors.push(`Document "${file.name}" must be less than 10MB`);
+          continue;
+        }
+        validFiles.push(file);
+        if (file.type === "application/pdf" || file.type.startsWith("image/")) {
+          previews.push(URL.createObjectURL(file));
+        } else {
+          previews.push(null); // no preview for DOC/DOCX
+        }
+      }
+
       if (fileErrors.length > 0) {
         newErrors.proofDocument = fileErrors.join(", ");
-        setProofDocumentFile(null); setProofDocumentPreview(null); e.target.value = null;
+        setProofDocumentFiles([]);
+        setProofDocumentPreviews([]);
+        e.target.value = null;
       } else {
-        setProofDocumentFile(file);
-        if (file.type === "application/pdf") {
-          setProofDocumentPreview(URL.createObjectURL(file));
-        } else if (file.type.startsWith("image/")) {
-          setProofDocumentPreview(URL.createObjectURL(file));
-        } else {
-          setProofDocumentPreview(null); // No preview for DOC/DOCX
-        }
         newErrors.proofDocument = "";
+        setProofDocumentFiles(validFiles);
+        setProofDocumentPreviews(previews);
       }
     }
     setErrors(newErrors);
   };
+
 
   // This function validates the entire form on submission
   const validateForm = () => {
@@ -206,9 +253,8 @@ const SubmitCause = () => {
     if (!formData.submitterPhone.trim()) newErrors.submitterPhone = "Phone number is required";
 
     // File upload checks
-    if (!proofDocumentFile) newErrors.proofDocument = "A supporting proof document is required";
-    if (!mediaFile) newErrors.media = "A display image or video for the cause is required";
-    if (!proofDocumentFile) newErrors.proofDocument = "A supporting proof document is required";
+    if (mediaFiles.length === 0) newErrors.media = "At least one display image or video is required";
+    if (proofDocumentFiles.length === 0) newErrors.proofDocument = "At least one supporting proof document is required";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -216,41 +262,77 @@ const SubmitCause = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!validateForm()) {
       Swal.fire("Validation Error", "Please fill all required fields and correct the errors.", "error");
       return;
     }
-    // The rest of handleSubmit is unchanged
+
     setIsSubmitting(true);
+
     const form = new FormData();
+
+    // Append other form fields
     for (const key in formData) {
       if (formData[key]) {
-        if (key === "targetAmount") { form.append(key, Number(formData[key])); }
-        else { form.append(key, formData[key]); }
+        if (key === "targetAmount") {
+          form.append(key, Number(formData[key]));
+        } else {
+          form.append(key, formData[key]);
+        }
       }
     }
-    if (mediaFile) form.append("media", mediaFile);
-    if (proofDocumentFile) form.append("proofDocument", proofDocumentFile);
 
+    // Append multiple media files
+    if (mediaFiles && mediaFiles.length > 0) {
+      mediaFiles.forEach((file) => {
+        form.append("media", file);
+      });
+    }
+
+    // Append multiple proof document files
+    if (proofDocumentFiles && proofDocumentFiles.length > 0) {
+      proofDocumentFiles.forEach((file) => {
+        form.append("proofDocument", file);
+      });
+    }
 
     try {
       await submitPersonalCauseApi(form);
       Swal.fire("Success", "Your cause has been submitted for review!", "success");
-      setFormData({ title: "", description: "", shortDescription: "", targetAmount: "", category: "", location: "", endDate: "", submitterName: "", submitterEmail: "", submitterPhone: "", submitterMessage: "", });
-      setProofDocumentFile(null);
-      setProofDocumentPreview(null);
-      setErrors({});
-      setMediaFile(null);
-      setMediaPreview(null);
-      document.getElementById('media').value = '';
 
+      // Reset form fields and file states
+      setFormData({
+        title: "",
+        description: "",
+        shortDescription: "",
+        targetAmount: "",
+        category: "",
+        location: "",
+        endDate: "",
+        submitterName: "",
+        submitterEmail: "",
+        submitterPhone: "",
+        submitterMessage: "",
+      });
+
+      setProofDocumentFiles([]);
+      setProofDocumentPreviews([]);
+      setMediaFiles([]);
+      setMediaPreviews([]);
+      setErrors({});
+
+      // Reset input file elements
+      document.getElementById('media').value = '';
       document.getElementById('proofDocument').value = '';
+
     } catch (error) {
       Swal.fire("Submission Failed", error.message || "Something went wrong. Please try again.", "error");
     } finally {
       setIsSubmitting(false);
     }
   };
+
 
   return (
     <div className="submit-cause-container">
@@ -335,104 +417,138 @@ const SubmitCause = () => {
             type="file"
             id="media"
             name="media"
+            multiple
             accept="image/jpeg,image/png,image/gif,image/webp,video/mp4,video/webm,video/ogg"
             onChange={handleFileChange}
           />
           {errors.media && <p className="error-message">{errors.media}</p>}
 
-          {mediaPreview && (
-            <div className="media-preview-container" style={{ position: "relative" }}>
-              {mediaFile.type.startsWith("image/") ? (
-                <img
-                  src={mediaPreview}
-                  alt="Cause Preview"
-                  className="form-image-preview"
-                />
-              ) : (
-                <video
-                  src={mediaPreview}
-                  controls
-                  width="320"
-                  height="240"
-                  style={{ borderRadius: "8px" }}
-                >
-                  Your browser does not support the video tag.
-                </video>
-              )}
-
-              <button
-                type="button"
-                className="remove-file-btn"
-                onClick={() => {
-                  setMediaFile(null);
-                  setMediaPreview(null);
-                  document.getElementById('media').value = '';
-                }}
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  right: 0,
-                  background: "red",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "50%",
-                  width: "24px",
-                  height: "24px",
-                  cursor: "pointer"
-                }}
-              >
-                X
-              </button>
+          {mediaPreviews.length > 0 && (
+            <div className="media-preview-container" style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+              {mediaFiles.map((file, index) => (
+                <div key={index} style={{ position: "relative" }}>
+                  {file.type.startsWith("image/") ? (
+                    <img
+                      src={mediaPreviews[index]}
+                      alt={`Cause Preview ${index + 1}`}
+                      className="form-image-preview"
+                      style={{ width: "150px", height: "auto", borderRadius: "8px" }}
+                    />
+                  ) : (
+                    <video
+                      src={mediaPreviews[index]}
+                      controls
+                      width="150"
+                      height="100"
+                      style={{ borderRadius: "8px" }}
+                    >
+                      Your browser does not support the video tag.
+                    </video>
+                  )}
+                  <button
+                    type="button"
+                    className="remove-file-btn"
+                    onClick={() => {
+                      // Remove this file
+                      const newFiles = [...mediaFiles];
+                      const newPreviews = [...mediaPreviews];
+                      newFiles.splice(index, 1);
+                      newPreviews.splice(index, 1);
+                      setMediaFiles(newFiles);
+                      setMediaPreviews(newPreviews);
+                      // Reset input if empty
+                      if (newFiles.length === 0) {
+                        document.getElementById('media').value = '';
+                      }
+                    }}
+                    style={{
+                      position: "absolute",
+                      top: 0,
+                      right: 0,
+                      background: "red",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "50%",
+                      width: "24px",
+                      height: "24px",
+                      cursor: "pointer"
+                    }}
+                  >
+                    X
+                  </button>
+                </div>
+              ))}
             </div>
           )}
+
         </div>
 
 
         <div className="form-group file-upload-group">
           <label htmlFor="proofDocument">Proof Document <span className="required-star">*</span> (Max 10MB)</label>
-          <input type="file" id="proofDocument" name="proofDocument" accept=".pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/jpeg,image/png" onChange={handleFileChange} />
+          <input type="file" id="proofDocument" name="proofDocument" multiple accept=".pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/jpeg,image/png" onChange={handleFileChange} />
           {errors.proofDocument && <p className="error-message">{errors.proofDocument}</p>}
-          {proofDocumentFile && (
-            <div className="file-preview-container">
-              {/* PDF preview */}
-              {proofDocumentPreview && proofDocumentFile.type === "application/pdf" && (
-                <iframe
-                  src={proofDocumentPreview}
-                  title="PDF Preview"
-                  width="100%"
-                  height="200px"
-                  style={{ border: "1px solid #ccc", borderRadius: "4px", marginBottom: "8px" }}
-                ></iframe>
-              )}
-
-              {/* Image preview */}
-              {proofDocumentPreview && proofDocumentFile.type.startsWith("image/") && (
-                <img
-                  src={proofDocumentPreview}
-                  alt="Document Preview"
-                  className="form-image-preview"
-                  style={{ maxHeight: "200px", marginBottom: "8px" }}
-                />
-              )}
-
-              {/* Filename only if no preview */}
-              {!proofDocumentPreview && (
-                <p className="uploaded-file-name">{proofDocumentFile.name}</p>
-              )}
-
-              <button
-                type="button"
-                className="remove-file-btn"
-                onClick={() => {
-                  setProofDocumentFile(null);
-                  setProofDocumentPreview(null);
-                  document.getElementById('proofDocument').value = '';
-                }}
-              >
-                X
-              </button>
+          {proofDocumentFiles.length > 0 && (
+            <div className="file-preview-container" style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+              {proofDocumentFiles.map((file, index) => (
+                <div key={index} style={{ position: "relative", maxWidth: "150px" }}>
+                  {/* PDF preview */}
+                  {proofDocumentPreviews[index] && file.type === "application/pdf" && (
+                    <iframe
+                      src={proofDocumentPreviews[index]}
+                      title={`PDF Preview ${index + 1}`}
+                      width="150"
+                      height="200"
+                      style={{ border: "1px solid #ccc", borderRadius: "4px", marginBottom: "8px" }}
+                    ></iframe>
+                  )}
+                  {/* Image preview */}
+                  {proofDocumentPreviews[index] && file.type.startsWith("image/") && (
+                    <img
+                      src={proofDocumentPreviews[index]}
+                      alt={`Document Preview ${index + 1}`}
+                      className="form-image-preview"
+                      style={{ maxHeight: "200px", marginBottom: "8px" }}
+                    />
+                  )}
+                  {/* Filename if no preview */}
+                  {!proofDocumentPreviews[index] && (
+                    <p className="uploaded-file-name" style={{ wordBreak: "break-word" }}>{file.name}</p>
+                  )}
+                  <button
+                    type="button"
+                    className="remove-file-btn"
+                    onClick={() => {
+                      const newFiles = [...proofDocumentFiles];
+                      const newPreviews = [...proofDocumentPreviews];
+                      newFiles.splice(index, 1);
+                      newPreviews.splice(index, 1);
+                      setProofDocumentFiles(newFiles);
+                      setProofDocumentPreviews(newPreviews);
+                      if (newFiles.length === 0) {
+                        document.getElementById('proofDocument').value = '';
+                      }
+                    }}
+                    style={{
+                      position: "absolute",
+                      top: 0,
+                      right: 0,
+                      background: "red",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "50%",
+                      width: "24px",
+                      height: "24px",
+                      cursor: "pointer"
+                    }}
+                  >
+                    X
+                  </button>
+                </div>
+              ))}
             </div>
           )}
+
 
         </div>
 

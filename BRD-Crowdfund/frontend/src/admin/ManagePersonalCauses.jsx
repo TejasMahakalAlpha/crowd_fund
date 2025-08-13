@@ -300,85 +300,75 @@ const ManagePersonalCauses = () => {
                 <p><strong>Rejected On:</strong> {new Date(selectedSubmission.rejectedAt).toLocaleString()}</p>
               )}
             </div>
+
             <div className="files-section">
               <h4>Attached Files:</h4>
-              {selectedSubmission.imageUrl || selectedSubmission.videoUrl ? (
-                <div className="file-item">
-                  <strong>Cause Image/Video:</strong>
-                  {(() => {
-                    const mediaUrl = selectedSubmission.videoUrl || selectedSubmission.imageUrl;
+
+              {/* Multiple Images and Videos */}
+              <div className="file-item">
+                <strong>Cause Images/Videos:</strong>
+
+                {selectedSubmission.mediaUrls && selectedSubmission.mediaUrls.length > 0 ? (
+                  selectedSubmission.mediaUrls.map((mediaUrl, index) => {
                     const url = getFileUrl(mediaUrl);
-                    const isVideo = /\.(mp4|webm|mov)$/i.test(mediaUrl);
+                    const ext = mediaUrl.split('.').pop().toLowerCase();
+                    const isVideo = ["mp4", "webm", "mov", "ogg"].includes(ext);
 
-                    return isVideo ? (
-                      <>
-                        <video src={url} controls className="detail-image-preview" />
-                        <a href={url} target="_blank" rel="noopener noreferrer" className="download-link">View Video</a>
-                        <a href={`${url}/download`} className="download-link">Download Video</a>
-                      </>
-                    ) : (
-                      <>
-                        <img src={url} alt="Cause Image" className="detail-image-preview" />
-                        <a href={url} target="_blank" rel="noopener noreferrer" className="download-link">View Image</a>
-                        <a href={`${url}/download`} className="download-link">Download Image</a>
-                      </>
+                    return (
+                      <div key={index} className="media-preview-item" style={{ marginBottom: "1rem" }}>
+                        {isVideo ? (
+                          <>
+                            <video src={url} controls className="detail-video-preview" />
+                            <a href={url} target="_blank" rel="noopener noreferrer" className="download-link">View Video</a>
+                            <a href={`${url}/download`} className="download-link">Download Video</a>
+                          </>
+                        ) : (
+                          <>
+                            <img src={url} alt={`Cause Media ${index + 1}`} className="detail-image-preview" />
+                            <a href={url} target="_blank" rel="noopener noreferrer" className="download-link">View Image</a>
+                            <a href={`${url}/download`} className="download-link">Download Image</a>
+                          </>
+                        )}
+                      </div>
                     );
-                  })()}
-                </div>
-              ) : (
-                <p>No Cause Image/Video provided.</p>
-              )}
+                  })
+                ) : (
+                  <p>No Cause Images/Videos provided.</p>
+                )}
+              </div>
 
-              {selectedSubmission.proofDocumentUrl ? (
-                <div className="file-item">
-                  <strong>Proof Document:</strong>
-                  <p>{selectedSubmission.proofDocumentName || selectedSubmission.proofDocumentUrl.split('/').pop()}</p>
+              {/* Multiple Proof Documents */}
+              <div className="file-item">
+                <strong>Proof Documents:</strong>
+                {selectedSubmission.proofDocumentUrls && selectedSubmission.proofDocumentUrls.length > 0 ? (
+                  selectedSubmission.proofDocumentUrls.map((docUrlPath, index) => {
+                    const docUrl = getFileUrl(docUrlPath);
+                    const ext = docUrlPath.split('.').pop().toLowerCase();
+                    const docName = selectedSubmission.proofDocumentNames?.[index] || docUrlPath.split('/').pop();
 
-                  {(() => {
-                    const docUrl = getFileUrl(selectedSubmission.proofDocumentUrl);
-                    const ext = selectedSubmission.proofDocumentUrl.split('.').pop().toLowerCase();
+                    return (
+                      <div key={index} className="proof-document-item" style={{ marginBottom: "1rem" }}>
+                        <p>{docName}</p>
 
-                    if (ext === "pdf") {
-                      return (
-                        <iframe
-                          src={docUrl}
-                          width="100%"
-                          height="300px"
-                          title="Proof Document"
-                        />
-                      );
-                    } else if (["jpg", "jpeg", "png", "webp"].includes(ext)) {
-                      return (
-                        <img
-                          src={docUrl}
-                          alt="Proof Document"
-                          className="detail-image-preview"
-                        />
-                      );
-                    } else {
-                      return <p>Unsupported document format.</p>;
-                    }
-                  })()}
+                        {ext === "pdf" ? (
+                          <a href={docUrl} target="_blank" rel="noopener noreferrer" className="download-link">
+                            Open PDF Document
+                          </a>
+                        ) : ["jpg", "jpeg", "png", "webp"].includes(ext) ? (
+                          <img src={docUrl} alt={`Proof Document ${index + 1}`} className="detail-image-preview" />
+                        ) : (
+                          <p>Unsupported document format.</p>
+                        )}
 
-                  <a
-                    href={getFileUrl(selectedSubmission.proofDocumentUrl)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="download-link"
-                  >
-                    View Document
-                  </a>
-                  <a
-                    href={`${getFileUrl(selectedSubmission.proofDocumentUrl)}/download`}
-                    className="download-link"
-                  >
-                    Download Document
-                  </a>
-                </div>
-              ) : (
-                <p>No Proof Document provided.</p>
-              )}
-
+                        <a href={docUrl} target="_blank" rel="noopener noreferrer" className="download-link">View Document</a>
+                        <a href={`${docUrl}/download`} className="download-link">Download Document</a>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <p>No Proof Documents provided.</p>
+                )}
+              </div>
             </div>
 
             {(selectedSubmission.status === 'PENDING' || selectedSubmission.status === 'UNDER_REVIEW') && (

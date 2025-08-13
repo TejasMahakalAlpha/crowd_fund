@@ -15,8 +15,8 @@ const ManageCauses = () => {
     location: "", targetAmount: "", endDate: "", status: "ACTIVE",
   });
 
-  const [imagePreview, setImagePreview] = useState([]);
-  const [imageFile, setImageFile] = useState([]);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
   const [displayFileType, setDisplayFileType] = useState('');
   const [causeToView, setCauseToView] = useState(null);
 
@@ -196,7 +196,7 @@ const ManageCauses = () => {
             <input type="date" name="endDate" placeholder="End Date" value={formData.endDate} onChange={handleChange} />
 
             <label>Display Image or Video:</label>
-            <input type="file" accept="image/*,video/*" multiple onChange={handleImageChange} key={imageFile || ''} />
+            <input type="file" accept="image/*,video/*" onChange={handleImageChange} key={imageFile || ''} />
 
             {imagePreview && (
               <div className="preview-container" style={{ marginTop: "10px" }}>
