@@ -105,7 +105,7 @@ const Blog = () => {
                     className="share-button" 
                     title="Share this blog"
                   >
-                    <FaShareAlt /> Share
+                   Share <FaShareAlt /> 
                   </button>
                 </div>
               </div>

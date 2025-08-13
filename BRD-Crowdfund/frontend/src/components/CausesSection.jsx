@@ -280,7 +280,7 @@ const CausesSection = () => {
                     title="Share this cause"
                     onClick={() => handleShare(cause)}
                   >
-                    <FaShareAlt />
+                   Share  <FaShareAlt /> 
                   </button>
                 </div>
               </div>

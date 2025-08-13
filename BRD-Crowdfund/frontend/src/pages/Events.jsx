@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { PublicApi } from "../services/api";
 import "./Events.css";
-import { FaShareAlt } from 'react-icons/fa'; // ✅ 1. Import the share icon
+import { FaShareAlt } from 'react-icons/fa';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
@@ -15,7 +15,6 @@ const Events = () => {
         return `${API_BASE}/api/images/${relativePath}`;
     };
 
-    // ✅ 2. Add the handleShare function from Blog.jsx
     const handleShare = async (e, title, url, summary) => {
         e.stopPropagation(); // Prevents other click events on the card
 
@@ -93,9 +92,9 @@ const Events = () => {
                             const endTime = "";
                             const fullTimeRange = `${dayOfWeek} ${time}${endTime ? ' - ' + endTime : ''}`;
                             
-                            // ✅ 3. Define the URL for the specific event to be shared
-                            const eventUrl = `${window.location.origin}/events/${event._id}`;
-
+                            // 💡 FIX: Check for both `_id` and `id` to prevent 'undefined' in the URL
+                            const eventId = event._id || event.id;
+                            const eventUrl = `${window.location.origin}/events/${eventId}`;
 
                             return (
                                 <div className="event-card" key={event.id || event._id || index}>
@@ -109,14 +108,13 @@ const Events = () => {
                                         <h3 className="event-title">{event.title}</h3>
                                         <p className="event-description">{event.description}</p>
 
-                                        {/* ✅ 4. Add the Share Button JSX here */}
                                         <div className="share-container">
                                             <button
                                                 onClick={(e) => handleShare(e, event.title, eventUrl, event.description)}
                                                 className="share-button"
                                                 title="Share this event"
                                             >
-                                                <FaShareAlt /> Share
+                                                Share  <FaShareAlt /> 
                                             </button>
                                         </div>
 

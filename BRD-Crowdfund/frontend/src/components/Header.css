@@ -25,7 +25,7 @@
 /* ✅ MODIFIED: Style for a text logo */
 .logo a {
   font-size: 2.5rem; /* ⭐ Increased from 2rem to 2.5rem. Change as you like. */
-  font-weight: 700; 
+  font-weight: 900; 
   color: #333; 
   text-decoration: none;
 }
@@ -193,4 +193,20 @@
   .phone-number {
     font-size: 0.9rem;
   }
+}
+
+/* ***********13-08-2025***************** */
+/* Yeh CSS apni Header.css file mein add karein */
+
+.logo-container {
+  display: flex;
+  align-items: center; /* Yeh logo aur text ko vertically center mein rakhega */
+  text-decoration: none; /* Link se underline hatane ke liye */
+}
+
+.logo-text {
+  color: #333; /* Text ka color */
+  font-size: 1.8rem; /* Text ka size (aap ise badal sakte hain) */
+  font-weight: 700;
+  margin-left: 12px; /* Logo aur text ke beech mein space */
 }
