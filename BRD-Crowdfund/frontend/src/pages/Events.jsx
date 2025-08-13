@@ -5,6 +5,19 @@ import { FaShareAlt } from 'react-icons/fa';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
+// ✨ NEW: Helper function to create a URL-friendly slug from a title
+const slugify = (text) => {
+  if (!text) return '';
+  return text
+    .toString()
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '-')       // Replace spaces with -
+    .replace(/[^\w\-]+/g, '')   // Remove all non-word chars except hyphens
+    .replace(/\-\-+/g, '-');    // Replace multiple hyphens with a single one
+};
+
+
 const Events = () => {
     const [events, setEvents] = useState([]);
     const [error, setError] = useState("");
@@ -16,7 +29,7 @@ const Events = () => {
     };
 
     const handleShare = async (e, title, url, summary) => {
-        e.stopPropagation(); // Prevents other click events on the card
+        e.stopPropagation();
 
         const shareData = {
             title: title,
@@ -31,7 +44,6 @@ const Events = () => {
                 console.error('Error sharing:', error);
             }
         } else {
-            // Fallback for desktop browsers
             try {
                 await navigator.clipboard.writeText(url);
                 alert('Link copied to clipboard!');
@@ -92,12 +104,12 @@ const Events = () => {
                             const endTime = "";
                             const fullTimeRange = `${dayOfWeek} ${time}${endTime ? ' - ' + endTime : ''}`;
                             
-                            // 💡 FIX: Check for both `_id` and `id` to prevent 'undefined' in the URL
-                            const eventId = event._id || event.id;
-                            const eventUrl = `${window.location.origin}/events/${eventId}`;
+                            // ✨ NEW: Create the URL using the event title's slug
+                            const eventSlug = slugify(event.title);
+                            const eventUrl = `${window.location.origin}/events/${eventSlug}`;
 
                             return (
-                                <div className="event-card" key={event.id || event._id || index}>
+                                <div className="event-card" key={event._id || event.id || index}>
                                     <div className="event-date-col">
                                         <span className="month-day">{month} {day}</span>
                                         <span className="year">{year}</span>
