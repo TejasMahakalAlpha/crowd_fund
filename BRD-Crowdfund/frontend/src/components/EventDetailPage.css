@@ -1,84 +1,118 @@
 /* =================================== */
-/* Event Detail Page Container    */
+/* Main Page Container & Back Button */
 /* =================================== */
-.event-detail-page {
-  max-width: 800px;
-  margin: 2rem auto; /* Centers the container */
-  padding: 2rem;
-  background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  overflow: hidden; /* Ensures content respects border-radius */
+.event-details-page {
+  max-width: 900px; /* Increased width for a better two-column look */
+  margin: 2rem auto;
+  padding: 0 1rem; /* Padding on sides for mobile */
 }
 
+.back-button {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #f7fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  color: #2d3748;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.back-button:hover {
+  background-color: #e2e8f0;
+}
+
+
 /* =================================== */
-/* Typography & Header            */
+/* NEW: Flexbox Layout Container  */
+/* This is the key for the new layout */
 /* =================================== */
-.event-detail-page h1 {
+.event-card-details {
+  display: flex; /* Activates Flexbox */
+  flex-direction: row; /* Arranges items side-by-side */
+  gap: 2.5rem; /* Creates space between image and text */
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+
+/* =================================== */
+/* NEW: Image Column Styling      */
+/* =================================== */
+.event-details-image {
+  flex: 1 1 40%; /* Column will take up 40% of the space */
+  width: 100%; /* Ensures image is contained */
+  height: 400px; /* Fixed height for a consistent look */
+  object-fit: cover; /* Best way to fit images without distortion */
+  border-radius: 8px;
+  align-self: flex-start; /* Aligns image to the top of the container */
+}
+
+
+/* =================================== */
+/* NEW: Content Column Styling    */
+/* =================================== */
+.event-details-content {
+  flex: 1 1 60%; /* Column will take up 60% of the space */
+}
+
+
+/* =================================== */
+/* Typography (Date, Title, etc.) */
+/* =================================== */
+.event-datetime-details {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #4a5568;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+
+.event-title-details {
   font-size: 2.5rem;
-  color: #1a202c; /* A dark, modern text color */
+  color: #1a202c;
   margin-top: 0;
   margin-bottom: 1.5rem;
   line-height: 1.2;
 }
 
-/* =================================== */
-/* Event Image                    */
-/* =================================== */
-.event-detail-image {
-  width: 100%;
-  height: auto;
-  max-height: 400px; /* Prevents image from being too tall */
-  object-fit: cover; /* Ensures image covers the area nicely */
-  border-radius: 8px;
-  margin-bottom: 2rem;
-}
-
-/* =================================== */
-/* Info Section (Date, Time)      */
-/* =================================== */
-.event-detail-info {
-  background-color: #f7fafc; /* A very light grey background */
-  padding: 1rem 1.5rem;
-  border-radius: 8px;
-  margin-bottom: 2rem;
-  border: 1px solid #e2e8f0;
-}
-
-.event-detail-info p {
-  margin: 0.5rem 0;
-  color: #4a5568; /* A softer text color */
-  font-size: 1rem;
-}
-
-.event-detail-info strong {
-  color: #2d3748; /* Makes the label slightly darker */
-  margin-right: 0.5rem;
-}
-
-/* =================================== */
-/* Main Description               */
-/* =================================== */
-.event-detail-description p {
+.event-description-details {
   font-size: 1.1rem;
-  line-height: 1.7; /* Improves readability */
+  line-height: 1.7;
   color: #2d3748;
 }
+
+.share-button {
+  margin-top: 2rem;
+  /* Add styling for your share button here */
+}
+
 
 /* =================================== */
 /* Responsive Design for Mobile   */
 /* =================================== */
 @media (max-width: 768px) {
-  .event-detail-page {
-    margin: 1rem;
+  /* Make the layout stack vertically on mobile */
+  .event-card-details {
+    flex-direction: column; /* This is the magic! */
     padding: 1.5rem;
+    gap: 1.5rem;
   }
 
-  .event-detail-page h1 {
-    font-size: 2rem;
+  .event-details-image {
+    height: 250px; /* Adjust image height for mobile */
   }
 
-  .event-detail-description p {
+  .event-title-details {
+    font-size: 2rem; /* Make title smaller on mobile */
+  }
+
+  .event-description-details {
     font-size: 1rem;
   }
 }
