@@ -1,8 +1,8 @@
 // DonationCard.jsx
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
-import { PublicApi, PaymentApi } from "../services/api"; // Ensure PaymentApi is imported
-import "./DonationCard.css"; // Assuming your CSS file is here
+import { PublicApi, PaymentApi } from "../services/api"; 
+import "./DonationCard.css"; 
 
 const DonationCard = () => {
   const [causes, setCauses] = useState([]);
@@ -11,8 +11,7 @@ const DonationCard = () => {
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // --- NEW CODE START: Terms and Conditions Text ---
-  // तुमचा Terms and Conditions मजकूर येथे टाकला आहे
+ 
   const termsAndConditionsText = `
     <div style="text-align: left; max-height: 40vh; overflow-y: auto; padding: 1em; border: 1px solid #eee; border-radius: 5px;">
         <h4>1. Acceptance of Terms</h4>
@@ -43,7 +42,7 @@ const DonationCard = () => {
         <p>These Terms are governed by Indian law. Jurisdiction lies in the courts of [specify city, e.g. Mumbai or Delhi], India.</p>
     </div>
   `;
-  // --- NEW CODE END ---
+ 
 
   const donationTypes = [
     {
@@ -121,8 +120,7 @@ const DonationCard = () => {
     document.body.appendChild(script);
   };
 
-  // --- CHANGED FUNCTION START ---
-  // फक्त ही एकच function बदलली आहे
+
   const collectDonorDetails = async (amountInPaisa) => {
     if (!selectedCauseId) {
       Swal.fire("Error", "Please select a cause first.", "warning");
@@ -134,7 +132,7 @@ const DonationCard = () => {
       return;
     }
 
-    // --- NEW: Terms and Conditions Check ---
+   
     const { value: accepted } = await Swal.fire({
         title: 'Terms & Conditions',
         html: termsAndConditionsText,
@@ -146,7 +144,6 @@ const DonationCard = () => {
         inputValidator: (result) => !result && 'You must agree to the terms and conditions to proceed.'
     });
 
-    // जर user ने T&C मान्य केले तरच पुढचा pop-up दिसेल
     if (accepted) {
         const { value: formValues } = await Swal.fire({
           title: 'Enter Your Details',

@@ -1,31 +1,24 @@
-// src/pages/CauseDetails.jsx (या जो भी आपकी फाइल का नाम है)
+// src/pages/CauseDetails.jsx
 
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { PublicApi } from "../services/api";
 import Swal from "sweetalert2";
-// import './CauseDetailsPage.css';
-//  आप स्टाइलिंग के लिए यह CSS फाइल बना सकते हैं
+import { FaShareAlt } from 'react-icons/fa';
+import './CauseDetails.css';
 
-// ===== CHANGED CODE START =====
-// API_BASE को इम्पोर्ट करें ताकि इमेज का पूरा URL बन सके
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
-// ===== CHANGED CODE END =====
 
+const getFileUrl = (relativePath) => {
+    if (!relativePath) return '';
+    return `${API_BASE}/uploads/${relativePath}`;
+};
 
 const CauseDetails = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const [cause, setCause] = useState(null);
     const [loading, setLoading] = useState(true);
-
-    // ===== CHANGED CODE START =====
-    // यह फंक्शन इमेज का पूरा URL बनाएगा
-    const getImageUrl = (relativePath) => {
-        if (!relativePath) return '';
-        return `${API_BASE}/api/images/${relativePath}`;
-    };
-    // ===== CHANGED CODE END =====
 
     useEffect(() => {
         const fetchCause = async () => {
@@ -41,38 +34,98 @@ const CauseDetails = () => {
         fetchCause();
     }, [id]);
 
-    if (loading) return <p style={{ textAlign: 'center', padding: '2rem' }}>Loading...</p>;
-    if (!cause) return <p style={{ textAlign: 'center', padding: '2rem' }}>Cause not found</p>;
+    const handleShare = async () => {
+        if (!cause) return;
+        const shareData = {
+            title: cause.title,
+            text: cause.shortDescription || cause.description,
+            url: window.location.href
+        };
+        if (navigator.share) {
+            await navigator.share(shareData).catch(err => console.log("Share error:", err));
+        } else {
+            await navigator.clipboard.writeText(shareData.url);
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'success',
+                title: 'Link copied!',
+                showConfirmButton: false,
+                timer: 2000
+            });
+        }
+    };
+
+    if (loading) return <p className="loading-text">Loading cause...</p>;
+    if (!cause) return <p className="error-text">Cause not found.</p>;
+
+    const raisedAmount = Number(cause.currentAmount) || 0;
+    const targetAmount = Number(cause.targetAmount) || 1;
+    const progressPercentage = Math.min((raisedAmount / targetAmount) * 100, 100);
 
     return (
-        <div className="cause-details-container" style={{ maxWidth: "800px", margin: "auto", padding: "2rem" }}>
-            <button onClick={() => navigate(-1)} className="back-button" style={{ marginBottom: '1.5rem' }}>
-                ← Back
+        <div className="cause-details-page">
+            <button onClick={() => navigate('/causes')} className="back-button">
+                ← Back to All Causes
             </button>
-            <h1>{cause.title}</h1>
-            
-            {/* ===== CHANGED CODE START ===== */}
-            {/* यहाँ getImageUrl फंक्शन का इस्तेमाल करें */}
-            {cause.imageUrl && (
-                <img
-                    src={getImageUrl(cause.imageUrl)}
-                    alt={cause.title}
-                    style={{ width: "100%", maxHeight: "400px", objectFit: "cover", marginBottom: "20px", borderRadius: '8px' }}
-                />
-            )}
-            {/* ===== CHANGED CODE END ===== */}
-            
-            <p><strong>Category:</strong> {cause.category}</p>
-            <p><strong>Location:</strong> {cause.location}</p>
-            <p><strong>Description:</strong> {cause.description}</p>
-            <p>
-                <strong>Raised:</strong> ₹{Number(cause.currentAmount).toLocaleString()} / ₹{Number(cause.targetAmount).toLocaleString()}
-            </p>
-            <p><strong>Status:</strong> {cause.status}</p>
-            <p><strong>End Date:</strong> {cause.endDate ? new Date(cause.endDate).toLocaleDateString() : "N/A"}</p>
-            <button className="donate-btn-details" style={{ marginTop: '1.5rem' }} onClick={() => alert('Donation logic goes here!')}>
-             Donate to this Cause
-           </button>
+
+            <div className="cause-card-details">
+                {/* Image Column */}
+                <div className="cause-image-container">
+                    {cause.mediaUrls && cause.mediaUrls.length > 0 ? (
+                        <img
+                            src={getFileUrl(cause.mediaUrls[0])}
+                            alt={cause.title}
+                            className="cause-details-image"
+                        />
+                    ) : (
+                        <div className="cause-details-image-placeholder">No Image</div>
+                    )}
+                </div>
+
+                {/* Content Column */}
+                <div className="cause-details-content">
+                    <p className="cause-meta-details">{cause.category || 'General'} • {cause.location || 'N/A'}</p>
+                    <h1 className="cause-title-details">{cause.title}</h1>
+                    <p className="cause-description-details">{cause.description}</p>
+                    
+                    {/* --- UPDATED JSX START --- */}
+                    <div className="fundraising-progress">
+                        <div className="progress-labels">
+                            <span className="label-raised">
+                                <strong>₹{raisedAmount.toLocaleString()}</strong> Raised
+                            </span>
+                            <span className="label-goal">
+                                Goal: ₹{targetAmount.toLocaleString()}
+                            </span>
+                        </div>
+                        <div className="progress-track">
+                            <div
+                                className="progress-fill"
+                                style={{ width: `${progressPercentage}%` }}
+                                title={`${Math.round(progressPercentage)}% Funded`}
+                            >
+                                {progressPercentage > 10 && (
+                                    <span className="progress-percent">
+                                        {Math.round(progressPercentage)}%
+                                    </span>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                    {/* --- UPDATED JSX END --- */}
+                    
+                    {/* Action Buttons */}
+                    <div className="action-buttons-container">
+                        <button className="donate-button" onClick={() => alert('Donation logic goes here!')}>
+                            Donate Now
+                        </button>
+                        <button onClick={handleShare} className="share-button" title="Share this cause">
+                            Share Cause <FaShareAlt />
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };

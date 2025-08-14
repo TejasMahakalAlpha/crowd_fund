@@ -1,0 +1,200 @@
+/* src/pages/CauseDetails.css */
+
+/*
+ * ===================================
+ * Theme & Global Styles
+ * ===================================
+ */
+
+:root {
+  /* Colors */
+  --primary-color: #3182ce;
+  --primary-color-dark: #2b6cb0;
+  --green-gradient: linear-gradient(90deg, #34d399, #10b981);
+  --text-dark: #1a202c;
+  --text-body: #2d3748;
+  --text-light: #64748b;
+  --surface-bg: #ffffff;
+  --surface-subtle-bg: #f7fafc;
+  --surface-border: #e2e8f0;
+  --surface-track-bg: #f1f5f9;
+
+  /* Typography */
+  --font-family-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+  /* Sizing & Radius */
+  --border-radius-md: 8px;
+  --border-radius-lg: 12px;
+  --border-radius-full: 9999px;
+}
+
+/* Base styles for the page */
+body {
+  font-family: var(--font-family-sans);
+  background-color: var(--surface-subtle-bg);
+  color: var(--text-body);
+}
+
+/* --- (Other styles remain the same) --- */
+
+.cause-details-page {
+  max-width: 950px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+.cause-card-details {
+  display: flex;
+  flex-direction: row;
+  gap: 2.5rem;
+  background-color: var(--surface-bg);
+  padding: 2.5rem;
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--surface-border);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05),
+    0 2px 4px -1px rgba(0, 0, 0, 0.04);
+  transition: box-shadow 0.3s ease;
+}
+.cause-image-container {
+  flex: 1 1 40%;
+}
+.cause-details-image {
+  width: 100%;
+  height: 420px;
+  object-fit: cover;
+  border-radius: var(--border-radius-md);
+}
+.cause-details-content {
+  flex: 1 1 60%;
+  display: flex;
+  flex-direction: column;
+}
+.cause-meta-details {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-light);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.cause-title-details {
+  font-size: 2.5rem;
+  color: var(--text-dark);
+  margin-top: 0;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+.cause-description-details {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: var(--text-body);
+  margin-bottom: 1.5rem;
+}
+
+
+/*
+ * ===================================
+ * Fundraising Progress Bar (UPDATED)
+ * ===================================
+ */
+
+.fundraising-progress {
+  width: 100%;
+  margin: 1.25rem 0;
+}
+
+.progress-labels {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-size: 0.9em;
+  color: var(--text-light);
+}
+
+.label-raised strong {
+  font-size: 1.1em;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-right: 0.25rem;
+}
+
+.progress-track {
+  background-color: var(--surface-track-bg);
+  border-radius: var(--border-radius-full);
+  height: 16px;
+  width: 100%;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+}
+
+.progress-fill {
+  background: var(--green-gradient);
+  height: 100%;
+  border-radius: var(--border-radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: width 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.progress-percent {
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+/* --- (Remaining styles are the same) --- */
+
+.action-buttons-container {
+  margin-top: auto;
+  padding-top: 1rem;
+  display: flex;
+  gap: 1rem;
+}
+.back-button, .donate-button, .share-button {
+  padding: 0.8rem 1.5rem;
+  border-radius: var(--border-radius-md);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.back-button:hover, .donate-button:hover, .share-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.donate-button {
+  flex-grow: 1;
+  background-color: var(--primary-color);
+  color: white;
+}
+.share-button {
+  background-color: var(--surface-subtle-bg);
+  border-color: var(--surface-border);
+  color: var(--text-body);
+}
+
+@media (max-width: 768px) {
+  .cause-card-details {
+    flex-direction: column;
+    padding: 1.5rem;
+    gap: 1.5rem;
+  }
+  .cause-details-image, .cause-details-image-placeholder {
+    height: 250px;
+  }
+  .cause-title-details {
+    font-size: 2rem;
+  }
+  .action-buttons-container {
+    flex-direction: column;
+    width: 100%;
+  }
+}

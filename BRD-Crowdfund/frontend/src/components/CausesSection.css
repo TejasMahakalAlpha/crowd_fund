@@ -109,6 +109,7 @@
   border-top: 1px solid var(--border-color);
   padding-top: 15px;
   margin-top: auto;
+  gap: 1rem;
 }
 
 .donate-btn {
@@ -120,8 +121,6 @@
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  flex-grow: 1;
-  margin-right: 15px;
 }
 
 .donate-btn:hover {
@@ -146,6 +145,7 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  gap: 8px;
 }
 
 .share-btn:hover {
