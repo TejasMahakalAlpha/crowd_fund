@@ -2,13 +2,12 @@
 
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-// ❌ react-helmet-async ki ab zaroorat nahi hai
 import { PublicApi } from "../services/api";
 import "./BlogDetails.css";
 import { FaEye } from "react-icons/fa";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
-const SITE_URL = "https://crowd-fun.netlify.app"; // ✅ Apni site ka base URL yahan daalein
+const SITE_URL = "https://crowd-fun.netlify.app";
 
 const BlogDetails = () => {
     const { slug } = useParams();
@@ -16,6 +15,7 @@ const BlogDetails = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
+    // This function is no longer used for the share image, but can stay for the <img> tag
     const getImageUrl = (relativePath) => `${API_BASE}/api/images/${relativePath}`;
 
     useEffect(() => {
@@ -38,12 +38,16 @@ const BlogDetails = () => {
     if (!blog) return <p style={{ textAlign: "center" }}>Blog not found</p>;
 
     const blogDescription = blog.subtitle || blog.title;
-    const blogImage = getImageUrl(blog.featuredImage);
+    
+    // ❌ Old dynamic image line is removed.
+    // ✅ New static image line added below.
+    const blogImage = `${SITE_URL}/crowdfund_logo.png`; 
+
     const blogUrl = `${SITE_URL}/blog/${slug}`;
 
     return (
         <div className="blog-container">
-            {/* ✅ React 19 mein aap seedhe tags daal sakte hain. Koi library nahi chahiye. */}
+            {/* Meta tags will now use the static blogImage URL */}
             <title>{`${blog.title} | Green Dharti`}</title>
             <meta name="description" content={blogDescription} />
 
@@ -60,7 +64,7 @@ const BlogDetails = () => {
             <meta name="twitter:description" content={blogDescription} />
             <meta name="twitter:image" content={blogImage} />
 
-            {/* Neeche aapka baaki ka component code hai */}
+            {/* Rest of your component */}
             <h1 className="blog-title">{blog.title}</h1>
             {blog.subtitle && <h3 className="blog-subtitle">{blog.subtitle}</h3>}
             <p className="blog-meta">
