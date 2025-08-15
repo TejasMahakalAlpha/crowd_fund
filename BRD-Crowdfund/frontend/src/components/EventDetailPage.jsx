@@ -8,7 +8,6 @@ import { FaShareAlt } from 'react-icons/fa';
 import "./EventDetailPage.css";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
-// ✅ Add SITE_URL for meta tags
 const SITE_URL = "https://crowd-fun.netlify.app"; 
 
 const slugify = (text) => {
@@ -80,15 +79,18 @@ const EventDetailPage = () => {
   const time = dateObj.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true });
   const fullTimeRange = `${dayOfWeek} ${time}`;
 
-  // ✅ Define variables for your meta tags
+  // Define variables for your meta tags
   const eventDescription = event.description || event.title;
-  const eventImage = `${SITE_URL}/default-event-image.png`; // A static default image for events
+  
+  // ✅ Changed the filename to match your image
+  const eventImage = `${SITE_URL}/crowdfund_logo.png`; 
+
   const eventUrl = `${SITE_URL}/events/${eventSlug}`; 
 
   return (
     <div className="event-details-page" style={{ maxWidth: '900px', margin: '2rem auto', padding: '0 1rem' }}>
         
-        {/* ✅ Add the meta tags here, using 'event' variables */}
+        {/* Add the meta tags here, using 'event' variables */}
         <title>{`${event.title} | Green Dharti`}</title>
         <meta name="description" content={eventDescription} />
 
