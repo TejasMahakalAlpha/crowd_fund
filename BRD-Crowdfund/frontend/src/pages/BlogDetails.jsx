@@ -1,12 +1,14 @@
 // src/components/BlogDetails.jsx
+
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+// ❌ react-helmet-async ki ab zaroorat nahi hai
 import { PublicApi } from "../services/api";
-import "./BlogDetails.css"; // ✅ Import the CSS
+import "./BlogDetails.css";
 import { FaEye } from "react-icons/fa";
 
-
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
+const SITE_URL = "https://crowd-fun.netlify.app"; // ✅ Apni site ka base URL yahan daalein
 
 const BlogDetails = () => {
     const { slug } = useParams();
@@ -30,13 +32,35 @@ const BlogDetails = () => {
         };
         fetchBlog();
     }, [slug]);
-    { console.log(blog) }
+
     if (loading) return <p style={{ textAlign: "center" }}>Loading blog...</p>;
     if (error) return <p style={{ textAlign: "center", color: "red" }}>{error}</p>;
     if (!blog) return <p style={{ textAlign: "center" }}>Blog not found</p>;
 
+    const blogDescription = blog.subtitle || blog.title;
+    const blogImage = getImageUrl(blog.featuredImage);
+    const blogUrl = `${SITE_URL}/blog/${slug}`;
+
     return (
         <div className="blog-container">
+            {/* ✅ React 19 mein aap seedhe tags daal sakte hain. Koi library nahi chahiye. */}
+            <title>{`${blog.title} | Green Dharti`}</title>
+            <meta name="description" content={blogDescription} />
+
+            {/* Open Graph Tags (for Facebook, WhatsApp, etc.) */}
+            <meta property="og:title" content={`${blog.title} | Green Dharti`} />
+            <meta property="og:description" content={blogDescription} />
+            <meta property="og:image" content={blogImage} />
+            <meta property="og:url" content={blogUrl} />
+            <meta property="og:type" content="article" />
+
+            {/* Twitter Card Tags */}
+            <meta name="twitter:card" content="summary_large_image" />
+            <meta name="twitter:title" content={`${blog.title} | Green Dharti`} />
+            <meta name="twitter:description" content={blogDescription} />
+            <meta name="twitter:image" content={blogImage} />
+
+            {/* Neeche aapka baaki ka component code hai */}
             <h1 className="blog-title">{blog.title}</h1>
             {blog.subtitle && <h3 className="blog-subtitle">{blog.subtitle}</h3>}
             <p className="blog-meta">
