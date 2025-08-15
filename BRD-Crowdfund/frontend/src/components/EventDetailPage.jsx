@@ -8,18 +8,16 @@ import { FaShareAlt } from 'react-icons/fa';
 import "./EventDetailPage.css";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
+// ✅ Add SITE_URL for meta tags
+const SITE_URL = "https://crowd-fun.netlify.app"; 
 
 const slugify = (text) => {
   if (!text) return '';
   return text.toString().toLowerCase().trim().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '').replace(/\-\-+/g, '-');
 };
 
-// ✅ FIX 1: Component ka naam file ke naam se match karein
-const EventDetailPage = () => { 
-  
-  // ✅ FIX 2: Route se 'eventSlug' nikalein, 'slug' nahi
-  const { eventSlug } = useParams(); 
-  
+const EventDetailPage = () => {
+  const { eventSlug } = useParams();
   const navigate = useNavigate();
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -35,8 +33,7 @@ const EventDetailPage = () => {
       try {
         const res = await PublicApi.getEvents();
         if (Array.isArray(res.data)) {
-          // ✅ FIX 3: Yahaan bhi 'eventSlug' ka istemal karein
-          const foundEvent = res.data.find(e => slugify(e.title) === eventSlug); 
+          const foundEvent = res.data.find(e => slugify(e.title) === eventSlug);
           if (foundEvent) {
             setEvent(foundEvent);
           } else {
@@ -52,15 +49,13 @@ const EventDetailPage = () => {
       }
     };
 
-    if (eventSlug) { // Sirf tabhi fetch karein jab eventSlug undefined na ho
+    if (eventSlug) {
         fetchEventDetails();
     } else {
         setError("Event slug not found in URL.");
         setLoading(false);
     }
-  }, [eventSlug]); // ✅ FIX 4: Dependency array mein bhi 'eventSlug' rakhein
-
-  // ... baaki ka code (handleShare, return statement) waisa hi rahega ...
+  }, [eventSlug]);
 
   const handleShare = async () => {
     if (!event) return;
@@ -85,8 +80,33 @@ const EventDetailPage = () => {
   const time = dateObj.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true });
   const fullTimeRange = `${dayOfWeek} ${time}`;
 
+  // ✅ Define variables for your meta tags
+  const eventDescription = event.description || event.title;
+  const eventImage = `${SITE_URL}/default-event-image.png`; // A static default image for events
+  const eventUrl = `${SITE_URL}/events/${eventSlug}`; 
+
   return (
     <div className="event-details-page" style={{ maxWidth: '900px', margin: '2rem auto', padding: '0 1rem' }}>
+        
+        {/* ✅ Add the meta tags here, using 'event' variables */}
+        <title>{`${event.title} | Green Dharti`}</title>
+        <meta name="description" content={eventDescription} />
+
+        {/* Open Graph Tags */}
+        <meta property="og:title" content={`${event.title} | Green Dharti`} />
+        <meta property="og:description" content={eventDescription} />
+        <meta property="og:image" content={eventImage} />
+        <meta property="og:url" content={eventUrl} />
+        <meta property="og:type" content="website" />
+
+        {/* Twitter Card Tags */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={`${event.title} | Green Dharti`} />
+        <meta name="twitter:description" content={eventDescription} />
+        <meta name="twitter:image" content={eventImage} />
+        
+        {/* --- Your existing event details code goes below --- */}
+
         <button onClick={() => navigate('/events')} className="back-button" style={{ marginBottom: '1.5rem' }}>
             ← Back to All Events
         </button>
@@ -105,5 +125,4 @@ const EventDetailPage = () => {
   );
 };
 
-// ✅ FIX 5: Export bhi sahi naam se karein
 export default EventDetailPage;
