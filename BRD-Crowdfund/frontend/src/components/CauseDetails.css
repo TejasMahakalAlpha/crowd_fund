@@ -198,3 +198,30 @@ body {
     width: 100%;
   }
 }
+
+
+/*
+ * ===================================
+ * Share Link Button (Naya Style)
+ * ===================================
+*/
+.share-link-button {
+  background-color: transparent;
+  border: none;
+  color: var(--primary-color);
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.5rem 0;
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  margin-top: 1rem;
+  margin-bottom: 1rem; /* Added margin to push progress bar down */
+  transition: color 0.2s ease;
+}
+
+.share-link-button:hover {
+  color: var(--primary-color-dark);
+  text-decoration: underline;
+}
