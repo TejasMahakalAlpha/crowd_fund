@@ -6,6 +6,15 @@ import { FaShareAlt } from "react-icons/fa";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
+// ✅ 1. YEH FUNCTION ADD KAREIN
+const slugify = (text) => {
+  if (!text) return '';
+  return text.toString().toLowerCase().trim()
+    .replace(/\s+/g, '-')
+    .replace(/[^\w\-]+/g, '')
+    .replace(/\-\-+/g, '-');
+};
+
 const CausesSection = () => {
   const [causes, setCauses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -51,11 +60,11 @@ const CausesSection = () => {
   }, [fetchCauses]);
 
   const handleShare = async (cause) => {
-    const causeId = cause.id || cause._id;
+    // ✅ 2. BAS YEH LINE BADLI HAI
     const shareData = {
       title: cause.title,
       text: cause.description,
-      url: `${window.location.origin}/causes/${causeId}`,
+      url: `${window.location.origin}/causes/${slugify(cause.title)}`,
     };
 
     if (navigator.share) {
