@@ -1,14 +1,8 @@
 // src/routes/AppRoutes.jsx
 import React, { useContext, useEffect } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
-
-// ⭐ 1. IMPORT THE SCROLLTOTOP COMPONENT
 import ScrollToTop from '../components/ScrollToTop';
-
-// Context for authentication
 import { AuthContext } from '../context/AuthContext';
-
-// Public Components (Pages)
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Home from '../pages/Home';
@@ -22,15 +16,8 @@ import BlogDetails from '../pages/BlogDetails';
 import VolunteerForm from '../pages/VolunteerForm';
 import SubmitCause from '../pages/SubmitCause';
 import WhatsApp from '../components/WhatsApp';
-import CauseDetails from '../components/CausesDetails';
+import CauseDetails from '../components/CausesDetails'; // Sahi component import karein
 import EventDetailPage from '../components/EventDetailPage';
-
-
-
-
-
-
-// Admin Pages
 import Login from '../admin/Login';
 import Dashboard from '../admin/Dashboard';
 import ManageBlogs from '../admin/ManageBlogs';
@@ -40,7 +27,6 @@ import ManageVolunteers from '../admin/ManageVolunteers';
 import ManageEvents from '../admin/ManageEvents';
 import ManageContacts from "../admin/ManageContacts";
 import ManagePersonalCauses from '../admin/ManagePersonalCauses';
-
 
 const AppRoutes = () => {
   const location = useLocation();
@@ -53,28 +39,26 @@ const AppRoutes = () => {
   };
 
   useEffect(() => {
-    if (!isAdminRoute) {
-      document.body.style.paddingTop = "60px"; // match your header height
-    } else {
-      document.body.style.paddingTop = "0";
+    // ✅ YAHAN BADLAAV KIYA GAYA HAI
+    // Yeh check karega ki code browser mein chal raha hai ya nahi
+    if (typeof window !== 'undefined') {
+      if (!isAdminRoute) {
+        document.body.style.paddingTop = "60px"; // Ab yeh sirf browser mein chalega
+      } else {
+        document.body.style.paddingTop = "0";
+      }
     }
   }, [isAdminRoute]);
 
   return (
     <>
-      {/* ⭐ 2. ADD THE COMPONENT HERE AT THE TOP */}
       <ScrollToTop />
-
-      {/* Header is shown only if it's NOT an admin route */}
       {!isAdminRoute && <Header />}
-
-      {/* Define all your application routes here */}
       <Routes>
-        {/* 🌐 Public Routes - accessible to everyone */}
+        {/* Public Routes */}
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/causes" element={<Causes />} />
-        {/* <Route path="/causes/:id" element={<CauseDetails />} /> */}
         <Route path="/causes/:causeSlug" element={<CauseDetails />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/events" element={<Events />} />
@@ -83,13 +67,10 @@ const AppRoutes = () => {
         <Route path="/blog/:slug" element={<BlogDetails />} />
         <Route path="/volunteer" element={<VolunteerForm />} />
         <Route path="/submit-cause" element={<SubmitCause />} />
-       <Route path="/events/:eventSlug" element={<EventDetailPage />} />
+        <Route path="/events/:eventSlug" element={<EventDetailPage />} />
 
-
-        {/* 🔒 Admin Routes - protected by authentication */}
+        {/* Admin Routes */}
         <Route path="/admin/login" element={<Login />} />
-
-        {/* All routes below this point use ProtectedRoute */}
         <Route path="/admin/dashboard" element={<ProtectedRoute element={<Dashboard />} />} />
         <Route path="/admin/manage-blogs" element={<ProtectedRoute element={<ManageBlogs />} />} />
         <Route path="/admin/manage-causes" element={<ProtectedRoute element={<ManageCauses />} />} />
@@ -99,11 +80,7 @@ const AppRoutes = () => {
         <Route path="/admin/manage-contacts" element={<ProtectedRoute element={<ManageContacts />} />} />
         <Route path="/admin/manage-personal-causes" element={<ProtectedRoute element={<ManagePersonalCauses />} />} />
       </Routes>
-
-      {/* Footer is shown only if it's NOT an admin route */}
       {!isAdminRoute && <Footer />}
-
-      {/* WhatsApp component added here conditionally */}
       {!isAdminRoute && <WhatsApp />}
     </>
   );
