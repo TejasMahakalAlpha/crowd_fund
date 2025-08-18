@@ -1,17 +1,15 @@
-// src/pages/SubmitCause.jsx
 import React, { useState } from "react";
 import Swal from "sweetalert2";
 import "./SubmitCause.css";
 import { PublicApi } from "../services/api";
 
-// This part is unchanged
+// API submission function
 const submitPersonalCauseApi = async (formData) => {
   try {
     const response = await PublicApi.submitCauseWithImageVideoAndDocumnent(formData);
     return response.data;
   } catch (error) {
     console.error("Error response from API:", error?.response?.data || error.message);
-
     throw new Error(
       error?.response?.data?.message ||
       error?.response?.data?.error ||
@@ -20,9 +18,7 @@ const submitPersonalCauseApi = async (formData) => {
   }
 };
 
-
 const SubmitCause = () => {
-  // State definitions are unchanged
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -36,16 +32,15 @@ const SubmitCause = () => {
     submitterPhone: "",
     submitterMessage: "",
   });
-  const [mediaFiles, setMediaFiles] = useState([]);             // array of selected media files
-  const [mediaPreviews, setMediaPreviews] = useState([]);       // array of URLs for preview
 
-  const [proofDocumentFiles, setProofDocumentFiles] = useState([]);  // array of selected docs
-  const [proofDocumentPreviews, setProofDocumentPreviews] = useState([]); // array of preview URLs or nulls
-
+  const [mediaFiles, setMediaFiles] = useState([]);
+  const [mediaPreviews, setMediaPreviews] = useState([]);
+  const [proofDocumentFiles, setProofDocumentFiles] = useState([]);
+  const [proofDocumentPreviews, setProofDocumentPreviews] = useState([]);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Real-time validation function for a single field
+  // Real-time field validation
   const validateField = (name, value) => {
     switch (name) {
       case 'title':
@@ -59,20 +54,19 @@ const SubmitCause = () => {
         return "";
       case 'targetAmount':
         if (!value) return "Target amount is required";
-        if (isNaN(Number(value)) || Number(value) <= 0) return "Target amount must be a positive number";
+        if (isNaN(Number(value)) || Number(value) <= 0) return "Target amount must be positive";
         return "";
       case 'submitterName':
         if (!value.trim()) return "Your name is required";
-        if (!/^[A-Za-z\s]*$/.test(value)) return "Name can only contain alphabets and spaces";
+        if (!/^[A-Za-z\s]*$/.test(value)) return "Name can only contain letters and spaces";
         return "";
       case 'submitterEmail':
         if (!value.trim()) return "Your email is required";
         if (!/\S+@\S+\.\S+/.test(value)) return "Invalid email format";
         return "";
       case 'submitterPhone':
-        // UPDATED: Phone number is now required
         if (!value.trim()) return "Phone number is required";
-        if (!/^\d{10}$/.test(value)) return "Phone number must be exactly 10 digits";
+        if (!/^\d{10}$/.test(value)) return "Phone number must be 10 digits";
         return "";
       case 'endDate':
         if (value && isNaN(new Date(value).getTime())) return "Invalid end date/time format";
@@ -83,251 +77,143 @@ const SubmitCause = () => {
     }
   };
 
-  // Updated handleChange to include real-time validation
+  // Handle text input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     let processedValue = value;
 
-    // Real-time input filtering
-    if (name === "submitterName") {
-      processedValue = value.replace(/[^A-Za-z\s]/g, ''); // Allow only letters and spaces
-    } else if (name === "submitterPhone") {
-      processedValue = value.replace(/[^0-9]/g, '').slice(0, 10); // Allow only numbers, max 10 digits
-    } else if (name === "targetAmount") {
-      processedValue = value.replace(/[^0-9]/g, ''); // Allow only numbers
-    }
+    if (name === "submitterName") processedValue = value.replace(/[^A-Za-z\s]/g, '');
+    if (name === "submitterPhone") processedValue = value.replace(/[^0-9]/g, '').slice(0, 10);
+    if (name === "targetAmount") processedValue = value.replace(/[^0-9]/g, '');
 
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: processedValue,
-    }));
+    setFormData(prev => ({ ...prev, [name]: processedValue }));
 
-    // Set error for the field being changed
     const error = validateField(name, processedValue);
-    setErrors((prevErrors) => ({ ...prevErrors, [name]: error }));
+    setErrors(prev => ({ ...prev, [name]: error }));
   };
 
-  const validateFile = (fileObj, type) => {
-    const fileErrors = [];
-    if (!fileObj) return [];
-
-    if (type === "document") {
-      const docTypes = [
-        'application/pdf',
-        'application/msword',
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        'image/jpeg',
-        'image/png'
-      ];
-      if (!docTypes.includes(fileObj.type)) fileErrors.push('Document must be PDF, DOC, DOCX, JPG, or PNG');
-      if (fileObj.size > 10 * 1024 * 1024) fileErrors.push('Document must be less than 10MB');
-    }
-    // You can add more validations for other types if needed
-    return fileErrors;
-  };
-
+  // Handle file input changes
   const handleFileChange = (e) => {
     const { name, files } = e.target;
     const newErrors = { ...errors };
 
-    if (name === "media") {
-      if (!files.length) {
-        setMediaFiles([]);
-        setMediaPreviews([]);
-        newErrors.media = "";
-        setErrors(newErrors);
-        return;
-      }
+    if (!files.length) {
+      if (name === "media[]") { setMediaFiles([]); setMediaPreviews([]); }
+      if (name === "proofDocument[]") { setProofDocumentFiles([]); setProofDocumentPreviews([]); }
+      newErrors[name] = "";
+      setErrors(newErrors);
+      return;
+    }
 
+    if (name === "media[]") {
       const allowedImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
       const allowedVideoTypes = ['video/mp4', 'video/webm', 'video/ogg'];
-      const maxImageSize = 5 * 1024 * 1024;  // 5MB
-      const maxVideoSize = 20 * 1024 * 1024; // 20MB
+      const maxImageSize = 5 * 1024 * 1024;
+      const maxVideoSize = 20 * 1024 * 1024;
 
-      let fileErrors = [];
       const validFiles = [];
       const previews = [];
+      const fileErrors = [];
 
-      for (let file of files) {
+      Array.from(files).forEach(file => {
         if (allowedImageTypes.includes(file.type)) {
-          if (file.size > maxImageSize) {
-            fileErrors.push(`Image "${file.name}" must be less than 5MB`);
-            continue;
-          }
+          if (file.size > maxImageSize) fileErrors.push(`Image "${file.name}" must be <5MB`);
+          else { validFiles.push(file); previews.push(URL.createObjectURL(file)); }
         } else if (allowedVideoTypes.includes(file.type)) {
-          if (file.size > maxVideoSize) {
-            fileErrors.push(`Video "${file.name}" must be less than 20MB`);
-            continue;
-          }
-        } else {
-          fileErrors.push(`File "${file.name}" must be an image (JPG, PNG, GIF, WebP) or a video (MP4, WebM, Ogg)`);
-          continue;
-        }
+          if (file.size > maxVideoSize) fileErrors.push(`Video "${file.name}" must be <20MB`);
+          else { validFiles.push(file); previews.push(URL.createObjectURL(file)); }
+        } else fileErrors.push(`File "${file.name}" must be image or video`);
+      });
 
-        validFiles.push(file);
-        previews.push(URL.createObjectURL(file));
-      }
+      if (fileErrors.length) { newErrors.media = fileErrors.join(", "); setMediaFiles([]); setMediaPreviews([]); e.target.value = null; }
+      else { newErrors.media = ""; setMediaFiles(validFiles); setMediaPreviews(previews); }
+    }
 
-      if (fileErrors.length > 0) {
-        newErrors.media = fileErrors.join(", ");
-        setMediaFiles([]);
-        setMediaPreviews([]);
-        e.target.value = null;
-      } else {
-        newErrors.media = "";
-        setMediaFiles(validFiles);
-        setMediaPreviews(previews);
-      }
-    } else if (name === "proofDocument") {
-      if (!files.length) {
-        setProofDocumentFiles([]);
-        setProofDocumentPreviews([]);
-        newErrors.proofDocument = "";
-        setErrors(newErrors);
-        return;
-      }
-
-      const docTypes = [
-        'application/pdf',
-        'application/msword',
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        'image/jpeg',
-        'image/png'
-      ];
-
-      let fileErrors = [];
+    if (name === "proofDocument[]") {
+      const docTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg', 'image/png'];
       const validFiles = [];
       const previews = [];
+      const fileErrors = [];
 
-      for (let file of files) {
-        if (!docTypes.includes(file.type)) {
-          fileErrors.push(`Document "${file.name}" must be PDF, DOC, DOCX, JPG, or PNG`);
-          continue;
+      Array.from(files).forEach(file => {
+        if (!docTypes.includes(file.type)) fileErrors.push(`Document "${file.name}" must be PDF, DOC, DOCX, JPG, or PNG`);
+        else if (file.size > 10 * 1024 * 1024) fileErrors.push(`Document "${file.name}" must be <10MB`);
+        else {
+          validFiles.push(file);
+          if (file.type === "application/pdf" || file.type.startsWith("image/")) previews.push(URL.createObjectURL(file));
+          else previews.push(null);
         }
-        if (file.size > 10 * 1024 * 1024) {
-          fileErrors.push(`Document "${file.name}" must be less than 10MB`);
-          continue;
-        }
-        validFiles.push(file);
-        if (file.type === "application/pdf" || file.type.startsWith("image/")) {
-          previews.push(URL.createObjectURL(file));
-        } else {
-          previews.push(null); // no preview for DOC/DOCX
-        }
-      }
+      });
 
-      if (fileErrors.length > 0) {
-        newErrors.proofDocument = fileErrors.join(", ");
-        setProofDocumentFiles([]);
-        setProofDocumentPreviews([]);
-        e.target.value = null;
-      } else {
-        newErrors.proofDocument = "";
-        setProofDocumentFiles(validFiles);
-        setProofDocumentPreviews(previews);
-      }
+      if (fileErrors.length) { newErrors.proofDocument = fileErrors.join(", "); setProofDocumentFiles([]); setProofDocumentPreviews([]); e.target.value = null; }
+      else { newErrors.proofDocument = ""; setProofDocumentFiles(validFiles); setProofDocumentPreviews(previews); }
     }
+
     setErrors(newErrors);
   };
 
-
-  // This function validates the entire form on submission
+  // Validate entire form
   const validateForm = () => {
     const newErrors = {};
 
-    // Validate all text fields
     Object.keys(formData).forEach(key => {
       const error = validateField(key, formData[key]);
-      if (error) {
-        newErrors[key] = error;
-      }
+      if (error) newErrors[key] = error;
     });
 
-    // Final check for required fields that might be empty
     if (!formData.title.trim()) newErrors.title = "Title is required";
     if (!formData.description.trim()) newErrors.description = "Description is required";
     if (!formData.targetAmount) newErrors.targetAmount = "Target amount is required";
-    if (!formData.submitterEmail.trim()) newErrors.submitterEmail = "Your email is required";
-    if (!formData.submitterName.trim()) newErrors.submitterName = "Your name is required";
-    // UPDATED: Added check for phone number
-    if (!formData.submitterPhone.trim()) newErrors.submitterPhone = "Phone number is required";
-
-    // File upload checks
-    if (mediaFiles.length === 0) newErrors.media = "At least one display image or video is required";
-    if (proofDocumentFiles.length === 0) newErrors.proofDocument = "At least one supporting proof document is required";
+    if (!formData.submitterName.trim()) newErrors.submitterName = "Name required";
+    if (!formData.submitterEmail.trim()) newErrors.submitterEmail = "Email required";
+    if (!formData.submitterPhone.trim()) newErrors.submitterPhone = "Phone required";
+    if (!mediaFiles.length) newErrors["media[]"] = "At least one image/video required";
+    if (!proofDocumentFiles.length) newErrors["proofDocument[]"] = "At least one proof document required";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
+  // Submit handler
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!validateForm()) {
       Swal.fire("Validation Error", "Please fill all required fields and correct the errors.", "error");
       return;
     }
 
     setIsSubmitting(true);
-
     const form = new FormData();
 
-    // Append other form fields
-    for (const key in formData) {
-      if (formData[key]) {
-        if (key === "targetAmount") {
-          form.append(key, Number(formData[key]));
-        } else {
-          form.append(key, formData[key]);
-        }
-      }
-    }
+    // Append text fields
+    Object.entries(formData).forEach(([key, value]) => {
+      if (value) form.append(key, key === "targetAmount" ? Number(value) : value);
+    });
 
-    // Append multiple media files
-    if (mediaFiles && mediaFiles.length > 0) {
-      mediaFiles.forEach((file) => {
-        form.append("media", file);
-      });
-    }
+    // Append files as arrays
+    mediaFiles.forEach(file => form.append("media[]", file));
+    proofDocumentFiles.forEach(file => form.append("proofDocument[]", file));
 
-    // Append multiple proof document files
-    if (proofDocumentFiles && proofDocumentFiles.length > 0) {
-      proofDocumentFiles.forEach((file) => {
-        form.append("proofDocument", file);
-      });
+    // Debug
+    for (let [key, value] of form.entries()) {
+      if (value instanceof File) console.log(`${key}: ${value.name} (${value.type}, ${value.size} bytes)`);
+      else console.log(`${key}: ${value}`);
     }
 
     try {
+      Swal.fire({ title: 'Sending...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
       await submitPersonalCauseApi(form);
       Swal.fire("Success", "Your cause has been submitted for review!", "success");
 
-      // Reset form fields and file states
-      setFormData({
-        title: "",
-        description: "",
-        shortDescription: "",
-        targetAmount: "",
-        category: "",
-        location: "",
-        endDate: "",
-        submitterName: "",
-        submitterEmail: "",
-        submitterPhone: "",
-        submitterMessage: "",
-      });
-
-      setProofDocumentFiles([]);
-      setProofDocumentPreviews([]);
-      setMediaFiles([]);
-      setMediaPreviews([]);
+      // Reset form
+      setFormData({ title: "", description: "", shortDescription: "", targetAmount: "", category: "", location: "", endDate: "", submitterName: "", submitterEmail: "", submitterPhone: "", submitterMessage: "" });
+      setMediaFiles([]); setMediaPreviews([]);
+      setProofDocumentFiles([]); setProofDocumentPreviews([]);
       setErrors({});
-
-      // Reset input file elements
       document.getElementById('media').value = '';
       document.getElementById('proofDocument').value = '';
-
     } catch (error) {
-      Swal.fire("Submission Failed", error.message || "Something went wrong. Please try again.", "error");
+      Swal.fire("Submission Failed", error.message || "Something went wrong.", "error");
     } finally {
       setIsSubmitting(false);
     }

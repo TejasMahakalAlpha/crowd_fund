@@ -261,7 +261,7 @@ const ManagePersonalCauses = () => {
               <p><strong>Target Amount:</strong> ₹{submission.targetAmount?.toLocaleString()}</p>
               <p><strong>Location:</strong> {submission.location || 'N/A'}</p>
               <p><strong>Submitted On:</strong> {new Date(submission.createdAt).toLocaleDateString()}</p>
-
+              {console.log(submissions)}
               <div className="card-actions">
                 <button className="view-details-btn" onClick={() => handleViewDetails(submission)}>
                   View Details & Manage

@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 // Swiper components
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay } from 'swiper/modules';
-// Swiper CSS
+import { Autoplay, Navigation } from 'swiper/modules';
+
 import 'swiper/css';
+import 'swiper/css/navigation';
+
 
 import './Testimonials.css';
 import avatar from "../assets/avtar.png";
@@ -82,12 +84,13 @@ const Testimonials = () => {
           // --- RENDER THIS ON MOBILE/TABLET ---
           <Swiper
             className="testimonial-swiper"
-            modules={[Autoplay]}
+            modules={[Autoplay, Navigation]}
             loop={true}
             autoplay={{ delay: 3000, disableOnInteraction: false }}
             slidesPerView={1.2}
             spaceBetween={20}
             centeredSlides={true}
+            navigation={true}
           >
             {testimonialsData.map((item, index) => (
               <SwiperSlide key={index}>

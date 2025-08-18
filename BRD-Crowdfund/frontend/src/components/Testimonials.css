@@ -179,4 +179,27 @@
   .testimonial-card {
     padding: 20px;
   }
+  /* Swiper Navigation Arrows */
+.swiper-button-prev,
+.swiper-button-next {
+  color: #4dc2c2;
+  background: #fff;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.swiper-button-prev::after,
+.swiper-button-next::after {
+  font-size: 18px; /* arrow size */
+  font-weight: bold;
+}
+
+.swiper-button-prev:hover,
+.swiper-button-next:hover {
+  background: #4dc2c2;
+  color: #fff;
+}
+
 }

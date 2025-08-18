@@ -78,7 +78,7 @@ const VolunteerForm = () => {
     }
 
     setFormData({ ...formData, [name]: processedValue });
-    
+
     // Validate the field and update the error message
     const error = validateField(name, processedValue);
     setErrors({ ...errors, [name]: error });
@@ -88,10 +88,10 @@ const VolunteerForm = () => {
   const validateForm = () => {
     const newErrors = {};
     Object.keys(formData).forEach(key => {
-        const error = validateField(key, formData[key]);
-        if (error) {
-            newErrors[key] = error;
-        }
+      const error = validateField(key, formData[key]);
+      if (error) {
+        newErrors[key] = error;
+      }
     });
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -99,13 +99,18 @@ const VolunteerForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
-        Swal.fire("Validation Error", "Please correct the errors before submitting.", "error");
-        return;
+      Swal.fire("Validation Error", "Please correct the errors before submitting.", "error");
+      return;
     }
 
     try {
+      Swal.fire({
+        title: 'Sending...',
+        allowOutsideClick: false,
+        didOpen: () => Swal.showLoading(),
+      });
       await PublicApi.registerVolunteer(formData);
       Swal.fire({
         icon: 'success',

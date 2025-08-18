@@ -156,6 +156,7 @@
 
   .nav-links.open {
     display: flex;
+    align-items: center;
   }
 
   .nav-links a,
