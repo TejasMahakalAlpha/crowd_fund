@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import './Header.css';
 import crowdfund_logo from "../assets/header/crowdfund_logo.png"
+
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -12,12 +13,15 @@ const Header = () => {
     <header className="main-header">
       <div className="container">
         <div className="logo">
-          <NavLink to="/" onClick={closeMenu}>
+          {/* 👇 NavLink ko ek class di gayi hai styling ke liye */}
+          <NavLink to="/" onClick={closeMenu} className="logo-container">
             <img 
               src={crowdfund_logo} 
               alt="Crowdfund Logo" 
               style={{ height: "50px", objectFit: "contain" }} 
             />
+            {/* ✅ YAHAN COMPANY KA NAAM ADD KIYA GAYA HAI */}
+            <span className="logo-text">Green Dharti</span>
           </NavLink>
         </div>
 

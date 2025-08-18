@@ -4,9 +4,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Lora:wght@700&display=swap');
 
 :root {
-  --primary-color: #00897b;   /* Accent color */
-  --dark-bg: #222831;         /* Modern charcoal background */
-  --light-text: #eeeeee;      /* Brighter text for readability */
+  --primary-color: #00897b;
+  --dark-bg: #222831;
+  --light-text: #eeeeee;
   --heading-text: #ffffff;
   --font-heading: 'Montserrat', sans-serif;
   --font-logo: 'Lora', serif;
@@ -16,14 +16,14 @@
 .main-footer-v2 {
   background-color: var(--dark-bg);
   color: var(--light-text);
-  padding: 80px 20px 0 20px;
+  padding: 40px 20px 0 20px;
   font-family: var(--font-heading);
 }
 
 .footer-container-v2 {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 40px;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -34,10 +34,10 @@
 }
 
 .footer-heading {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   font-weight: 700;
   color: var(--heading-text);
-  margin-bottom: 25px;
+  margin-bottom: 15px;
   position: relative;
 }
 
@@ -45,26 +45,23 @@
   content: '';
   position: absolute;
   left: 0;
-  bottom: -8px;
-  width: 40px;
+  bottom: -6px;
+  width: 30px;
   height: 2px;
   background-color: var(--primary-color);
 }
 
 /* --- BRAND & SOCIALS COLUMN --- */
-
-/* ❌ Removed the old .footer-logo style for the text */
-
-/* ✅ Added new style for the logo image */
 .footer-logo-img {
-  width: 150px; /* You can adjust the width of the logo here */
-  height: auto;   /* Maintains the aspect ratio */
-  margin-bottom: 20px; /* Keeps the spacing same as before */
+  width: 130px;
+  height: auto;
+  margin-bottom: 10px;
 }
 
 .footer-tagline {
-  line-height: 1.7;
-  margin-bottom: 25px;
+  line-height: 1.6;
+  margin-bottom: 15px;
+  font-size: 0.9rem;
   color: var(--heading-text);
 }
 
@@ -72,19 +69,20 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 35px;
+  height: 35px;
   background-color: rgba(255, 255, 255, 0.1);
   color: var(--heading-text);
   border-radius: 50%;
-  margin-right: 10px;
+  margin-right: 8px;
   text-decoration: none;
   transition: background-color 0.3s, transform 0.3s;
+  font-size: 0.8rem;
 }
 
 .footer-social a:hover {
   background-color: var(--primary-color);
-  transform: translateY(-3px);
+  transform: translateY(-2px);
 }
 
 /* --- QUICK LINKS & CONTACT COLUMNS --- */
@@ -96,7 +94,7 @@
 
 .links-col li,
 .contact-col li {
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 }
 
 .links-col a,
@@ -104,6 +102,7 @@
   color: var(--light-text);
   text-decoration: none;
   transition: color 0.3s;
+  font-size: 0.9rem;
 }
 
 .links-col a:hover,
@@ -117,27 +116,27 @@
 }
 
 .contact-icon {
-  margin-right: 15px;
-  font-size: 1.1rem;
+  margin-right: 10px;
+  font-size: 1rem;
   color: var(--primary-color);
-  margin-top: 4px;
+  margin-top: 3px;
 }
 
 /* --- BOTTOM BAR --- */
 .footer-bottom {
   background-color: var(--dark-bg);
   border-top: 1px solid rgba(255, 255, 255, 0.1);
-  margin-top: 60px;
-  padding: 25px 0;
+  margin-top: 30px;
+  padding: 15px 0;
   text-align: center;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   color: var(--heading-text);
 }
 
 /* --- RESPONSIVE ADJUSTMENTS --- */
 @media (max-width: 768px) {
   .main-footer-v2 {
-    padding-top: 60px;
+    padding-top: 30px;
   }
   .footer-container-v2 {
     text-align: center;
@@ -149,7 +148,6 @@
   .contact-col li {
     justify-content: center;
   }
-  /* Center the logo on mobile */
   .footer-logo-img {
       margin-left: auto;
       margin-right: auto;
