@@ -217,7 +217,7 @@ const CausesSection = () => {
   const handleDonate = async (causeId) => {
     const { value: amount } = await Swal.fire({ title: "Enter donation amount", input: "number", inputAttributes: { min: 1, step: 1 }, inputValidator: (value) => { if (!value || value <= 0) return "Please enter a valid amount"; }, showCancelButton: true, confirmButtonText: "Next" });
     if (amount) {
-      const amountInPaisa = Number(amount) * 100;
+      const amountInPaisa = Number(amount);
       collectDonorDetails(amountInPaisa, causeId);
     } else {
       Swal.fire("Donation Cancelled", "No amount entered.", "info");
@@ -234,7 +234,7 @@ const CausesSection = () => {
           {causes.map((cause, index) => {
             const raised = Number(cause.currentAmount) || 0;
             const goal = Number(cause.targetAmount) || 1;
-            const percentage = Math.min(100, Math.round((raised / goal) * 100));
+            const percentage = Math.min(100, Math.round((raised / goal)));
             const causeId = cause.id || cause._id;
 
             return (
@@ -283,13 +283,13 @@ const CausesSection = () => {
                   >
                     {isPaymentProcessing ? "Processing..." : "Donate Now"}
                   </button>
-                  
+
                   <button
                     className="share-btn"
                     title="Share this cause"
                     onClick={() => handleShare(cause)}
                   >
-                   Share  <FaShareAlt /> 
+                    Share  <FaShareAlt />
                   </button>
                 </div>
               </div>

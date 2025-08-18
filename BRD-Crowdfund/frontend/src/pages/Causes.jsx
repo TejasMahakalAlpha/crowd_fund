@@ -163,7 +163,7 @@ const Causes = () => {
     const causeId = cause.id || cause._id;
     const { value: amount } = await Swal.fire({ title: `Donate to ${cause.title}`, input: "number", inputLabel: "Amount (INR)", inputPlaceholder: "e.g., 500", showCancelButton: true, confirmButtonText: "Next", inputValidator: (value) => { if (!value || value <= 0) return "Please enter a valid amount"; } });
     if (amount) {
-      collectDonorDetails(Number(amount) * 100, causeId);
+      collectDonorDetails(Number(amount), causeId);
     }
   };
 
@@ -231,7 +231,7 @@ const Causes = () => {
             {causes.map((cause) => {
               const raised = Number(cause.currentAmount) || 0;
               const goal = Number(cause.targetAmount) || 1;
-              const percentage = Math.min(100, Math.round((raised / goal) * 100));
+              const percentage = Math.min(100, Math.round((raised / goal)));
               const causeId = cause.id || cause._id;
               return (
                 <div className="cause-box" key={causeId}>

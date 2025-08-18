@@ -45,7 +45,7 @@ const ManageDonations = () => {
     e.preventDefault();
     try {
       // Amount sent to backend typically in paisa/smallest unit
-      const amountInPaisa = parseFloat(formData.amount) * 100;
+      const amountInPaisa = parseFloat(formData.amount);
 
       const payload = {
         donorName: formData.donorName,

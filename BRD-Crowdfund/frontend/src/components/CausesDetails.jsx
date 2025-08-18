@@ -11,9 +11,9 @@ const SITE_URL = "https://crowd-fun.netlify.app";
 const slugify = (text) => {
     if (!text) return '';
     return text.toString().toLowerCase().trim()
-      .replace(/\s+/g, '-')
-      .replace(/[^\w\-]+/g, '')
-      .replace(/\-\-+/g, '-');
+        .replace(/\s+/g, '-')
+        .replace(/[^\w\-]+/g, '')
+        .replace(/\-\-+/g, '-');
 };
 
 const getFileUrl = (relativePath) => {
@@ -59,7 +59,7 @@ const CauseDetails = () => {
     }, [causeSlug]);
 
     const causeUrl = `${SITE_URL}/causes/${causeSlug}`;
-    
+
     const metaImageForPreview = `${SITE_URL}/crowdfund_logo.png`;
     const causeImageOnPage = cause?.mediaUrls && cause.mediaUrls.length > 0
         ? getFileUrl(cause.mediaUrls[0])
@@ -86,14 +86,14 @@ const CauseDetails = () => {
             });
         }
     };
-    
+
     if (loading) return <p className="loading-text">Loading cause...</p>;
     if (error) return <p className="error-text">{error}</p>;
     if (!cause) return <p className="error-text">Cause not found.</p>;
 
     const raisedAmount = Number(cause.currentAmount) || 0;
     const targetAmount = Number(cause.targetAmount) || 1;
-    const progressPercentage = Math.min((raisedAmount / targetAmount) * 100, 100);
+    const progressPercentage = Math.min((raisedAmount / targetAmount), 100);
 
     return (
         <div className="cause-details-page">
@@ -122,7 +122,7 @@ const CauseDetails = () => {
                     </p>
                     <h1 className="cause-title-details">{cause.title}</h1>
                     <p className="cause-description-details">{cause.description}</p>
-                    
+
                     <button onClick={handleShare} className="share-link-button">
                         Share Cause <FaShareAlt style={{ marginLeft: '8px' }} />
                     </button>

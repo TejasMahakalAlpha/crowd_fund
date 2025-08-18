@@ -24,7 +24,7 @@ const Home = () => {
       <HeroSection />
       <AboutSection />
       <div ref={donationRef}>
-        <DonationCard />
+        {/* <DonationCard /> */}
       </div>
       <CausesSection />
       <StatsSection />

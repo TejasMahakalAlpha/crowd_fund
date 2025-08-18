@@ -124,13 +124,171 @@
 
 /* --- BOTTOM BAR --- */
 .footer-bottom {
-  background-color: var(--dark-bg);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  /* background-color: var(--dark-bg); */
+  /* border-top: 1px solid rgba(255, 255, 255, 0.1); */
   margin-top: 30px;
   padding: 15px 0;
   text-align: center;
   font-size: 0.8rem;
-  color: var(--heading-text);
+  /* color: var(--heading-text); */
+  color : white;
+}
+
+/* Popup Overlay */
+.terms-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* Popup Box */
+.terms-modal {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  max-width: 600px;
+  width: 90%;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Close Button */
+.close-btn {
+  background: #4dc2c2;
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  margin-top: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.close-btn:hover {
+  background: #379a9a;
+}
+
+/* Terms link button in footer */
+/* .terms-btn {
+  background: none;
+  border: none;
+  color: #4d66c2;
+  cursor: pointer;
+  font-size: inherit;
+  text-decoration: underline;
+  padding: 0;
+}
+.terms-btn:hover {
+  color: #379a9a; */
+/* } */
+/* Popup Overlay */
+.terms-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  
+}
+
+/* Popup Box */
+/* --- Popup Overlay --- */
+.terms-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  overflow: auto; /* 👈 allows overlay scrolling on small screens */
+}
+
+/* --- Popup Box --- */
+.terms-popup {
+  background: #fff;
+  padding: 20px 30px;
+  border-radius: 10px;
+  max-width: 600px;
+  width: 100%;
+  max-height: 80vh;       /* 👈 restrict height to viewport */
+  overflow-y: auto;       /* 👈 enables vertical scroll */
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  position: relative;
+  text-align: left;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Optional: Scrollbar styling */
+.terms-popup::-webkit-scrollbar {
+  width: 6px;
+}
+.terms-popup::-webkit-scrollbar-thumb {
+  background-color: #4dc2c2;
+  border-radius: 3px;
+}
+.terms-popup::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+/* --- Close Button --- */
+.close-btn {
+  background: #4dc2c2;
+  border: none;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 6px;
+  margin-top: 20px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.close-btn:hover {
+  background: #3aa3a3;
+}
+
+/* --- Terms Link Button --- */
+.terms-btn {
+  background: none;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 14px;
+  text-decoration: none;
+  padding: 0;
+  font-family: 'Montserrat', sans-serif;
+}
+.terms-btn:hover {
+  color:  #379a9a;
+}
+
+/* --- Animation --- */
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+/* Responsive Adjustments */
+
+
+@media (max-width: 480px) {
+  .terms-popup {
+    padding: 10px 15px;
+    font-size: 0.9rem;
+   
+  }
 }
 
 /* --- RESPONSIVE ADJUSTMENTS --- */
@@ -151,5 +309,10 @@
   .footer-logo-img {
       margin-left: auto;
       margin-right: auto;
+  }
+    .terms-popup {
+    padding: 15px 20px;
+    max-width: 95%;
+     margin: 10px;
   }
 }
