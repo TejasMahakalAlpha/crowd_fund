@@ -44,7 +44,7 @@
   box-shadow: 0 0 0 2px rgba(0, 121, 107, 0.2);
 }
 
-.loading-message, .error-message, .no-submissions-message {
+.loading-message, .no-submissions-message {
   text-align: center;
   font-size: 1.1rem;
   color: #777;
@@ -55,8 +55,6 @@
 }
 .error-message {
     color: #e74c3c;
-    background-color: #f8d7da;
-    border: 1px solid #e74c3c;
 }
 
 .submissions-list {

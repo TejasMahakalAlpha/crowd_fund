@@ -85,7 +85,7 @@ const Testimonials = () => {
           <Swiper
             className="testimonial-swiper"
             modules={[Autoplay, Navigation]}
-            loop={true}
+            // loop={true}
             autoplay={{ delay: 3000, disableOnInteraction: false }}
             slidesPerView={1.2}
             spaceBetween={20}

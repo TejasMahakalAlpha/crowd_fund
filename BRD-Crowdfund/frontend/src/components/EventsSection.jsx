@@ -1,7 +1,19 @@
 import React, { useEffect, useState } from "react";
 import API, { PublicApi } from "../services/api";
 import "./EventsSection.css";
+import { FaShareAlt } from "react-icons/fa";
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
+const slugify = (text) => {
+  if (!text) return '';
+  return text
+    .toString()
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/[^\w\-]+/g, '')
+    .replace(/\-\-+/g, '-');
+};
 
 const EventsSection = () => {
   const [events, setEvents] = useState([]);
@@ -9,6 +21,41 @@ const EventsSection = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const getImageUrl = (relativePath) => {
     return `${API_BASE}/api/images/${relativePath}`;
+  };
+
+  const handleShare = async (event) => {
+    const eventSlug = slugify(event.title);
+    const shareData = {
+      title: event.title,
+      text: event.description,
+      url: `${window.location.origin}/events/${eventSlug}`,
+    };
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (error) {
+        if (error.name !== 'AbortError') {
+          console.error("Error sharing:", error);
+          Swal.fire("Error", "Could not share this event.", "error");
+        }
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(shareData.url);
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'success',
+          title: 'Link copied to clipboard!',
+          showConfirmButton: false,
+          timer: 2000
+        });
+      } catch (err) {
+        console.error("Failed to copy link: ", err);
+        Swal.fire("Error", "Could not copy link.", "error");
+      }
+    }
   };
   useEffect(() => {
     const fetchEvents = async () => {
@@ -85,7 +132,7 @@ const EventsSection = () => {
             <div
               className="event-card"
               key={event._id || idx}
-              onClick={() => handleCardClick(event)}
+
             >
               <div className="event-date">
                 <span className="day">{day}</span>
@@ -93,7 +140,7 @@ const EventsSection = () => {
                 <span className="year">{year}</span>
               </div>
               <div className="event-info">
-                <h3>{event.title}</h3>
+                <h3 onClick={() => handleCardClick(event)}>{event.title}</h3>
                 <p className="time">{time}</p>
                 <p className="description">{event.description}</p>
                 <p className="location">{event.location}</p>
@@ -104,6 +151,16 @@ const EventsSection = () => {
                     className="event-image"
                   />
                 )}
+                <div className="share-container">
+                  <button
+                    // ✨ 3. onClick को सरल बनाया गया
+                    onClick={() => handleShare(event)}
+                    className="share-button"
+                    title="Share this event"
+                  >
+                    Share <FaShareAlt />
+                  </button>
+                </div>
               </div>
             </div>
           );

@@ -143,3 +143,9 @@
 .close-btn:hover {
   color: #e53935;
 }
+
+.btn-container
+{
+  display: flex;
+  gap: 10px;
+}

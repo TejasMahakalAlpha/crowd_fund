@@ -75,7 +75,7 @@
 
 /* === MOBILE/TABLET LAYOUT (Swiper Slider) === */
 .testimonial-swiper {
-  width: 100vw; /* Takes full viewport width */
+  width: 90vw; /* Takes full viewport width */
   max-width: 1200px;
 }
 
@@ -163,6 +163,27 @@
     max-width: 450px;
     margin-top: 0 !important; /* Remove staggering on tablet */
   }
+  .swiper-button-prev,
+.swiper-button-next {
+  color: #4dc2c2;
+  background: #fff;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.swiper-button-prev::after,
+.swiper-button-next::after {
+  font-size: 18px; /* arrow size */
+  font-weight: bold;
+}
+
+.swiper-button-prev:hover,
+.swiper-button-next:hover {
+  background: #4dc2c2;
+  color: #fff;
+}
 }
 
 @media (max-width: 480px) {

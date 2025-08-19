@@ -125,6 +125,15 @@ const Events = () => {
                     <h3 className="event-title">{event.title}</h3>
                     <p className="event-description">{event.description}</p>
 
+                    {event.imageUrl && (
+                      <div className="event-image-container">
+                        <img
+                          src={getImageUrl(event.imageUrl)}
+                          alt={event.title}
+                          className="event-main-image"
+                        />
+                      </div>
+                    )}
                     <div className="share-container">
                       <button
                         // ✨ 3. onClick को सरल बनाया गया
@@ -136,15 +145,6 @@ const Events = () => {
                       </button>
                     </div>
 
-                    {event.imageUrl && (
-                      <div className="event-image-container">
-                        <img
-                          src={getImageUrl(event.imageUrl)}
-                          alt={event.title}
-                          className="event-main-image"
-                        />
-                      </div>
-                    )}
                   </div>
                 </div>
               );

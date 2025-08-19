@@ -55,7 +55,7 @@ background-color:  #004d40; /* <-- CHANGED to direct green color */
 
 /* --- GENERAL CONTENT & TWO-COLUMN LAYOUT --- */
 .content-section {
-  padding: 80px 20px;
+  padding: 20px 20px;
 }
 
 .content-section:nth-of-type(odd) {
@@ -107,7 +107,7 @@ background-color:  #004d40; /* <-- CHANGED to direct green color */
 
 /* --- APPROACH CARDS SECTION --- */
 .approach-section {
-  padding: 80px 20px;
+  padding: 40px 20px;
   background-color: var(--light-bg);
   text-align: center;
 }
@@ -115,7 +115,7 @@ background-color:  #004d40; /* <-- CHANGED to direct green color */
 .approach-section h2 {
   font-family: var(--font-heading);
   font-size: 2.5rem;
-  color: #2E8B57; /* <-- CHANGED to direct green color */
+  color: #004d40; /* <-- CHANGED to direct green color */
   margin-bottom: 50px;
 }
 
@@ -158,7 +158,7 @@ background-color:  #004d40; /* <-- CHANGED to direct green color */
 /* --- QUOTE SECTION --- */
 .quote-section {
   padding: 80px 20px;
-  background-color: #2E8B57; /* <-- CHANGED to direct green color */
+  background-color: #004d40; /* <-- CHANGED to direct green color */
   color: var(--light-text);
   text-align: center;
 }
