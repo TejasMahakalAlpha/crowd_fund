@@ -63,40 +63,41 @@ const Causes = () => {
       loadRazorpayScript();
       return;
     }
-    const { value: accepted } = await Swal.fire({
-      title: 'Terms & Conditions',
-      html: termsAndConditionsText,
-      input: 'checkbox',
-      inputValue: 0,
-      inputPlaceholder: 'I have read and agree to the terms and conditions',
-      confirmButtonText: 'Agree & Continue →',
+    // const { value: accepted } = await Swal.fire({
+    //   title: 'Terms & Conditions',
+    //   html: termsAndConditionsText,
+    //   input: 'checkbox',
+    //   inputValue: 0,
+    //   inputPlaceholder: 'I have read and agree to the terms and conditions',
+    //   confirmButtonText: 'Agree & Continue →',
+    //   showCancelButton: true,
+    //   inputValidator: (result) => !result && 'You must agree to the terms and conditions to proceed.'
+    // });
+    // if (accepted) {
+    const { value: formValues } = await Swal.fire({
+      title: 'Enter Your Details',
+      html: `<input id="swal-input-name" class="swal2-input" placeholder="Full Name" required><input id="swal-input-email" class="swal2-input" type="email" placeholder="Email Address" required><input id="swal-input-phone" class="swal2-input" type="tel" placeholder="Phone Number (10 digits)" required>`,
+      focusConfirm: false,
       showCancelButton: true,
-      inputValidator: (result) => !result && 'You must agree to the terms and conditions to proceed.'
-    });
-    if (accepted) {
-      const { value: formValues } = await Swal.fire({
-        title: 'Enter Your Details',
-        html: `<input id="swal-input-name" class="swal2-input" placeholder="Full Name" required><input id="swal-input-email" class="swal2-input" type="email" placeholder="Email Address" required><input id="swal-input-phone" class="swal2-input" type="tel" placeholder="Phone Number (10 digits)" required>`,
-        focusConfirm: false,
-        showCancelButton: true,
-        confirmButtonText: 'Proceed to Pay',
-        cancelButtonText: 'Cancel',
-        preConfirm: () => {
-          const name = document.getElementById('swal-input-name').value.trim();
-          const email = document.getElementById('swal-input-email').value.trim();
-          const phone = document.getElementById('swal-input-phone').value.trim();
-          if (!name || !email || !phone) { Swal.showValidationMessage(`Please fill in all details`); return false; }
-          if (!/\S+@\S+\.\S+/.test(email)) { Swal.showValidationMessage(`Please enter a valid email address`); return false; }
-          if (!/^\d{10}$/.test(phone)) { Swal.showValidationMessage(`Please enter a valid 10-digit phone number`); return false; }
-          return { name, email, phone };
-        }
-      });
-      if (formValues) {
-        startPayment(amountInPaisa, formValues.name, formValues.email, formValues.phone, causeId);
-      } else {
-        Swal.fire("Donation Cancelled", "You can try again anytime!", "info");
+      confirmButtonText: 'Proceed to Pay',
+      cancelButtonText: 'Cancel',
+      preConfirm: () => {
+        const name = document.getElementById('swal-input-name').value.trim();
+        const email = document.getElementById('swal-input-email').value.trim();
+        const phone = document.getElementById('swal-input-phone').value.trim();
+        if (!name || !email || !phone) { Swal.showValidationMessage(`Please fill in all details`); return false; }
+        if (!/\S+@\S+\.\S+/.test(email)) { Swal.showValidationMessage(`Please enter a valid email address`); return false; }
+        if (!/^\d{10}$/.test(phone)) { Swal.showValidationMessage(`Please enter a valid 10-digit phone number`); return false; }
+        return { name, email, phone };
       }
     }
+    );
+    if (formValues) {
+      startPayment(amountInPaisa, formValues.name, formValues.email, formValues.phone, causeId);
+    } else {
+      Swal.fire("Donation Cancelled", "You can try again anytime!", "info");
+    }
+    // }
   };
 
   const startPayment = async (amountInPaisa, donorName, donorEmail, donorPhone, causeId) => {
