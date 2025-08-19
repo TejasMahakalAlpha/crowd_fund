@@ -1,12 +1,13 @@
-/* src/pages/About.css - NEW V2 STYLES */
+/* src/pages/About.css - UPDATED & ISOLATED STYLES */
 
 /* --- FONT IMPORT --- */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Lora:ital,wght@0,400;1,500&display=swap');
 
 /* --- CSS VARIABLES FOR EASY THEMEING --- */
+/* We are keeping this block but will override the primary color directly in the styles below */
 :root {
-  --primary-color: #00695c; /* A slightly richer teal */
-  --secondary-color: #ffc107; /* A warm accent color (amber) */
+  --primary-color: #f45612; 
+  --secondary-color: #ffc107;
   --light-bg: #f4f7f6;
   --dark-text: #2c3e50;
   --light-text: #ffffff;
@@ -22,19 +23,17 @@
 
 /* --- HERO SECTION - UPDATED STYLES --- */
 .about-hero-v2 {
-  /* Removed background image and height to create a content-sized banner */
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
   color: var(--light-text);
-  background-color: var(--primary-color); /* Set the solid background color */
-  padding: 60px 20px; /* Added padding to create banner height */
+  /* background-color: #ec6906; */
+background-color:  #004d40; /* <-- CHANGED to direct green color */
+  padding: 60px 20px;
 }
 
 .hero-overlay {
-  /* Removed dark overlay, max-width and border-radius */
-  /* This div now just holds the content */
   width: 100%;
 }
 
@@ -49,12 +48,10 @@
   font-size: 1.2rem;
   font-weight: 400;
   opacity: 0.9;
-  max-width: 800px; /* Added max-width here for readability */
+  max-width: 800px;
   margin: 0 auto;
-  color:white;
+  color: white;
 }
-
-/* --- ALL OTHER STYLES BELOW ARE UNCHANGED --- */
 
 /* --- GENERAL CONTENT & TWO-COLUMN LAYOUT --- */
 .content-section {
@@ -87,7 +84,7 @@
 .column-text h2 {
   font-family: var(--font-heading);
   font-size: 2.5rem;
-  color: var(--primary-color);
+  color: #004d40; /* <-- CHANGED to direct green color */
   margin-bottom: 20px;
 }
 
@@ -114,10 +111,11 @@
   background-color: var(--light-bg);
   text-align: center;
 }
+
 .approach-section h2 {
   font-family: var(--font-heading);
   font-size: 2.5rem;
-  color: var(--primary-color);
+  color: #2E8B57; /* <-- CHANGED to direct green color */
   margin-bottom: 50px;
 }
 
@@ -143,7 +141,7 @@
 }
 
 .card-icon {
-  color: var(--primary-color);
+  color: #2E8B57; /* <-- CHANGED to direct green color */
   margin-bottom: 15px;
 }
 
@@ -160,7 +158,7 @@
 /* --- QUOTE SECTION --- */
 .quote-section {
   padding: 80px 20px;
-  background-color: var(--primary-color);
+  background-color: #2E8B57; /* <-- CHANGED to direct green color */
   color: var(--light-text);
   text-align: center;
 }
@@ -185,10 +183,12 @@
   position: absolute;
   color: rgba(255, 255, 255, 0.2);
 }
+
 .quote-section blockquote::before {
   top: -20px;
   left: 0;
 }
+
 .quote-section blockquote::after {
   bottom: -40px;
   right: 0;
@@ -215,7 +215,7 @@
 }
 
 .cta-button:hover {
-  background-color: #ffca28; /* Slightly lighter amber */
+  background-color: #ffca28;
   transform: scale(1.05);
 }
 

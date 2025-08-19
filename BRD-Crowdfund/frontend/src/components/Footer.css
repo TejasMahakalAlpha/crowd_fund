@@ -124,13 +124,10 @@
 
 /* --- BOTTOM BAR --- */
 .footer-bottom {
-  /* background-color: var(--dark-bg); */
-  /* border-top: 1px solid rgba(255, 255, 255, 0.1); */
   margin-top: 30px;
   padding: 15px 0;
   text-align: center;
   font-size: 0.8rem;
-  /* color: var(--heading-text); */
   color : white;
 }
 
@@ -173,35 +170,6 @@
   background: #379a9a;
 }
 
-/* Terms link button in footer */
-/* .terms-btn {
-  background: none;
-  border: none;
-  color: #4d66c2;
-  cursor: pointer;
-  font-size: inherit;
-  text-decoration: underline;
-  padding: 0;
-}
-.terms-btn:hover {
-  color: #379a9a; */
-/* } */
-/* Popup Overlay */
-.terms-popup-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.6);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 2000;
-  
-}
-
-/* Popup Box */
 /* --- Popup Overlay --- */
 .terms-popup-overlay {
   position: fixed;
@@ -224,8 +192,8 @@
   border-radius: 10px;
   max-width: 600px;
   width: 100%;
-  max-height: 80vh;       /* 👈 restrict height to viewport */
-  overflow-y: auto;       /* 👈 enables vertical scroll */
+  max-height: 80vh;      /* 👈 restrict height to viewport */
+  overflow-y: auto;      /* 👈 enables vertical scroll */
   box-shadow: 0 5px 15px rgba(0,0,0,0.3);
   position: relative;
   text-align: left;
@@ -280,16 +248,6 @@
   from { opacity: 0; transform: scale(0.95); }
   to { opacity: 1; transform: scale(1); }
 }
-/* Responsive Adjustments */
-
-
-@media (max-width: 480px) {
-  .terms-popup {
-    padding: 10px 15px;
-    font-size: 0.9rem;
-   
-  }
-}
 
 /* --- RESPONSIVE ADJUSTMENTS --- */
 @media (max-width: 768px) {
@@ -313,6 +271,19 @@
     .terms-popup {
     padding: 15px 20px;
     max-width: 95%;
-     margin: 10px;
+      margin: 10px;
   }
+}
+
+@media (max-width: 480px) {
+  .terms-popup {
+    padding: 10px 15px;
+    font-size: 0.9rem;
+    
+  }
+}
+
+/* --- ✅ THIS IS THE ADDED CODE TO FIX THE COLOR --- */
+.footer-bottom p {
+  color: #b0b0b0; /* Light grey for better visibility */
 }
