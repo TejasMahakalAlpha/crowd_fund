@@ -149,6 +149,10 @@ const EventsSection = () => {
                     src={getImageUrl(event.imageUrl)}
                     alt={event.title}
                     className="event-image"
+                    onError={(e) => {
+                      e.currentTarget.src = "/crowdfund_logo.png"; // fallback if 404 or broken
+                      e.currentTarget.onerror = null; // prevent infinite loop if default also missing
+                    }}
                   />
                 )}
                 <div className="share-container">
@@ -176,6 +180,10 @@ const EventsSection = () => {
                 src={getImageUrl(selectedEvent.imageUrl)}
                 alt={selectedEvent.title}
                 className="cause-image"
+                onError={(e) => {
+                  e.currentTarget.src = "/crowdfund_logo.png"; // fallback if 404 or broken
+                  e.currentTarget.onerror = null; // prevent infinite loop if default also missing
+                }}
                 style={{ width: "100%", borderRadius: "8px", objectFit: "cover", maxHeight: "200px" }}
               />
             </div>

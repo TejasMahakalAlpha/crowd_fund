@@ -129,7 +129,6 @@ body {
 }
 
 .progress-fill {
-  background: var(--green-gradient);
   height: 100%;
   border-radius: var(--border-radius-full);
   display: flex;

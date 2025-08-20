@@ -8,7 +8,7 @@ import { FaShareAlt } from 'react-icons/fa';
 import "./EventDetailPage.css";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
-const SITE_URL = "https://crowd-fun.netlify.app"; 
+const SITE_URL = "https://crowd-fun.netlify.app";
 
 const slugify = (text) => {
   if (!text) return '';
@@ -39,7 +39,7 @@ const EventDetailPage = () => {
             setError("Event not found.");
           }
         } else {
-            setError("Could not fetch event data.");
+          setError("Could not fetch event data.");
         }
       } catch (err) {
         setError("Failed to fetch event details.");
@@ -49,10 +49,10 @@ const EventDetailPage = () => {
     };
 
     if (eventSlug) {
-        fetchEventDetails();
+      fetchEventDetails();
     } else {
-        setError("Event slug not found in URL.");
-        setLoading(false);
+      setError("Event slug not found in URL.");
+      setLoading(false);
     }
   }, [eventSlug]);
 
@@ -81,48 +81,52 @@ const EventDetailPage = () => {
 
   // Define variables for your meta tags
   const eventDescription = event.description || event.title;
-  
-  // ✅ Changed the filename to match your image
-  const eventImage = `${SITE_URL}/crowdfund_logo.png`; 
 
-  const eventUrl = `${SITE_URL}/events/${eventSlug}`; 
+  // ✅ Changed the filename to match your image
+  const eventImage = `${SITE_URL}/crowdfund_logo.png`;
+
+  const eventUrl = `${SITE_URL}/events/${eventSlug}`;
 
   return (
     <div className="event-details-page" style={{ maxWidth: '900px', margin: '2rem auto', padding: '0 1rem' }}>
-        
-        {/* Add the meta tags here, using 'event' variables */}
-        <title>{`${event.title} | Green Dharti`}</title>
-        <meta name="description" content={eventDescription} />
 
-        {/* Open Graph Tags */}
-        <meta property="og:title" content={`${event.title} | Green Dharti`} />
-        <meta property="og:description" content={eventDescription} />
-        <meta property="og:image" content={eventImage} />
-        <meta property="og:url" content={eventUrl} />
-        <meta property="og:type" content="website" />
+      {/* Add the meta tags here, using 'event' variables */}
+      <title>{`${event.title} | Green Dharti`}</title>
+      <meta name="description" content={eventDescription} />
 
-        {/* Twitter Card Tags */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={`${event.title} | Green Dharti`} />
-        <meta name="twitter:description" content={eventDescription} />
-        <meta name="twitter:image" content={eventImage} />
-        
-        {/* --- Your existing event details code goes below --- */}
+      {/* Open Graph Tags */}
+      <meta property="og:title" content={`${event.title} | Green Dharti`} />
+      <meta property="og:description" content={eventDescription} />
+      <meta property="og:image" content={eventImage} />
+      <meta property="og:url" content={eventUrl} />
+      <meta property="og:type" content="website" />
 
-        <button onClick={() => navigate('/events')} className="back-button" style={{ marginBottom: '1.5rem' }}>
-            ← Back to All Events
-        </button>
-        <div className="event-card-details">
-            {event.imageUrl && <img src={getImageUrl(event.imageUrl)} alt={event.title} className="event-details-image" />}
-            <div className="event-details-content">
-                <p className="event-datetime-details">{month} {day}, {year} • {fullTimeRange}</p>
-                <h1 className="event-title-details">{event.title}</h1>
-                <p className="event-description-details">{event.description}</p>
-                <button onClick={handleShare} className="share-button" title="Share this event" style={{ marginTop: '20px' }}>
-                    Share Event <FaShareAlt />
-                </button>
-            </div>
+      {/* Twitter Card Tags */}
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content={`${event.title} | Green Dharti`} />
+      <meta name="twitter:description" content={eventDescription} />
+      <meta name="twitter:image" content={eventImage} />
+
+      {/* --- Your existing event details code goes below --- */}
+
+      <button onClick={() => navigate('/events')} className="back-button" style={{ marginBottom: '1.5rem' }}>
+        ← Back to All Events
+      </button>
+      <div className="event-card-details">
+        {event.imageUrl && <img src={getImageUrl(event.imageUrl)} alt={event.title} className="event-details-image"
+          onError={(e) => {
+            e.currentTarget.src = "/crowdfund_logo.png"; // fallback if 404 or broken
+            e.currentTarget.onerror = null; // prevent infinite loop if default also missing
+          }} />}
+        <div className="event-details-content">
+          <p className="event-datetime-details">{month} {day}, {year} • {fullTimeRange}</p>
+          <h1 className="event-title-details">{event.title}</h1>
+          <p className="event-description-details">{event.description}</p>
+          <button onClick={handleShare} className="share-button" title="Share this event" style={{ marginTop: '20px' }}>
+            Share Event <FaShareAlt />
+          </button>
         </div>
+      </div>
     </div>
   );
 };

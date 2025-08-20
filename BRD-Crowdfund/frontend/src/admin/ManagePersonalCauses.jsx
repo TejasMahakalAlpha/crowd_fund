@@ -300,6 +300,74 @@ const ManagePersonalCauses = () => {
                 <p><strong>Rejected On:</strong> {new Date(selectedSubmission.rejectedAt).toLocaleString()}</p>
               )}
             </div>
+            <div className="files-section">
+              <h4>Attached Files:</h4>
+
+              {/* Single Image or Video */}
+              <div className="file-item">
+                <strong>Cause Image/Video:</strong>
+                {selectedSubmission.mediaUrl ? (
+                  (() => {
+                    const url = getFileUrl(selectedSubmission.mediaUrl);
+                    const ext = selectedSubmission.mediaUrl.split('.').pop().toLowerCase();
+                    const isVideo = ["mp4", "webm", "mov", "ogg"].includes(ext);
+
+                    return (
+                      <div className="media-preview-item" style={{ marginBottom: "1rem" }}>
+                        {isVideo ? (
+                          <>
+                            <video src={url} controls className="detail-video-preview" />
+                            <a href={url} target="_blank" rel="noopener noreferrer" className="download-link">View Video</a>
+                            <a href={`${url}/download`} className="download-link">Download Video</a>
+                          </>
+                        ) : (
+                          <>
+                            <img src={url} alt="Cause Media" className="detail-image-preview" />
+                            <a href={url} target="_blank" rel="noopener noreferrer" className="download-link">View Image</a>
+                            <a href={`${url}/download`} className="download-link">Download Image</a>
+                          </>
+                        )}
+                      </div>
+                    );
+                  })()
+                ) : (
+                  <p>No Cause Image/Video provided.</p>
+                )}
+              </div>
+
+              {/* Single Proof Document */}
+              <div className="file-item">
+                <strong>Proof Document:</strong>
+                {selectedSubmission.proofDocumentUrl ? (
+                  (() => {
+                    const docUrl = getFileUrl(selectedSubmission.proofDocumentUrl);
+                    const ext = selectedSubmission.proofDocumentUrl.split('.').pop().toLowerCase();
+                    const docName = selectedSubmission.proofDocumentName || selectedSubmission.proofDocumentUrl.split('/').pop();
+
+                    return (
+                      <div className="proof-document-item" style={{ marginBottom: "1rem" }}>
+                        <p>{docName}</p>
+
+                        {ext === "pdf" ? (
+                          <a href={docUrl} target="_blank" rel="noopener noreferrer" className="download-link">
+                            Open PDF Document
+                          </a>
+                        ) : ["jpg", "jpeg", "png", "webp"].includes(ext) ? (
+                          <img src={docUrl} alt="Proof Document" className="detail-image-preview" />
+                        ) : (
+                          <p>Unsupported document format.</p>
+                        )}
+
+                        <a href={docUrl} target="_blank" rel="noopener noreferrer" className="download-link">View Document</a>
+                        <a href={`${docUrl}/download`} className="download-link">Download Document</a>
+                      </div>
+                    );
+                  })()
+                ) : (
+                  <p>No Proof Document provided.</p>
+                )}
+              </div>
+            </div>
 
             <div className="files-section">
               <h4>Attached Files:</h4>

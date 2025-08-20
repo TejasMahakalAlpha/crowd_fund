@@ -26,14 +26,7 @@ const getFileUrl = (relativePath) => {
     return `${API_BASE}/uploads/${relativePath}`;
 };
 
-// ✅ Terms and Conditions (same as CausesSection)
-const termsAndConditionsText = `
-  <div style="text-align: left; max-height: 40vh; overflow-y: auto; padding: 1em; border: 1px solid #eee; border-radius: 5px;">
-    <h4>1. Acceptance of Terms</h4>
-    <p>By donating on GreenDharti.com, you agree to the Terms of Use...</p>
-    <p>[... keep same text as in CausesSection]</p>
-  </div>
-`;
+
 
 const CauseDetails = () => {
     const { causeSlug } = useParams();
@@ -104,57 +97,47 @@ const CauseDetails = () => {
             loadRazorpayScript();
             return;
         }
-        const { value: accepted } = await Swal.fire({
-            title: "Terms & Conditions",
-            html: termsAndConditionsText,
-            input: "checkbox",
-            inputPlaceholder: "I agree to the terms and conditions",
-            confirmButtonText: "Agree & Continue →",
-            showCancelButton: true,
-            inputValidator: (result) =>
-                !result && "You must agree to proceed with donation.",
-        });
-        if (accepted) {
-            const { value: formValues } = await Swal.fire({
-                title: "Enter Your Details",
-                html: `
+
+        const { value: formValues } = await Swal.fire({
+            title: "Enter Your Details",
+            html: `
           <input id="swal-input-name" class="swal2-input" placeholder="Full Name" required>
           <input id="swal-input-email" class="swal2-input" type="email" placeholder="Email Address" required>
           <input id="swal-input-phone" class="swal2-input" type="tel" placeholder="Phone Number (10 digits)" required>
         `,
-                focusConfirm: false,
-                showCancelButton: true,
-                confirmButtonText: "Proceed to Pay",
-                preConfirm: () => {
-                    const name = document.getElementById("swal-input-name").value.trim();
-                    const email = document.getElementById("swal-input-email").value.trim();
-                    const phone = document.getElementById("swal-input-phone").value.trim();
-                    if (!name || !email || !phone) {
-                        Swal.showValidationMessage("Please fill in all details");
-                        return false;
-                    }
-                    if (!/\S+@\S+\.\S+/.test(email)) {
-                        Swal.showValidationMessage("Invalid email address");
-                        return false;
-                    }
-                    if (!/^\d{10}$/.test(phone)) {
-                        Swal.showValidationMessage("Invalid 10-digit phone number");
-                        return false;
-                    }
-                    return { name, email, phone };
-                },
-            });
+            focusConfirm: false,
+            showCancelButton: true,
+            confirmButtonText: "Proceed to Pay",
+            preConfirm: () => {
+                const name = document.getElementById("swal-input-name").value.trim();
+                const email = document.getElementById("swal-input-email").value.trim();
+                const phone = document.getElementById("swal-input-phone").value.trim();
+                if (!name || !email || !phone) {
+                    Swal.showValidationMessage("Please fill in all details");
+                    return false;
+                }
+                if (!/\S+@\S+\.\S+/.test(email)) {
+                    Swal.showValidationMessage("Invalid email address");
+                    return false;
+                }
+                if (!/^\d{10}$/.test(phone)) {
+                    Swal.showValidationMessage("Invalid 10-digit phone number");
+                    return false;
+                }
+                return { name, email, phone };
+            },
+        });
 
-            if (formValues) {
-                startPayment(
-                    amountInPaisa,
-                    formValues.name,
-                    formValues.email,
-                    formValues.phone,
-                    causeId
-                );
-            }
+        if (formValues) {
+            startPayment(
+                amountInPaisa,
+                formValues.name,
+                formValues.email,
+                formValues.phone,
+                causeId
+            );
         }
+
     };
 
     // ✅ Start payment
@@ -332,9 +315,7 @@ const CauseDetails = () => {
                         >
                             {isPaymentProcessing ? "Processing..." : "Donate Now"}
                         </button>
-                        <button className="share-button">
-                            Share <FaShareAlt />
-                        </button>
+
                     </div>
                 </div>
             </div>

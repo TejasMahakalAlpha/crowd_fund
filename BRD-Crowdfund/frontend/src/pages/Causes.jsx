@@ -263,7 +263,7 @@ const Causes = () => {
             {causes.map((cause) => {
               const raised = Number(cause.currentAmount) || 0;
               const goal = Number(cause.targetAmount) || 1;
-              const percentage = Math.min(100, Math.round((raised / goal)));
+              const percentage = Math.min(Math.round((raised / goal) * 100, 100));
               const causeId = cause.id || cause._id;
               return (
                 <div className="cause-box" key={causeId}>
@@ -279,12 +279,17 @@ const Causes = () => {
                         playsInline
                         onContextMenu={(e) => e.preventDefault()} // Disable right-click
                         controlsList="nodownload" // Disable download in some browsers
+
                       />
                     ) : (
                       <img
                         src={getImageUrl(cause.imageUrl)}
                         alt={cause.title}
                         className="modal-image"
+                        onError={(e) => {
+                          e.currentTarget.src = "/crowdfund_logo.png"; // fallback if 404 or broken
+                          e.currentTarget.onerror = null; // prevent infinite loop if default also missing
+                        }}
                       />
                     )}
 

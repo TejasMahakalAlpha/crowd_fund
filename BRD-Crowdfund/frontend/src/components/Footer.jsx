@@ -17,7 +17,10 @@ const Footer = () => {
         <div className="footer-container-v2">
           {/* Column 1: Brand & Socials */}
           <div className="footer-col about-col">
-            <img src={logo} alt="Green Dharti Logo" className="footer-logo-img" />
+            <div className='footer-img-container'>
+              <img src={logo} alt="Green Dharti Logo" className="footer-logo-img" />
+              <h1>Green Dharti</h1>
+            </div>
             <p className="footer-tagline">
               Empowering communities to fund, support, and scale meaningful environmental projects across India.
             </p>

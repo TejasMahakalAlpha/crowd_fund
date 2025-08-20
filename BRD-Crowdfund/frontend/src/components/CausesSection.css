@@ -221,3 +221,15 @@ display: flex
     padding: 10px 15px;
   }
 }
+
+/* For Chrome, Safari, Edge */
+.swal2-input::-webkit-outer-spin-button,
+.swal2-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* For Firefox */
+.swal2-input[type=number] {
+  -moz-appearance: textfield;
+}

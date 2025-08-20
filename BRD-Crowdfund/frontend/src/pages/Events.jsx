@@ -131,6 +131,10 @@ const Events = () => {
                           src={getImageUrl(event.imageUrl)}
                           alt={event.title}
                           className="event-main-image"
+                          onError={(e) => {
+                            e.currentTarget.src = "/crowdfund_logo.png"; // fallback if 404 or broken
+                            e.currentTarget.onerror = null; // prevent infinite loop if default also missing
+                          }}
                         />
                       </div>
                     )}

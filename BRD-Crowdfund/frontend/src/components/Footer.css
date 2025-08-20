@@ -58,6 +58,12 @@
   margin-bottom: 10px;
 }
 
+.footer-img-container
+{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .footer-tagline {
   line-height: 1.6;
   margin-bottom: 15px;
