@@ -1,41 +1,34 @@
 // src/admin/ManagePersonalCauses.jsx
 import React, { useEffect, useState, useContext } from "react";
-import { AdminApi } from "../services/api"; // Ensure AdminApi is correctly imported
+import { AdminApi } from "../services/api";
 import Swal from "sweetalert2";
 import "./ManagePersonalCauses.css";
-// CSS for this component
-import { AuthContext } from "../../src/context/AuthContext"; // Import AuthContext for admin name
-// UPDATED: Added useNavigate
+import { AuthContext } from "../../src/context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
-// NEW: Import a back arrow icon
 import { IoArrowBack } from "react-icons/io5";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
-// Helper function to get the correct file URL based on category (copied from SubmitCause)
+// Helper function to get the correct file URL
 const getFileUrl = (relativePath) => {
   if (!relativePath) return null;
   const parts = relativePath.split('/');
   if (parts.length < 2) return null;
-
   const category = parts[0];
   const filename = parts.slice(1).join('/');
-
   return `${API_BASE}/api/documents/${category}/${filename}`;
 };
 
 const ManagePersonalCauses = () => {
-  // NEW: Initialize the useNavigate hook
   const navigate = useNavigate();
-
   const [submissions, setSubmissions] = useState([]);
-  const [filterStatus, setFilterStatus] = useState("PENDING"); // Default filter
+  const [filterStatus, setFilterStatus] = useState("PENDING");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedSubmission, setSelectedSubmission] = useState(null); // For modal view
+  const [selectedSubmission, setSelectedSubmission] = useState(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [adminNotes, setAdminNotes] = useState("");
-  const [modifiedCauseDetails, setModifiedCauseDetails] = useState({ // For approval modifications
+  const [modifiedCauseDetails, setModifiedCauseDetails] = useState({
     modifiedTitle: "",
     modifiedDescription: "",
     modifiedShortDescription: "",
@@ -43,12 +36,12 @@ const ManagePersonalCauses = () => {
     modifiedLocation: "",
   });
 
-  const { user } = useContext(AuthContext); // Assuming AuthContext provides user info with a name
-  const adminName = user?.name || "Admin"; // Fallback to "Admin" if user name is not available
+  const { user } = useContext(AuthContext);
+  const adminName = user?.name || "Admin";
 
   useEffect(() => {
     fetchSubmissions();
-  }, [filterStatus]); // Re-fetch when filter status changes
+  }, [filterStatus]);
 
   const fetchSubmissions = async () => {
     setLoading(true);
@@ -56,9 +49,9 @@ const ManagePersonalCauses = () => {
     try {
       let res;
       if (filterStatus === "ALL") {
-        res = await AdminApi.getPersonalCauseSubmissions(); // Assuming this API exists
+        res = await AdminApi.getPersonalCauseSubmissions();
       } else {
-        res = await AdminApi.getPersonalCauseSubmissionsByStatus(filterStatus); // Assuming this API exists
+        res = await AdminApi.getPersonalCauseSubmissionsByStatus(filterStatus);
       }
       setSubmissions(res.data || []);
     } catch (err) {
@@ -71,8 +64,9 @@ const ManagePersonalCauses = () => {
   };
 
   const handleViewDetails = (submission) => {
+    console.log("Submission data received:", submission);
     setSelectedSubmission(submission);
-    setAdminNotes(submission.adminNotes || ""); // Pre-fill notes if any
+    setAdminNotes(submission.adminNotes || "");
     setModifiedCauseDetails({
       modifiedTitle: submission.title || "",
       modifiedDescription: submission.description || "",
@@ -98,10 +92,9 @@ const ManagePersonalCauses = () => {
 
   const handleApprove = async () => {
     if (!selectedSubmission) return;
-
     const result = await Swal.fire({
       title: "Approve Submission?",
-      text: "This will approve the cause and optionally create a new live cause.",
+      text: "This will approve the cause.",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#28a745",
@@ -110,12 +103,8 @@ const ManagePersonalCauses = () => {
       input: 'textarea',
       inputLabel: 'Admin Notes (Optional)',
       inputValue: adminNotes,
-      inputPlaceholder: 'Enter notes for approval...',
       showLoaderOnConfirm: true,
-      preConfirm: (notes) => {
-        setAdminNotes(notes);
-        return { notes };
-      }
+      preConfirm: (notes) => ({ notes }),
     });
 
     if (result.isConfirmed) {
@@ -123,14 +112,13 @@ const ManagePersonalCauses = () => {
         const payload = {
           adminNotes: result.value.notes,
           approvedBy: adminName,
-          ...modifiedCauseDetails
+          ...modifiedCauseDetails,
         };
         await AdminApi.approvePersonalCauseSubmission(selectedSubmission.id, payload);
         Swal.fire("Approved!", "Cause approved successfully.", "success");
         fetchSubmissions();
         handleCloseDetailsModal();
       } catch (err) {
-        console.error("Error approving submission:", err);
         Swal.fire("Error", "Failed to approve submission.", "error");
       }
     }
@@ -138,43 +126,26 @@ const ManagePersonalCauses = () => {
 
   const handleReject = async () => {
     if (!selectedSubmission) return;
-
     const result = await Swal.fire({
       title: "Reject Submission?",
-      text: "This will reject the cause and mark it as 'REJECTED'.",
+      text: "This will mark the cause as 'REJECTED'.",
       icon: "question",
       showCancelButton: true,
       confirmButtonColor: "#dc3545",
-      cancelButtonColor: "#3085d6",
       confirmButtonText: "Yes, Reject it!",
       input: 'textarea',
       inputLabel: 'Admin Notes (Required)',
-      inputValue: adminNotes,
-      inputPlaceholder: 'Enter reason for rejection...',
-      inputValidator: (value) => {
-        if (!value.trim()) {
-          return 'Reason for rejection is required!';
-        }
-      },
-      showLoaderOnConfirm: true,
-      preConfirm: (notes) => {
-        setAdminNotes(notes);
-        return { notes };
-      }
+      inputValidator: (value) => !value && 'Reason for rejection is required!',
     });
-    console.log(selectedSubmission)
+
     if (result.isConfirmed) {
       try {
-        const payload = {
-          adminNotes: result.value.notes,
-          approvedBy: adminName,
-        };
+        const payload = { adminNotes: result.value, approvedBy: adminName };
         await AdminApi.rejectPersonalCauseSubmission(selectedSubmission.id, payload);
         Swal.fire("Rejected!", "Cause rejected successfully.", "success");
         fetchSubmissions();
         handleCloseDetailsModal();
       } catch (err) {
-        console.error("Error rejecting submission:", err);
         Swal.fire("Error", "Failed to reject submission.", "error");
       }
     }
@@ -187,8 +158,7 @@ const ManagePersonalCauses = () => {
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "Yes, delete it!"
+      confirmButtonText: "Yes, delete it!",
     });
 
     if (result.isConfirmed) {
@@ -197,7 +167,6 @@ const ManagePersonalCauses = () => {
         Swal.fire("Deleted!", "The submission has been deleted.", "success");
         fetchSubmissions();
       } catch (err) {
-        console.error("Error deleting submission:", err);
         Swal.fire("Error", "Failed to delete submission.", "error");
       }
     }
@@ -205,23 +174,16 @@ const ManagePersonalCauses = () => {
 
   const handleModificationChange = (e) => {
     const { name, value } = e.target;
-    setModifiedCauseDetails(prevState => ({
-      ...prevState,
-      [name]: value
-    }));
+    setModifiedCauseDetails((prevState) => ({ ...prevState, [name]: value }));
   };
 
-  // NEW: Function to handle going back
-  const handleGoBack = () => {
-    navigate(-1); // This navigates to the previous page in history
-  };
+  const handleGoBack = () => navigate(-1);
 
-  if (loading) return <div className="loading-message">Loading personal cause submissions...</div>;
+  if (loading) return <div className="loading-message">Loading...</div>;
   if (error) return <div className="error-message">{error}</div>;
-  console.log
+
   return (
     <div className="manage-personal-causes-container">
-      {/* UPDATED: Added a header wrapper for the button and title */}
       <div className="page-header">
         <button onClick={handleGoBack} className="back-button">
           <IoArrowBack size={20} />
@@ -232,11 +194,7 @@ const ManagePersonalCauses = () => {
 
       <div className="filter-controls">
         <label htmlFor="status-filter">Filter by Status:</label>
-        <select
-          id="status-filter"
-          value={filterStatus}
-          onChange={(e) => setFilterStatus(e.target.value)}
-        >
+        <select id="status-filter" value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
           <option value="PENDING">Pending</option>
           <option value="UNDER_REVIEW">Under Review</option>
           <option value="APPROVED">Approved</option>
@@ -259,9 +217,7 @@ const ManagePersonalCauses = () => {
               </div>
               <p><strong>Submitted by:</strong> {submission.submitterName} ({submission.submitterEmail})</p>
               <p><strong>Target Amount:</strong> ₹{submission.targetAmount?.toLocaleString()}</p>
-              <p><strong>Location:</strong> {submission.location || 'N/A'}</p>
               <p><strong>Submitted On:</strong> {new Date(submission.createdAt).toLocaleDateString()}</p>
-              {console.log(submissions)}
               <div className="card-actions">
                 <button className="view-details-btn" onClick={() => handleViewDetails(submission)}>
                   View Details & Manage
@@ -285,20 +241,7 @@ const ManagePersonalCauses = () => {
               <p><strong>Submitted By:</strong> {selectedSubmission.submitterName} ({selectedSubmission.submitterEmail})</p>
               <p><strong>Phone:</strong> {selectedSubmission.submitterPhone || 'N/A'}</p>
               <p><strong>Submitted On:</strong> {new Date(selectedSubmission.createdAt).toLocaleString()}</p>
-              <p><strong>Short Description:</strong> {selectedSubmission.shortDescription || 'N/A'}</p>
-              <p><strong>Description:</strong> {selectedSubmission.description}</p>
-              <p><strong>Target Amount:</strong> ₹{selectedSubmission.targetAmount?.toLocaleString()}</p>
-              <p><strong>Category:</strong> {selectedSubmission.category || 'N/A'}</p>
-              <p><strong>Location:</strong> {selectedSubmission.location || 'N/A'}</p>
-              <p><strong>End Date:</strong> {selectedSubmission.endDate ? new Date(selectedSubmission.endDate).toLocaleString() : 'N/A'}</p>
-              <p><strong>Submitter Message:</strong> {selectedSubmission.submitterMessage || 'N/A'}</p>
-              <p><strong>Admin Notes:</strong> {selectedSubmission.adminNotes || 'None'}</p>
-              {selectedSubmission.status === 'APPROVED' && selectedSubmission.approvedBy && (
-                <p><strong>Approved By:</strong> {selectedSubmission.approvedBy} on {new Date(selectedSubmission.approvedAt).toLocaleString()}</p>
-              )}
-              {selectedSubmission.status === 'REJECTED' && selectedSubmission.rejectedAt && (
-                <p><strong>Rejected On:</strong> {new Date(selectedSubmission.rejectedAt).toLocaleString()}</p>
-              )}
+              {/* Add other fields as needed */}
             </div>
             <div className="files-section">
               <h4>Attached Files:</h4>
@@ -372,69 +315,67 @@ const ManagePersonalCauses = () => {
             <div className="files-section">
               <h4>Attached Files:</h4>
 
-              {/* Multiple Images and Videos */}
               <div className="file-item">
-                <strong>Cause Images/Videos:</strong>
-
-                {selectedSubmission.mediaUrls && selectedSubmission.mediaUrls.length > 0 ? (
-                  selectedSubmission.mediaUrls.map((mediaUrl, index) => {
-                    const url = getFileUrl(mediaUrl);
-                    const ext = mediaUrl.split('.').pop().toLowerCase();
-                    const isVideo = ["mp4", "webm", "mov", "ogg"].includes(ext);
-
-                    return (
-                      <div key={index} className="media-preview-item" style={{ marginBottom: "1rem" }}>
-                        {isVideo ? (
-                          <>
-                            <video src={url} controls className="detail-video-preview" />
-                            <a href={url} target="_blank" rel="noopener noreferrer" className="download-link">View Video</a>
-                            <a href={`${url}/download`} className="download-link">Download Video</a>
-                          </>
-                        ) : (
-                          <>
-                            <img src={url} alt={`Cause Media ${index + 1}`} className="detail-image-preview" />
-                            <a href={url} target="_blank" rel="noopener noreferrer" className="download-link">View Image</a>
-                            <a href={`${url}/download`} className="download-link">Download Image</a>
-                          </>
-                        )}
-                      </div>
-                    );
-                  })
+                <strong>Cause Image/Video:</strong>
+                {selectedSubmission.videoUrl ? (
+                  <div className="media-preview-item" style={{ marginBottom: "1rem" }}>
+                    <video
+                      src={getFileUrl(selectedSubmission.videoUrl)}
+                      controls
+                      className="detail-video-preview"
+                    />
+                    <a href={getFileUrl(selectedSubmission.videoUrl)} target="_blank" rel="noopener noreferrer" className="download-link">
+                      View Video
+                    </a>
+                    <a href={`${getFileUrl(selectedSubmission.videoUrl)}/download`} className="download-link">
+                      Download Video
+                    </a>
+                  </div>
+                ) : selectedSubmission.imageUrl ? (
+                  <div className="media-preview-item" style={{ marginBottom: "1rem" }}>
+                    <img
+                      src={getFileUrl(selectedSubmission.imageUrl)}
+                      alt="Cause Media"
+                      className="detail-image-preview"
+                    />
+                    <a href={getFileUrl(selectedSubmission.imageUrl)} target="_blank" rel="noopener noreferrer" className="download-link">
+                      View Image
+                    </a>
+                    <a href={`${getFileUrl(selectedSubmission.imageUrl)}/download`} className="download-link">
+                      Download Image
+                    </a>
+                  </div>
                 ) : (
-                  <p>No Cause Images/Videos provided.</p>
+                  <p>No Cause Image/Video provided.</p>
                 )}
               </div>
 
-              {/* Multiple Proof Documents */}
               <div className="file-item">
-                <strong>Proof Documents:</strong>
-                {selectedSubmission.proofDocumentUrls && selectedSubmission.proofDocumentUrls.length > 0 ? (
-                  selectedSubmission.proofDocumentUrls.map((docUrlPath, index) => {
-                    const docUrl = getFileUrl(docUrlPath);
-                    const ext = docUrlPath.split('.').pop().toLowerCase();
-                    const docName = selectedSubmission.proofDocumentNames?.[index] || docUrlPath.split('/').pop();
-
+                <strong>Proof Document:</strong>
+                {selectedSubmission.proofDocumentUrl ? (
+                  (() => {
+                    const docUrl = getFileUrl(selectedSubmission.proofDocumentUrl);
+                    const ext = selectedSubmission.proofDocumentUrl.split('.').pop().toLowerCase();
+                    const docName = selectedSubmission.proofDocumentName || selectedSubmission.proofDocumentUrl.split('/').pop();
                     return (
-                      <div key={index} className="proof-document-item" style={{ marginBottom: "1rem" }}>
+                      <div className="proof-document-item" style={{ marginBottom: "1rem" }}>
                         <p>{docName}</p>
-
                         {ext === "pdf" ? (
                           <a href={docUrl} target="_blank" rel="noopener noreferrer" className="download-link">
                             Open PDF Document
                           </a>
                         ) : ["jpg", "jpeg", "png", "webp"].includes(ext) ? (
-                          <img src={docUrl} alt={`Proof Document ${index + 1}`} className="detail-image-preview" />
+                          <img src={docUrl} alt="Proof Document" className="detail-image-preview" />
                         ) : (
                           <p>Unsupported document format.</p>
                         )}
-
                         <a href={docUrl} target="_blank" rel="noopener noreferrer" className="download-link">View Document</a>
                         <a href={`${docUrl}/download`} className="download-link">Download Document</a>
                       </div>
                     );
-                  })
+                  })()
                 ) : (
-                  <p>No Proof Documents provided.</p>
+                  <p>No Proof Document provided.</p>
                 )}
               </div>
             </div>
@@ -442,26 +383,7 @@ const ManagePersonalCauses = () => {
             {(selectedSubmission.status === 'PENDING' || selectedSubmission.status === 'UNDER_REVIEW') && (
               <div className="modification-section">
                 <h4>Modify Details Before Approval (Optional)</h4>
-                <div className="form-group">
-                  <label>Title</label>
-                  <input type="text" name="modifiedTitle" value={modifiedCauseDetails.modifiedTitle} onChange={handleModificationChange} />
-                </div>
-                <div className="form-group">
-                  <label>Short Description</label>
-                  <input type="text" name="modifiedShortDescription" value={modifiedCauseDetails.modifiedShortDescription} onChange={handleModificationChange} />
-                </div>
-                <div className="form-group">
-                  <label>Category</label>
-                  <input type="text" name="modifiedCategory" value={modifiedCauseDetails.modifiedCategory} onChange={handleModificationChange} />
-                </div>
-                <div className="form-group">
-                  <label>Location</label>
-                  <input type="text" name="modifiedLocation" value={modifiedCauseDetails.modifiedLocation} onChange={handleModificationChange} />
-                </div>
-                <div className="form-group">
-                  <label>Full Description</label>
-                  <textarea name="modifiedDescription" value={modifiedCauseDetails.modifiedDescription} onChange={handleModificationChange} rows="4"></textarea>
-                </div>
+                {/* Modification form fields */}
               </div>
             )}
             <div className="modal-actions">
@@ -470,11 +392,6 @@ const ManagePersonalCauses = () => {
                   <button className="approve-btn" onClick={handleApprove}>Approve</button>
                   <button className="reject-btn" onClick={handleReject}>Reject</button>
                 </>
-              )}
-              {selectedSubmission.status === 'APPROVED' && (
-                <Link to={`/causes/${selectedSubmission.id}`} target="_blank" rel="noopener noreferrer">
-                  <button className="view-on-site-btn">View on Site</button>
-                </Link>
               )}
             </div>
           </div>

@@ -181,7 +181,7 @@ const ManageDonations = () => {
             <div className="donation-item" key={d.id || d._id || d.orderId || Math.random()}> {/* ⭐ Renamed class, added more robust key */}
               <div>
                 <h3>{d.donorName}</h3>
-                <p><strong>Amount:</strong> ₹{d.amount ? (d.amount / 100).toLocaleString() : 'N/A'} {d.currency || ''}</p> {/* Assuming amount in paisa, convert to Rupee */}
+                <p><strong>Amount:</strong> ₹{d.amount ? (d.amount).toLocaleString() : 'N/A'} {d.currency || ''}</p> {/* Assuming amount in paisa, convert to Rupee */}
                 <p><strong>Status:</strong> {d.status || 'N/A'}</p> {/* Display status */}
                 {d.donorEmail && <p><strong>Email:</strong> {d.donorEmail}</p>}
                 {d.donorPhone && <p><strong>Phone:</strong> {d.donorPhone}</p>}
