@@ -240,8 +240,21 @@ const ManagePersonalCauses = () => {
               <p><strong>Status:</strong> <span className={`status-badge ${selectedSubmission.status.toLowerCase()}`}>{selectedSubmission.status.replace('_', ' ')}</span></p>
               <p><strong>Submitted By:</strong> {selectedSubmission.submitterName} ({selectedSubmission.submitterEmail})</p>
               <p><strong>Phone:</strong> {selectedSubmission.submitterPhone || 'N/A'}</p>
-              <p><strong>Submitted On:</strong> {new Date(selectedSubmission.createdAt).toLocaleString()}</p>
-              {/* Add other fields as needed */}
+              <p><strong>Submitted On:</strong> {(selectedSubmission.createdAt).toLocaleString()}</p>
+              <p><strong>Short Description:</strong> {selectedSubmission.shortDescription || 'N/A'}</p>
+              <p><strong>Description:</strong> {selectedSubmission.description}</p>
+              <p><strong>Target Amount:</strong> ₹{selectedSubmission.targetAmount?.toLocaleString()}</p>
+              <p><strong>Category:</strong> {selectedSubmission.category || 'N/A'}</p>
+              <p><strong>Location:</strong> {selectedSubmission.location || 'N/A'}</p>
+              <p><strong>End Date:</strong> {selectedSubmission.endDate ? new Date(selectedSubmission.endDate).toLocaleString() : 'N/A'}</p>
+              <p><strong>Submitter Message:</strong> {selectedSubmission.submitterMessage || 'N/A'}</p>
+              <p><strong>Admin Notes:</strong> {selectedSubmission.adminNotes || 'None'}</p>
+              {selectedSubmission.status === 'APPROVED' && selectedSubmission.approvedBy && (
+                <p><strong>Approved By:</strong> {selectedSubmission.approvedBy} on {new Date(selectedSubmission.approvedAt).toLocaleString()}</p>
+              )}
+              {selectedSubmission.status === 'REJECTED' && selectedSubmission.rejectedAt && (
+                <p><strong>Rejected On:</strong> {new Date(selectedSubmission.rejectedAt).toLocaleString()}</p>
+              )}
             </div>
             <div className="files-section">
               <h4>Attached Files:</h4>
@@ -312,78 +325,29 @@ const ManagePersonalCauses = () => {
               </div>
             </div>
 
-            <div className="files-section">
-              <h4>Attached Files:</h4>
-
-              <div className="file-item">
-                <strong>Cause Image/Video:</strong>
-                {selectedSubmission.videoUrl ? (
-                  <div className="media-preview-item" style={{ marginBottom: "1rem" }}>
-                    <video
-                      src={getFileUrl(selectedSubmission.videoUrl)}
-                      controls
-                      className="detail-video-preview"
-                    />
-                    <a href={getFileUrl(selectedSubmission.videoUrl)} target="_blank" rel="noopener noreferrer" className="download-link">
-                      View Video
-                    </a>
-                    <a href={`${getFileUrl(selectedSubmission.videoUrl)}/download`} className="download-link">
-                      Download Video
-                    </a>
-                  </div>
-                ) : selectedSubmission.imageUrl ? (
-                  <div className="media-preview-item" style={{ marginBottom: "1rem" }}>
-                    <img
-                      src={getFileUrl(selectedSubmission.imageUrl)}
-                      alt="Cause Media"
-                      className="detail-image-preview"
-                    />
-                    <a href={getFileUrl(selectedSubmission.imageUrl)} target="_blank" rel="noopener noreferrer" className="download-link">
-                      View Image
-                    </a>
-                    <a href={`${getFileUrl(selectedSubmission.imageUrl)}/download`} className="download-link">
-                      Download Image
-                    </a>
-                  </div>
-                ) : (
-                  <p>No Cause Image/Video provided.</p>
-                )}
-              </div>
-
-              <div className="file-item">
-                <strong>Proof Document:</strong>
-                {selectedSubmission.proofDocumentUrl ? (
-                  (() => {
-                    const docUrl = getFileUrl(selectedSubmission.proofDocumentUrl);
-                    const ext = selectedSubmission.proofDocumentUrl.split('.').pop().toLowerCase();
-                    const docName = selectedSubmission.proofDocumentName || selectedSubmission.proofDocumentUrl.split('/').pop();
-                    return (
-                      <div className="proof-document-item" style={{ marginBottom: "1rem" }}>
-                        <p>{docName}</p>
-                        {ext === "pdf" ? (
-                          <a href={docUrl} target="_blank" rel="noopener noreferrer" className="download-link">
-                            Open PDF Document
-                          </a>
-                        ) : ["jpg", "jpeg", "png", "webp"].includes(ext) ? (
-                          <img src={docUrl} alt="Proof Document" className="detail-image-preview" />
-                        ) : (
-                          <p>Unsupported document format.</p>
-                        )}
-                        <a href={docUrl} target="_blank" rel="noopener noreferrer" className="download-link">View Document</a>
-                        <a href={`${docUrl}/download`} className="download-link">Download Document</a>
-                      </div>
-                    );
-                  })()
-                ) : (
-                  <p>No Proof Document provided.</p>
-                )}
-              </div>
-            </div>
-
             {(selectedSubmission.status === 'PENDING' || selectedSubmission.status === 'UNDER_REVIEW') && (
               <div className="modification-section">
                 <h4>Modify Details Before Approval (Optional)</h4>
-                {/* Modification form fields */}
+                <div className="form-group">
+                  <label>Title</label>
+                  <input type="text" name="modifiedTitle" value={modifiedCauseDetails.modifiedTitle} onChange={handleModificationChange} />
+                </div>
+                <div className="form-group">
+                  <label>Short Description</label>
+                  <input type="text" name="modifiedShortDescription" value={modifiedCauseDetails.modifiedShortDescription} onChange={handleModificationChange} />
+                </div>
+                <div className="form-group">
+                  <label>Category</label>
+                  <input type="text" name="modifiedCategory" value={modifiedCauseDetails.modifiedCategory} onChange={handleModificationChange} />
+                </div>
+                <div className="form-group">
+                  <label>Location</label>
+                  <input type="text" name="modifiedLocation" value={modifiedCauseDetails.modifiedLocation} onChange={handleModificationChange} />
+                </div>
+                <div className="form-group">
+                  <label>Full Description</label>
+                  <textarea name="modifiedDescription" value={modifiedCauseDetails.modifiedDescription} onChange={handleModificationChange} rows="4"></textarea>
+                </div>
               </div>
             )}
             <div className="modal-actions">
