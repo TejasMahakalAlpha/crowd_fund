@@ -188,7 +188,7 @@ const VolunteerForm = () => {
           {renderError("email")}
 
           <label>
-            Phone Number
+            Phone Number <span style={{ color: "red" }}>*</span>
             <input
               type="text"
               name="phone"
@@ -200,7 +200,7 @@ const VolunteerForm = () => {
           {renderError("phone")}
 
           <label>
-            Address
+            Address <span style={{ color: "red" }}>*</span>
             <input
               type="text"
               name="address"
@@ -225,7 +225,7 @@ const VolunteerForm = () => {
           {renderError("skills")}
 
           <label>
-            Availability
+            Availability <span style={{ color: "red" }}>*</span>
             <input
               type="text"
               name="availability"
@@ -237,7 +237,7 @@ const VolunteerForm = () => {
           {renderError("availability")}
 
           <label>
-            Experience
+            Experience <span style={{ color: "red" }}>*</span>
             <textarea
               name="experience"
               rows="3"

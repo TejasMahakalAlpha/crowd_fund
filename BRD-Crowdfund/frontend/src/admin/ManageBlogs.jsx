@@ -54,7 +54,9 @@ const ManageBlogs = () => {
 
     if (formData.authorEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.authorEmail)) {
       newErrors.authorEmail = 'Invalid email format';
-    }
+    } else if (!formData.authorEmail.trim()) newErrors.authorEmail = 'email is required';
+
+    if (!formData.author.trim()) newErrors.author = 'author is required';
 
     if (formData.publishedAt && isNaN(Date.parse(formData.publishedAt))) {
       newErrors.publishedAt = 'Invalid date';
@@ -282,6 +284,7 @@ const ManageBlogs = () => {
           value={formData.author}
           onChange={handleChange}
         />
+        {errors.author && <p className="error">{errors.author}</p>}
 
         <label htmlFor="authorEmail">
           Author Email <span style={{ color: "red" }}>*</span>

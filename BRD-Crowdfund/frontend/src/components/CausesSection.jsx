@@ -110,7 +110,7 @@ const CausesSection = () => {
 
     const { value: formValues } = await Swal.fire({
       title: 'Enter Your Details',
-      html: `<input id="swal-input-name" class="swal2-input" placeholder="Full Name" required><input id="swal-input-email" class="swal2-input" type="email" placeholder="Email Address" required><input id="swal-input-phone" class="swal2-input" type="tel" placeholder="Phone Number (10 digits)" required>`,
+      html: `<input id="swal-input-name" class="swal2-input" placeholder="Full Name" required><input id="swal-input-email" class="swal2-input" type="email" placeholder="Email Address" required><input id="swal-input-phone" class="swal2-input" type="tel" placeholder="Phone Number (10 digits)" required><input id="swal-input-message" class="swal2-input" placeholder="message">`,
       focusConfirm: false,
       showCancelButton: true,
       confirmButtonText: 'Proceed to Pay',
@@ -119,21 +119,22 @@ const CausesSection = () => {
         const name = document.getElementById('swal-input-name').value.trim();
         const email = document.getElementById('swal-input-email').value.trim();
         const phone = document.getElementById('swal-input-phone').value.trim();
+        const message = document.getElementById('swal-input-message').value.trim();
         if (!name || !email || !phone) { Swal.showValidationMessage(`Please fill in all details`); return false; }
         if (!/\S+@\S+\.\S+/.test(email)) { Swal.showValidationMessage(`Please enter a valid email address`); return false; }
         if (!/^\d{10}$/.test(phone)) { Swal.showValidationMessage(`Please enter a valid 10-digit phone number`); return false; }
-        return { name, email, phone };
+        return { name, email, phone, message };
       }
     });
     if (formValues) {
-      startPayment(amountInPaisa, formValues.name, formValues.email, formValues.phone, causeId);
+      startPayment(amountInPaisa, formValues.name, formValues.email, formValues.phone, formValues.message, causeId);
     } else {
       Swal.fire("Donation Cancelled", "You can try again anytime!", "info");
     }
 
   };
 
-  const startPayment = async (amountInPaisa, donorName, donorEmail, donorPhone, causeId) => {
+  const startPayment = async (amountInPaisa, donorName, donorEmail, donorPhone, message, causeId) => {
     setIsPaymentProcessing(true);
     Swal.fire({ title: "Initiating Payment...", html: "Please wait...", allowOutsideClick: false, didOpen: () => Swal.showLoading() });
     try {
@@ -144,7 +145,7 @@ const CausesSection = () => {
         Swal.close();
         return;
       }
-      const donorDetailsPayload = { donorName, donorEmail, donorPhone, message: `Donation for ${selectedCauseForPayment.title}`, amount: amountInPaisa, currency: "INR", causeId };
+      const donorDetailsPayload = { donorName, donorEmail, donorPhone, message: message || "No message provided", amount: amountInPaisa, currency: "INR", causeId };
       const res = await PaymentApi.createDonationAndOrder(donorDetailsPayload);
       const { orderId, amount: amountFromBackend, currency: currencyFromBackend, razorpayKeyId } = res.data;
       const razorpayKey = razorpayKeyId || import.meta.env.VITE_RAZORPAY_KEY_ID;
@@ -261,7 +262,11 @@ const CausesSection = () => {
                 <p className="donation-info">
                   ₹{raised.toLocaleString()} donated of ₹{goal.toLocaleString()} goal
                 </p>
-                <p className="description">{cause.description}</p>
+                <p className="description">{
+                  cause.description?.length > 200
+                    ? cause.description.slice(0, 200) + "..."
+                    : cause.description
+                }</p>
 
                 <div className="cause-actions">
                   <button

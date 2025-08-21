@@ -77,6 +77,10 @@ const ManageCauses = () => {
     if (!formData.title.trim()) newErrors.title = "Title is required";
     if (!formData.shortDescription.trim()) newErrors.shortDescription = "Short description is required";
     if (!formData.description.trim()) newErrors.description = "Description is required";
+    else if (formData.description < 20) newErrors.description = "Description should be 10 charater"
+    if (!formData.category.trim()) newErrors.category = "category is required";
+    if (!formData.location.trim()) newErrors.location = "location is required";
+
     if (!formData.targetAmount || Number(formData.targetAmount) <= 0)
       newErrors.targetAmount = "Target amount must be greater than 0";
     if (!formData.endDate) newErrors.endDate = "End date is required";
@@ -84,6 +88,9 @@ const ManageCauses = () => {
     if (formData.endDate && new Date(formData.endDate) < new Date())
       newErrors.endDate = "End date cannot be in the past";
 
+    if (formData.image && !formData.image.type.startsWith('image/')) {
+      newErrors.image = 'File must be an image';
+    }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0; // return true if no errors
   };

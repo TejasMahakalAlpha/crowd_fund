@@ -142,7 +142,12 @@ const EventsSection = () => {
               <div className="event-info">
                 <h3 onClick={() => handleCardClick(event)}>{event.title}</h3>
                 <p className="time">{time}</p>
-                <p className="description">{event.description}</p>
+                <p className="description">
+                  {event.description?.length > 200
+                    ? event.description.slice(0, 200) + "..."
+                    : event.description}
+
+                </p>
                 <p className="location">{event.location}</p>
                 {event.imageUrl && (
                   <img

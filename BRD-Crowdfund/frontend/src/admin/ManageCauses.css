@@ -144,7 +144,7 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  align-items: flex-end;
+  align-items: flex-start;
   flex-shrink: 0;
 }
 
@@ -198,6 +198,38 @@
 .copy-button:hover {
   background: #a5a121; /* Darker shade of yellow-green */
 }
+
+.preview-container {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px dashed #ccc;
+  border-radius: 12px;
+  padding: 15px;
+  background: #fafafa;
+  max-width: 450px;
+  max-height: 300px;
+  overflow: hidden;
+  transition: border-color 0.3s ease, background 0.3s ease;
+  
+}
+
+.preview-container:hover {
+  border-color: #00796b;
+  background: #f0fdfa;
+}
+
+.preview-container img,
+.preview-container video {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 10px;
+  object-fit: fill;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+
 
 /* Responsive */
 @media (max-width: 768px) {

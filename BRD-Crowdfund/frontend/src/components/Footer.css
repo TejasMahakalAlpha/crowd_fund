@@ -90,7 +90,7 @@
 }
 .links-col ul,
 .footer-quick-link{
-  padding-left: 50px;
+  padding-left: 100px;
 }
 
 .links-col li,
@@ -274,6 +274,10 @@
     max-width: 95%;
       margin: 10px;
   }
+  .links-col ul,
+.footer-quick-link{
+  padding-left: 0px;
+}
 }
 
 @media (max-width: 480px) {

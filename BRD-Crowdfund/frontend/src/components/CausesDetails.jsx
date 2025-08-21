@@ -21,9 +21,9 @@ const slugify = (text) => {
 };
 
 // ✅ file URL helper
-const getFileUrl = (relativePath) => {
+const getImageUrl = (relativePath) => {
     if (!relativePath) return "";
-    return `${API_BASE}/uploads/${relativePath}`;
+    return `${API_BASE}/api/images/${relativePath}`;
 };
 
 
@@ -104,6 +104,7 @@ const CauseDetails = () => {
           <input id="swal-input-name" class="swal2-input" placeholder="Full Name" required>
           <input id="swal-input-email" class="swal2-input" type="email" placeholder="Email Address" required>
           <input id="swal-input-phone" class="swal2-input" type="tel" placeholder="Phone Number (10 digits)" required>
+          <input id="swal-input-message" class="swal2-input" placeholder="message" >
         `,
             focusConfirm: false,
             showCancelButton: true,
@@ -112,6 +113,7 @@ const CauseDetails = () => {
                 const name = document.getElementById("swal-input-name").value.trim();
                 const email = document.getElementById("swal-input-email").value.trim();
                 const phone = document.getElementById("swal-input-phone").value.trim();
+                const message = document.getElementById("swal-input-message").value.trim();
                 if (!name || !email || !phone) {
                     Swal.showValidationMessage("Please fill in all details");
                     return false;
@@ -124,7 +126,7 @@ const CauseDetails = () => {
                     Swal.showValidationMessage("Invalid 10-digit phone number");
                     return false;
                 }
-                return { name, email, phone };
+                return { name, email, phone, message };
             },
         });
 
@@ -134,6 +136,7 @@ const CauseDetails = () => {
                 formValues.name,
                 formValues.email,
                 formValues.phone,
+                formValues.message,
                 causeId
             );
         }
@@ -146,6 +149,7 @@ const CauseDetails = () => {
         donorName,
         donorEmail,
         donorPhone,
+        message,
         causeId
     ) => {
         setIsPaymentProcessing(true);
@@ -161,7 +165,7 @@ const CauseDetails = () => {
                 donorName,
                 donorEmail,
                 donorPhone,
-                message: `Donation for ${cause.title}`,
+                message: message || "No message provided",
                 amount: amountInPaisa,
                 currency: "INR",
                 causeId,
@@ -271,11 +275,6 @@ const CauseDetails = () => {
     const targetAmount = Number(cause.targetAmount) || 1;
     const progressPercentage = Math.min((raisedAmount / targetAmount) * 100, 100);
 
-    const causeImageOnPage =
-        cause?.mediaUrls && cause.mediaUrls.length > 0
-            ? getFileUrl(cause.mediaUrls[0])
-            : `${SITE_URL}/crowdfund_logo.png`;
-
     return (
         <div className="cause-details-page">
             <button onClick={() => navigate("/causes")} className="back-button">
@@ -284,11 +283,29 @@ const CauseDetails = () => {
 
             <div className="cause-card-details">
                 <div className="cause-image-container">
-                    <img
-                        src={causeImageOnPage}
-                        alt={cause.title}
-                        className="cause-details-image"
-                    />
+                    {cause.mediaType === 'VIDEO' ? (
+                        <video
+                            src={getImageUrl(cause.videoUrl)}
+                            className="modal-image"
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            onContextMenu={(e) => e.preventDefault()}
+                            controlsList="nodownload"
+                        />
+                    ) : (
+                        <img
+                            src={getImageUrl(cause.imageUrl)}
+                            alt={cause.title}
+                            className="modal-image"
+                            onError={(e) => {
+                                e.currentTarget.src = "/crowdfund_logo.png"; // fallback if 404 or broken
+                                e.currentTarget.onerror = null; // prevent infinite loop if default also missing
+                            }}
+                        />
+                    )}
+
                 </div>
                 <div className="cause-details-content">
                     <h1 className="cause-title-details">{cause.title}</h1>
