@@ -148,35 +148,123 @@ const VolunteerForm = () => {
       <div className="volunteer-container">
         <h2>Volunteer Application Form</h2>
         <form onSubmit={handleSubmit} noValidate>
-          <input type="text" name="firstName" placeholder="First Name" value={formData.firstName} onChange={handleChange} />
+          <label>
+            First Name <span style={{ color: "red" }}>*</span>
+            <input
+              type="text"
+              name="firstName"
+              placeholder="First Name"
+              value={formData.firstName}
+              onChange={handleChange}
+              required
+            />
+          </label>
           {renderError("firstName")}
 
-          <input type="text" name="lastName" placeholder="Last Name" value={formData.lastName} onChange={handleChange} />
+          <label>
+            Last Name <span style={{ color: "red" }}>*</span>
+            <input
+              type="text"
+              name="lastName"
+              placeholder="Last Name"
+              value={formData.lastName}
+              onChange={handleChange}
+              required
+            />
+          </label>
           {renderError("lastName")}
 
-          <input type="email" name="email" placeholder="Email Address" value={formData.email} onChange={handleChange} />
+          <label>
+            Email Address <span style={{ color: "red" }}>*</span>
+            <input
+              type="email"
+              name="email"
+              placeholder="Email Address"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </label>
           {renderError("email")}
 
-          <input type="text" name="phone" placeholder="Phone Number" value={formData.phone} onChange={handleChange} />
+          <label>
+            Phone Number
+            <input
+              type="text"
+              name="phone"
+              placeholder="Phone Number"
+              value={formData.phone}
+              onChange={handleChange}
+            />
+          </label>
           {renderError("phone")}
 
-          <input type="text" name="address" placeholder="Address" value={formData.address} onChange={handleChange} />
+          <label>
+            Address
+            <input
+              type="text"
+              name="address"
+              placeholder="Address"
+              value={formData.address}
+              onChange={handleChange}
+            />
+          </label>
           {renderError("address")}
 
-          <input type="text" name="skills" placeholder="Skills (e.g., Teaching)" value={formData.skills} onChange={handleChange} />
+          <label>
+            Skills <span style={{ color: "red" }}>*</span>
+            <input
+              type="text"
+              name="skills"
+              placeholder="Skills (e.g., Teaching)"
+              value={formData.skills}
+              onChange={handleChange}
+              required
+            />
+          </label>
           {renderError("skills")}
 
-          <input type="text" name="availability" placeholder="Availability (e.g., Weekends)" value={formData.availability} onChange={handleChange} />
+          <label>
+            Availability
+            <input
+              type="text"
+              name="availability"
+              placeholder="Availability (e.g., Weekends)"
+              value={formData.availability}
+              onChange={handleChange}
+            />
+          </label>
           {renderError("availability")}
 
-          <textarea name="experience" rows="3" placeholder="Experience" value={formData.experience} onChange={handleChange}></textarea>
+          <label>
+            Experience
+            <textarea
+              name="experience"
+              rows="3"
+              placeholder="Experience"
+              value={formData.experience}
+              onChange={handleChange}
+            ></textarea>
+          </label>
           {renderError("experience")}
 
-          <textarea name="motivation" rows="4" placeholder="Why do you want to volunteer?" value={formData.motivation} onChange={handleChange}></textarea>
+          <label>
+            Why do you want to volunteer? <span style={{ color: "red" }}>*</span>
+            <textarea
+              name="motivation"
+              rows="4"
+              placeholder="Motivation"
+              value={formData.motivation}
+              onChange={handleChange}
+              required
+            ></textarea>
+          </label>
           {renderError("motivation")}
 
           <button type="submit">Submit Application</button>
         </form>
+
+
       </div>
     </div>
   );

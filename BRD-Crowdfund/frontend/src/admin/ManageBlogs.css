@@ -52,6 +52,8 @@
   font-size: 1rem;
   width: 100%; /* Ensure full width */
   box-sizing: border-box; /* Include padding in width */
+    resize: none;
+  overflow-y: auto;
 }
 
 .blog-form button[type="submit"] {
@@ -279,5 +281,16 @@
     flex: 1;
     width: auto;
   }
+}
+/* Remove number input spinner - Chrome, Safari, Edge */
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Remove number input spinner - Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
 }
 

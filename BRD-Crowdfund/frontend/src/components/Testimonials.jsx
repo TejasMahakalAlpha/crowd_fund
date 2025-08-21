@@ -71,7 +71,7 @@ const Testimonials = () => {
     <section className="testimonials-section" id="testimonials">
       <div className="testimonials-background-overlay"></div>
       <div className="testimonials-content-wrapper">
-        <h2 className="section-title">Here’s what people say about <span className="highlight-word">give</span></h2>
+        <h2 className="section-title">Here’s What People Say About <span className="highlight-word">Give</span></h2>
 
         {isDesktop ? (
           // --- RENDER THIS ON DESKTOP ---

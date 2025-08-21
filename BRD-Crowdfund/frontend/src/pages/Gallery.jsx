@@ -3,13 +3,16 @@ import React from 'react';
 import './Gallery.css';
 
 const images = [
-  'blooddonation.jpeg',
-  'communitycleaning.jpeg',
-  'eco-week.jpeg',
-  'freemedicalcamp.jpeg',
-  'treeplantation.jpeg',
-  'womanempower.jpg',
-  'youthvoluneteer.jpeg',
+  'Gallary/Img_1.jpg',
+  'Gallary/img_2.jpg',
+  'Gallary/img_3.jpg',
+  'Gallary/img_4.jpg',
+  'Gallary/Img_5.jpg',
+  'Gallary/img_6.jpg',
+  'Gallary/Img_7.jpg',
+  'Gallary/Img_8.jpg',
+  'Gallary/Img_9.jpg',
+  'Gallary/Img_10.jpg',
 ];
 
 const Gallery = () => {

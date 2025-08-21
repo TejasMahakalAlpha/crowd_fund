@@ -224,47 +224,112 @@ const ManageBlogs = () => {
       <h2>{editingBlogId ? 'Edit Blog' : 'Add Blog'}</h2>
 
       <form className="blog-form" onSubmit={handleSubmit} noValidate>
-        <input name="title" placeholder="Title" value={formData.title} onChange={handleChange} />
+        <label htmlFor="title">
+          Title <span style={{ color: "red" }}>*</span>
+        </label>
+        <input
+          id="title"
+          name="title"
+          placeholder="Title"
+          value={formData.title}
+          onChange={handleChange}
+        />
         {errors.title && <p className="error">{errors.title}</p>}
 
-        <input name="subtitle" placeholder="Subtitle" value={formData.subtitle} onChange={handleChange} />
+        <label htmlFor="subtitle">
+          Subtitle
+        </label>
+        <input
+          id="subtitle"
+          name="subtitle"
+          placeholder="Subtitle"
+          value={formData.subtitle}
+          onChange={handleChange}
+        />
 
-        <input name="slug" placeholder="Slug" value={formData.slug} onChange={handleChange} />
+        <label htmlFor="slug">
+          Slug <span style={{ color: "red" }}>*</span>
+        </label>
+        <input
+          id="slug"
+          name="slug"
+          placeholder="Slug"
+          value={formData.slug}
+          onChange={handleChange}
+        />
         {errors.slug && <p className="error">{errors.slug}</p>}
 
-        <textarea name="content" placeholder="Content" rows={4} value={formData.content} onChange={handleChange} />
+        <label htmlFor="content">
+          Content <span style={{ color: "red" }}>*</span>
+        </label>
+        <textarea
+          id="content"
+          name="content"
+          placeholder="Content"
+          rows={4}
+          value={formData.content}
+          onChange={handleChange}
+        />
         {errors.content && <p className="error">{errors.content}</p>}
 
-        <input name="author" placeholder="Author Name" value={formData.author} onChange={handleChange} />
+        <label htmlFor="author">
+          Author Name <span style={{ color: "red" }}>*</span>
+        </label>
+        <input
+          id="author"
+          name="author"
+          placeholder="Author Name"
+          value={formData.author}
+          onChange={handleChange}
+        />
 
-        <input name="authorEmail" placeholder="Author Email" type="email" value={formData.authorEmail} onChange={handleChange} />
+        <label htmlFor="authorEmail">
+          Author Email <span style={{ color: "red" }}>*</span>
+        </label>
+        <input
+          id="authorEmail"
+          name="authorEmail"
+          type="email"
+          placeholder="Author Email"
+          value={formData.authorEmail}
+          onChange={handleChange}
+        />
         {errors.authorEmail && <p className="error">{errors.authorEmail}</p>}
 
-        <select name="status" value={formData.status} onChange={handleChange}>
+        <label htmlFor="status">
+          Status
+        </label>
+        <select id="status" name="status" value={formData.status} onChange={handleChange}>
           <option value="DRAFT">DRAFT</option>
           <option value="PUBLISHED">PUBLISHED</option>
         </select>
 
-        {/* <input name="publishedAt" type="date" value={formData.publishedAt} onChange={handleChange} />
-        {errors.publishedAt && <p className="error">{errors.publishedAt}</p>} */}
-
-        <input name="tags" placeholder="Tags (comma separated)" value={formData.tags} onChange={handleChange} />
-
-        <label>
-          <input type="checkbox" name="isFeatured" checked={formData.isFeatured} onChange={handleChange} />
-          Featured
+        <label htmlFor="tags">
+          Tags
         </label>
+        <input
+          id="tags"
+          name="tags"
+          placeholder="Tags (comma separated)"
+          value={formData.tags}
+          onChange={handleChange}
+        />
 
-        <label>
-          <input type="checkbox" name="allowComments" checked={formData.allowComments} onChange={handleChange} />
-          Allow Comments
+        <label htmlFor="image">
+          Upload Image <span style={{ color: "red" }}>*</span>
         </label>
-
-        <input type="file" name="image" accept="image/*" onChange={handleChange} />
+        <input
+          id="image"
+          type="file"
+          name="image"
+          accept="image/*"
+          onChange={handleChange}
+        />
         {errors.image && <p className="error">{errors.image}</p>}
 
-        <button type="submit">{editingBlogId ? 'Update Blog' : 'Add Blog'}</button>
+        <button type="submit">{editingBlogId ? "Update Blog" : "Add Blog"}</button>
       </form>
+
 
       <div className="blog-list">
         {blogs.map((blog) => (

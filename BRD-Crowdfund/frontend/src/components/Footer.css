@@ -41,15 +41,6 @@
   position: relative;
 }
 
-.footer-heading::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: -6px;
-  width: 30px;
-  height: 2px;
-  background-color: var(--primary-color);
-}
 
 /* --- BRAND & SOCIALS COLUMN --- */
 .footer-logo-img {
@@ -96,6 +87,10 @@
 .contact-col ul {
   list-style: none;
   padding: 0;
+}
+.links-col ul,
+.footer-quick-link{
+  padding-left: 50px;
 }
 
 .links-col li,

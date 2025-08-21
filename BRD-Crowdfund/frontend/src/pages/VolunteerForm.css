@@ -1,9 +1,9 @@
 /* src/pages/VolunteerForm.css */
 .volunteer-page {
   font-family: 'Poppins', sans-serif;
-
 }
 
+/* Hero Section */
 .volunteer-hero {
   background: #004d40;
   color: white;
@@ -15,57 +15,79 @@
   font-size: 2.5rem;
   margin-bottom: 10px;
 }
-.form-error {
-  color: red;
-  font-size: 0.9rem;
-  margin: -0.5rem 0 0.8rem;
-}
-
 
 .volunteer-hero p {
   font-size: 1.1rem;
   max-width: 700px;
   margin: 0 auto;
-  color:white;
+  color: white;
 }
 
+/* Form Container */
 .volunteer-container {
   background: #f0fdfa;
-  padding: 60px 20px;
+  padding: 40px 20px;
   max-width: 700px;
-  margin: 0 auto;
+  margin: 40px auto;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .volunteer-container h2 {
   text-align: center;
   color: #004d40;
-  margin-bottom: 30px;
+  margin-bottom: 25px;
 }
 
+/* Form Layout */
 .volunteer-container form {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 18px;
 }
 
+/* Labels */
+.volunteer-container label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #004d40;
+}
+
+/* Inputs & Textareas */
+/* Inputs & Textareas */
 .volunteer-container input,
 .volunteer-container textarea {
-  padding: 12px;
+  width: 100%;
+  padding: 12px 14px;
   border: 1px solid #ccc;
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box; /* ✅ Fix overflow */
+}
+
+
+.volunteer-container input:focus,
+.volunteer-container textarea:focus {
+  border-color: #26a69a;
+  box-shadow: 0 0 6px rgba(38, 166, 154, 0.3);
   outline: none;
 }
 
+.volunteer-container textarea {
+  resize: none;
+  overflow-y: auto;
+}
+
+/* Submit Button */
 .volunteer-container button {
   background-color: #26a69a;
   color: white;
   border: none;
-  padding: 12px;
-  border-radius: 6px;
+  padding: 14px;
+  border-radius: 8px;
   font-weight: bold;
+  font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
@@ -73,7 +95,34 @@
 .volunteer-container button:hover {
   background-color: #00796b;
 }
-textarea {
-  resize: none;
-  overflow-y: auto; /* keep scroll bar if needed */
+
+/* Error Message */
+.form-error,
+.error-message {
+  color: #e53e3e;
+  font-size: 0.9rem;
+  margin-top: -6px;
+  margin-bottom: 8px;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .volunteer-hero h1 {
+    font-size: 2rem;
+  }
+
+  .volunteer-container {
+    padding: 25px 15px;
+  }
+}
+/* Remove number input spinner - Chrome, Safari, Edge */
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Remove number input spinner - Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
 }

@@ -46,34 +46,74 @@ const ManageVolunteers = () => {
 
   const validate = () => {
     const newErrors = {};
-    if (!formData.firstName.trim())
+
+    // Helper functions
+    const isTextOnly = (str) => /^[A-Za-z\s]+$/.test(str);
+    const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    const isValidPhone = (phone) => phone === "" || /^\d{10}$/.test(phone);
+
+    // First Name
+    if (!formData.firstName.trim()) {
       newErrors.firstName = "First Name is required";
-    else if (!isTextOnly(formData.firstName))
+    } else if (!isTextOnly(formData.firstName)) {
       newErrors.firstName = "Only letters and spaces allowed";
+    }
 
-    if (!formData.lastName.trim())
+    // Last Name
+    if (!formData.lastName.trim()) {
       newErrors.lastName = "Last Name is required";
-    else if (!isTextOnly(formData.lastName))
+    } else if (!isTextOnly(formData.lastName)) {
       newErrors.lastName = "Only letters and spaces allowed";
+    }
 
-    if (!formData.email.trim())
+    // Email
+    if (!formData.email.trim()) {
       newErrors.email = "Email is required";
-    else if (!isValidEmail(formData.email))
+    } else if (!isValidEmail(formData.email)) {
       newErrors.email = "Invalid email format";
+    }
 
-    if (!isValidPhone(formData.phone))
+    // Phone (optional)
+    if (!isValidPhone(formData.phone)) {
       newErrors.phone = "Phone must be 10 digits or empty";
+    } else if (!formData.phone.trim()) {
+      newErrors.email = "phone number is required";
+    }
+    // Address
+    if (!formData.address.trim()) {
+      newErrors.address = "Address is required";
+    }
 
-    if (formData.skills && !isTextOnly(formData.skills))
+    // Skills
+    if (!formData.skills.trim()) {
+      newErrors.skills = "Skills are required";
+    } else if (!isTextOnly(formData.skills)) {
       newErrors.skills = "Only letters and spaces allowed";
+    }
 
-    if (formData.motivation.trim().length < 10)
+    // Availability
+    if (!formData.availability.trim()) {
+      newErrors.availability = "Availability is required";
+    }
+
+    // Experience
+    if (!formData.experience.trim()) {
+      newErrors.experience = "Experience is required";
+    }
+
+    // Motivation
+    if (!formData.motivation.trim()) {
+      newErrors.motivation = "Motivation is required";
+    } else if (formData.motivation.trim().length < 10) {
       newErrors.motivation = "Motivation must be at least 10 characters";
+    }
 
     setErrors(newErrors);
 
+    // Return true if no errors
     return Object.keys(newErrors).length === 0;
   };
+
 
   const checkIfVolunteerExists = (email) => {
     return volunteers.some(
@@ -158,86 +198,121 @@ const ManageVolunteers = () => {
       <h2>Manage Volunteers</h2>
 
       <form className="blog-form" onSubmit={handleSubmit} noValidate>
-        <input
-          type="text"
-          name="firstName"
-          placeholder="First Name"
-          value={formData.firstName}
-          onChange={handleChange}
-          required
-        />
-        {errors.firstName && <p style={{ color: "red" }}>{errors.firstName}</p>}
+        <label>
+          First Name: <span style={{ color: "red" }}>*</span>
+          <input
+            type="text"
+            name="firstName"
+            placeholder="First Name"
+            value={formData.firstName}
+            onChange={handleChange}
+            required
+          />
+          {errors.firstName && <p style={{ color: "red" }}>{errors.firstName}</p>}
+        </label>
 
-        <input
-          type="text"
-          name="lastName"
-          placeholder="Last Name"
-          value={formData.lastName}
-          onChange={handleChange}
-          required
-        />
-        {errors.lastName && <p style={{ color: "red" }}>{errors.lastName}</p>}
+        <label>
+          Last Name: <span style={{ color: "red" }}>*</span>
+          <input
+            type="text"
+            name="lastName"
+            placeholder="Last Name"
+            value={formData.lastName}
+            onChange={handleChange}
+            required
+          />
+          {errors.lastName && <p style={{ color: "red" }}>{errors.lastName}</p>}
+        </label>
 
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-        {errors.email && <p style={{ color: "red" }}>{errors.email}</p>}
+        <label>
+          Email: <span style={{ color: "red" }}>*</span>
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
+          {errors.email && <p style={{ color: "red" }}>{errors.email}</p>}
+        </label>
 
-        <input
-          type="tel"
-          name="phone"
-          placeholder="Phone"
-          maxLength={10}
-          value={formData.phone}
-          onChange={handleChange}
-        />
-        {errors.phone && <p style={{ color: "red" }}>{errors.phone}</p>}
+        <label>
+          Phone: <span style={{ color: "red" }}>*</span>
+          <input
+            type="tel"
+            name="phone"
+            placeholder="Phone"
+            maxLength={10}
+            value={formData.phone}
+            onChange={handleChange}
+          />
+          {errors.phone && <p style={{ color: "red" }}>{errors.phone}</p>}
+        </label>
 
-        <input
-          type="text"
-          name="address"
-          placeholder="Address"
-          value={formData.address}
-          onChange={handleChange}
-        />
+        <label>
+          Address: <span style={{ color: "red" }}>*</span>
+          <input
+            type="text"
+            name="address"
+            placeholder="Address"
+            value={formData.address}
+            onChange={handleChange}
+            required
+          />
+          {errors.address && <p style={{ color: "red" }}>{errors.address}</p>}
+        </label>
 
-        <input
-          type="text"
-          name="skills"
-          placeholder="Skills"
-          value={formData.skills}
-          onChange={handleChange}
-        />
-        {errors.skills && <p style={{ color: "red" }}>{errors.skills}</p>}
+        <label>
+          Skills: <span style={{ color: "red" }}>*</span>
+          <input
+            type="text"
+            name="skills"
+            placeholder="Skills"
+            value={formData.skills}
+            onChange={handleChange}
+            required
+          />
+          {errors.skills && <p style={{ color: "red" }}>{errors.skills}</p>}
+        </label>
 
-        <input
-          type="text"
-          name="availability"
-          placeholder="Availability"
-          value={formData.availability}
-          onChange={handleChange}
-        />
+        <label>
+          Availability: <span style={{ color: "red" }}>*</span>
+          <input
+            type="text"
+            name="availability"
+            placeholder="Availability"
+            value={formData.availability}
+            onChange={handleChange}
+            required
+          />
+          {errors.availability && <p style={{ color: "red" }}>{errors.availability}</p>}
+        </label>
 
-        <textarea
-          name="experience"
-          placeholder="Experience"
-          value={formData.experience}
-          onChange={handleChange}
-          rows={3}
-        />
+        <label>
+          Experience: <span style={{ color: "red" }}>*</span>
+          <textarea
+            name="experience"
+            placeholder="Experience"
+            value={formData.experience}
+            onChange={handleChange}
+            rows={3}
+            required
+          />
+          {errors.experience && <p style={{ color: "red" }}>{errors.experience}</p>}
+        </label>
 
-        <textarea
-          name="motivation"
-          placeholder="Why do you want to volunteer?"
-          value={formData.motivation}
-          onChange={handleChange}
-        />
-        {errors.motivation && <p style={{ color: "red" }}>{errors.motivation}</p>}
+        <label>
+          Motivation: <span style={{ color: "red" }}>*</span>
+          <textarea
+            name="motivation"
+            placeholder="Why do you want to volunteer?"
+            value={formData.motivation}
+            onChange={handleChange}
+            required
+          />
+          {errors.motivation && <p style={{ color: "red" }}>{errors.motivation}</p>}
+        </label>
 
         <button type="submit">Add Volunteer</button>
 
@@ -249,6 +324,7 @@ const ManageVolunteers = () => {
         {success && <p style={{ color: "green", marginTop: "10px" }}>{success}</p>}
         {error && <p style={{ color: "red", marginTop: "10px" }}>{error}</p>}
       </form>
+
 
       {volunteers.length === 0 ? (
         <p>No volunteers yet.</p>

@@ -8,6 +8,8 @@
 }
 
 .manage-personal-causes-container h2 {
+  display: flex;
+  justify-content: center;
   font-size: 2.5rem;
   color: #004d40;
   text-align: center;
@@ -83,7 +85,7 @@
 .submission-card .card-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start; /* Align badge to top if title wraps */
+  align-items: center; /* Align badge to top if title wraps */
   margin-bottom: 10px;
   gap: 10px;
 }
@@ -456,7 +458,7 @@
 /* Add this CSS to your ManagePersonalCauses.css file */
 
 .page-header {
-  display: flex;
+
   align-items: center;
   gap: 20px; /* Space between back button and title */
   width: 100%;
@@ -486,4 +488,16 @@
 .back-button:hover {
   background-color: #f8f9fa;
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* Remove number input spinner - Chrome, Safari, Edge */
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Remove number input spinner - Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
 }

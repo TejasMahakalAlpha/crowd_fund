@@ -184,11 +184,11 @@ const ManagePersonalCauses = () => {
 
   return (
     <div className="manage-personal-causes-container">
+      <button onClick={handleGoBack} className="back-button">
+        <IoArrowBack size={20} />
+        <span>Back</span>
+      </button>
       <div className="page-header">
-        <button onClick={handleGoBack} className="back-button">
-          <IoArrowBack size={20} />
-          <span>Back</span>
-        </button>
         <h2>Manage Personal Cause Submissions</h2>
       </div>
 
@@ -240,7 +240,7 @@ const ManagePersonalCauses = () => {
               <p><strong>Status:</strong> <span className={`status-badge ${selectedSubmission.status.toLowerCase()}`}>{selectedSubmission.status.replace('_', ' ')}</span></p>
               <p><strong>Submitted By:</strong> {selectedSubmission.submitterName} ({selectedSubmission.submitterEmail})</p>
               <p><strong>Phone:</strong> {selectedSubmission.submitterPhone || 'N/A'}</p>
-              <p><strong>Submitted On:</strong> {(selectedSubmission.createdAt).toLocaleString()}</p>
+              <p><strong>Submitted On:</strong> {new Date(selectedSubmission.createdAt).toLocaleString()}</p>
               <p><strong>Short Description:</strong> {selectedSubmission.shortDescription || 'N/A'}</p>
               <p><strong>Description:</strong> {selectedSubmission.description}</p>
               <p><strong>Target Amount:</strong> ₹{selectedSubmission.targetAmount?.toLocaleString()}</p>
@@ -262,34 +262,39 @@ const ManagePersonalCauses = () => {
               {/* Single Image or Video */}
               <div className="file-item">
                 <strong>Cause Image/Video:</strong>
-                {selectedSubmission.mediaUrl ? (
-                  (() => {
-                    const url = getFileUrl(selectedSubmission.mediaUrl);
-                    const ext = selectedSubmission.mediaUrl.split('.').pop().toLowerCase();
-                    const isVideo = ["mp4", "webm", "mov", "ogg"].includes(ext);
-
-                    return (
-                      <div className="media-preview-item" style={{ marginBottom: "1rem" }}>
-                        {isVideo ? (
-                          <>
-                            <video src={url} controls className="detail-video-preview" />
-                            <a href={url} target="_blank" rel="noopener noreferrer" className="download-link">View Video</a>
-                            <a href={`${url}/download`} className="download-link">Download Video</a>
-                          </>
-                        ) : (
-                          <>
-                            <img src={url} alt="Cause Media" className="detail-image-preview" />
-                            <a href={url} target="_blank" rel="noopener noreferrer" className="download-link">View Image</a>
-                            <a href={`${url}/download`} className="download-link">Download Image</a>
-                          </>
-                        )}
-                      </div>
-                    );
-                  })()
+                {selectedSubmission.videoUrl ? (
+                  <div className="media-preview-item" style={{ marginBottom: "1rem" }}>
+                    <video
+                      src={getFileUrl(selectedSubmission.videoUrl)}
+                      controls
+                      className="detail-video-preview"
+                    />
+                    <a href={getFileUrl(selectedSubmission.videoUrl)} target="_blank" rel="noopener noreferrer" className="download-link">
+                      View Video
+                    </a>
+                    <a href={`${getFileUrl(selectedSubmission.videoUrl)}/download`} className="download-link">
+                      Download Video
+                    </a>
+                  </div>
+                ) : selectedSubmission.imageUrl ? (
+                  <div className="media-preview-item" style={{ marginBottom: "1rem" }}>
+                    <img
+                      src={getFileUrl(selectedSubmission.imageUrl)}
+                      alt="Cause Media"
+                      className="detail-image-preview"
+                    />
+                    <a href={getFileUrl(selectedSubmission.imageUrl)} target="_blank" rel="noopener noreferrer" className="download-link">
+                      View Image
+                    </a>
+                    <a href={`${getFileUrl(selectedSubmission.imageUrl)}/download`} className="download-link">
+                      Download Image
+                    </a>
+                  </div>
                 ) : (
                   <p>No Cause Image/Video provided.</p>
                 )}
               </div>
+
 
               {/* Single Proof Document */}
               <div className="file-item">
@@ -304,19 +309,33 @@ const ManagePersonalCauses = () => {
                       <div className="proof-document-item" style={{ marginBottom: "1rem" }}>
                         <p>{docName}</p>
 
-                        {ext === "pdf" ? (
-                          <a href={docUrl} target="_blank" rel="noopener noreferrer" className="download-link">
-                            Open PDF Document
-                          </a>
-                        ) : ["jpg", "jpeg", "png", "webp"].includes(ext) ? (
-                          <img src={docUrl} alt="Proof Document" className="detail-image-preview" />
-                        ) : (
-                          <p>Unsupported document format.</p>
-                        )}
+                        {(() => {
+                          const imageExtensions = ["jpg", "jpeg", "png", "webp"];
+                          const pdfExtensions = ["pdf"];
+                          const docExtensions = ["doc", "docx"];
 
-                        <a href={docUrl} target="_blank" rel="noopener noreferrer" className="download-link">View Document</a>
+                          if (pdfExtensions.includes(ext)) {
+                            return (
+                              <a href={docUrl} target="_blank" rel="noopener noreferrer" className="download-link">
+                                Open PDF
+                              </a>
+                            );
+                          } else if (docExtensions.includes(ext)) {
+                            return (
+                              <a href={docUrl} target="_blank" rel="noopener noreferrer" className="download-link">
+                                Open DOC
+                              </a>
+                            );
+                          } else if (imageExtensions.includes(ext)) {
+                            return <img src={docUrl} alt="Proof Document" className="detail-image-preview" />;
+                          } else {
+                            return <p>Unsupported document format.</p>;
+                          }
+                        })()}
+
                         <a href={`${docUrl}/download`} className="download-link">Download Document</a>
                       </div>
+
                     );
                   })()
                 ) : (

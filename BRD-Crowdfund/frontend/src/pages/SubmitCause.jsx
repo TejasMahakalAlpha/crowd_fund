@@ -297,7 +297,7 @@ const SubmitCause = () => {
 
         <div className="form-group">
           <label htmlFor="endDate">Expected End Date & Time</label>
-          <input type="datetime-local" id="endDate" name="endDate" value={formData.endDate} onChange={handleChange} />
+          <input type="datetime-local" id="endDate" name="endDate" value={formData.endDate} onChange={handleChange} min={new Date().toISOString().split("T")[0]} />
           {errors.endDate && <p className="error-message">{errors.endDate}</p>}
         </div>
 

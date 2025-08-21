@@ -203,7 +203,9 @@ const Contact = () => {
           <form onSubmit={handleSubmit} noValidate>
             <div className="form-row">
               <div className="form-group">
-                <label htmlFor="name">Name</label>
+                <label htmlFor="name">
+                  Name <span style={{ color: "red" }}>*</span>
+                </label>
                 <input
                   type="text"
                   id="name"
@@ -217,7 +219,9 @@ const Contact = () => {
               </div>
 
               <div className="form-group">
-                <label htmlFor="email">Email Address</label>
+                <label htmlFor="email">
+                  Email Address <span style={{ color: "red" }}>*</span>
+                </label>
                 <input
                   type="email"
                   id="email"
@@ -232,7 +236,9 @@ const Contact = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="phone">Phone Number</label>
+              <label htmlFor="phone">
+                Phone Number <span style={{ color: "red" }}>*</span>
+              </label>
               <input
                 type="text"
                 id="phone"
@@ -246,7 +252,9 @@ const Contact = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="subject">Subject</label>
+              <label htmlFor="subject">
+                Subject <span style={{ color: "red" }}>*</span>
+              </label>
               <input
                 type="text"
                 id="subject"
@@ -260,7 +268,9 @@ const Contact = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="content">Message</label>
+              <label htmlFor="content">
+                Message <span style={{ color: "red" }}>*</span>
+              </label>
               <textarea
                 id="content"
                 name="content"
@@ -275,6 +285,7 @@ const Contact = () => {
 
             <button type="submit">Submit</button>
           </form>
+
         </div>
       </section>
     </div>

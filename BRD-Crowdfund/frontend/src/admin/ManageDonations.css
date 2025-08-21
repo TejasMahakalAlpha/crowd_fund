@@ -175,3 +175,14 @@
         font-size: 0.85rem;
     }
 }
+/* Remove number input spinner - Chrome, Safari, Edge */
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Remove number input spinner - Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}

@@ -10,6 +10,7 @@ const ManageCauses = () => {
   const [causes, setCauses] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [editId, setEditId] = useState(null);
+  const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     title: "", shortDescription: "", description: "", category: "",
     location: "", targetAmount: "", endDate: "", status: "ACTIVE",
@@ -70,10 +71,27 @@ const ManageCauses = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.title.trim()) newErrors.title = "Title is required";
+    if (!formData.shortDescription.trim()) newErrors.shortDescription = "Short description is required";
+    if (!formData.description.trim()) newErrors.description = "Description is required";
+    if (!formData.targetAmount || Number(formData.targetAmount) <= 0)
+      newErrors.targetAmount = "Target amount must be greater than 0";
+    if (!formData.endDate) newErrors.endDate = "End date is required";
+    // Optional: check if endDate is in the past
+    if (formData.endDate && new Date(formData.endDate) < new Date())
+      newErrors.endDate = "End date cannot be in the past";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0; // return true if no errors
+  };
 
   // --- YEH FUNCTION THEEK KIYA GAYA HAI ---
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateForm()) return;
     const formPayload = new FormData();
     for (const key in formData) {
       formPayload.append(key, formData[key]);
@@ -187,31 +205,92 @@ const ManageCauses = () => {
           <button onClick={() => navigate(-1)} className="back-button">← Back</button>
           <h2>Manage Causes</h2>
           <form className="cause-form" onSubmit={handleSubmit} noValidate>
-            <input type="text" name="title" placeholder="Cause Title" value={formData.title} onChange={handleChange} />
-            <textarea name="description" placeholder="Description" value={formData.description} onChange={handleChange} rows={3} />
-            <input type="number" name="targetAmount" placeholder="Target Amount" value={formData.targetAmount} onChange={handleChange} min="1" />
-            <input type="text" name="shortDescription" placeholder="Short Description" value={formData.shortDescription} onChange={handleChange} />
-            <input type="text" name="category" placeholder="Category" value={formData.category} onChange={handleChange} />
-            <input type="text" name="location" placeholder="Location" value={formData.location} onChange={handleChange} />
-            <input type="date" name="endDate" placeholder="End Date" value={formData.endDate} onChange={handleChange} />
+            <label>
+              Cause Title: <span style={{ color: "red" }}>*</span>
+              <input type="text" name="title" value={formData.title} onChange={handleChange} />
+              {errors.title && <p className="error">{errors.title}</p>}
+            </label>
 
-            <label>Display Image or Video:</label>
-            <input type="file" accept="image/*,video/*" onChange={handleImageChange} key={imageFile || ''} />
+            <label>
+              Short Description: <span style={{ color: "red" }}>*</span>
+              <input type="text" name="shortDescription" value={formData.shortDescription} onChange={handleChange} />
+              {errors.shortDescription && <p className="error">{errors.shortDescription}</p>}
+            </label>
+
+            <label>
+              Description: <span style={{ color: "red" }}>*</span>
+              <textarea name="description" value={formData.description} onChange={handleChange} rows={3} />
+              {errors.description && <p className="error">{errors.description}</p>}
+            </label>
+
+            <label>
+              Target Amount: <span style={{ color: "red" }}>*</span>
+              <input type="number" name="targetAmount" value={formData.targetAmount} onChange={handleChange} min="1" />
+              {errors.targetAmount && <p className="error">{errors.targetAmount}</p>}
+            </label>
+
+
+
+
+            <label>
+              Category:
+              <input type="text" name="category" value={formData.category} onChange={handleChange} />
+            </label>
+
+            <label>
+              Location:
+              <input type="text" name="location" value={formData.location} onChange={handleChange} />
+            </label>
+
+            <label>
+              End Date: <span style={{ color: "red" }}>*</span>
+              <input
+                type="date"
+                name="endDate"
+                value={formData.endDate}
+                onChange={handleChange}
+                min={new Date().toISOString().split("T")[0]} // sets today as minimum
+              />
+              {errors.endDate && <p className="error">{errors.endDate}</p>}
+            </label>
+
+
+            <label>
+              Display Image or Video:
+              <input type="file" accept="image/*,video/*" onChange={handleImageChange} key={imageFile || ''} />
+            </label>
 
             {imagePreview && (
-              <div className="preview-container" style={{ marginTop: "10px" }}>
+              <div className="preview-container">
                 {displayFileType === 'image' && (
-                  <img src={imagePreview} alt="Preview" style={{ width: "200px", borderRadius: "8px" }} />
+                  <img src={imagePreview} alt="Preview" />
                 )}
                 {displayFileType === 'video' && (
-                  <video src={imagePreview} controls autoPlay muted loop style={{ width: "200px", borderRadius: "8px" }} />
+                  <video src={imagePreview} controls autoPlay muted loop />
                 )}
               </div>
             )}
 
-            <button type="submit">{isEditing ? "Update Cause" : "Add Cause"}</button>
-            {isEditing && <button type="button" onClick={() => { setIsEditing(false); setEditId(null); setFormData({ title: "", shortDescription: "", description: "", category: "", location: "", targetAmount: "", endDate: "", status: "ACTIVE" }); setImagePreview(null); setDisplayFileType(''); }}>Cancel Edit</button>}
+            <div className="form-actions">
+              <button type="submit">{isEditing ? "Update Cause" : "Add Cause"}</button>
+              {isEditing && (
+                <button
+                  type="reset"
+                  className="cancel-btn"
+                  onClick={() => {
+                    setIsEditing(false);
+                    setEditId(null);
+                    setFormData({ title: "", shortDescription: "", description: "", category: "", location: "", targetAmount: "", endDate: "", status: "ACTIVE" });
+                    setImagePreview(null);
+                    setDisplayFileType('');
+                  }}
+                >
+                  Cancel Edit
+                </button>
+              )}
+            </div>
           </form>
+
 
           <div className="cause-list">
             {causes.map((cause) => (

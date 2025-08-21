@@ -19,6 +19,7 @@ const ManageDonations = () => {
     paymentMethod: "",
   });
   const navigate = useNavigate();
+  const [errors, setErrors] = useState({});
 
 
   useEffect(() => {
@@ -30,7 +31,6 @@ const ManageDonations = () => {
       // ⭐ CRITICAL FIX: Changed to AdminApi.getAllDonationsAdmin()
       const res = await AdminApi.getAllDonationsAdmin();
       setDonations(res.data || []);
-      console.log("Fetched donations for admin:", res.data); // For debugging
     } catch (err) {
       console.error("Error fetching donations", err);
       toast.error("Failed to fetch donations");
@@ -41,8 +41,34 @@ const ManageDonations = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const validate = () => {
+    const newErrors = {};
+
+    if (!formData.donorName.trim()) newErrors.donorName = "Donor Name is required";
+    if (!formData.amount || parseFloat(formData.amount) <= 0)
+      newErrors.amount = "Amount must be greater than 0";
+    if (!formData.currency.trim()) newErrors.currency = "Currency is required";
+    if (!formData.paymentMethod.trim()) newErrors.paymentMethod = "Payment Method is required";
+
+    if (formData.donorEmail) {
+      const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i;
+      if (!emailRegex.test(formData.donorEmail)) newErrors.donorEmail = "Invalid email address";
+    }
+
+    if (formData.donorPhone) {
+      const phoneRegex = /^[0-9]{10}$/;
+      if (!phoneRegex.test(formData.donorPhone)) newErrors.donorPhone = "Enter 10-digit phone number";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validate()) return;
+
     try {
       // Amount sent to backend typically in paisa/smallest unit
       const amountInPaisa = parseFloat(formData.amount);
@@ -110,70 +136,100 @@ const ManageDonations = () => {
 
       <h2>Manage Donations</h2>
 
-      <form className="donation-form" onSubmit={handleSubmit}> {/* ⭐ Renamed class for specific styling */}
-        <input
-          type="text"
-          name="donorName"
-          placeholder="Donor Name"
-          value={formData.donorName}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="email"
-          name="donorEmail"
-          placeholder="Email Address"
-          value={formData.donorEmail}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="donorPhone"
-          placeholder="Phone Number"
-          maxLength={10}
-          value={formData.donorPhone}
-          onChange={handleChange}
-        />
-        <input
-          type="number"
-          name="amount"
-          placeholder="Amount (in Rupees)"
-          value={formData.amount}
-          onChange={handleChange}
-          required
-          min="1"
-          step="any"
-        />
-        <input
-          type="number"
-          name="causeId"
-          placeholder="Cause ID (Optional)"
-          value={formData.causeId}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="currency"
-          placeholder="Currency (e.g., INR)"
-          value={formData.currency}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="paymentMethod"
-          placeholder="Payment Method (e.g., MANUAL, CARD)"
-          value={formData.paymentMethod}
-          onChange={handleChange}
-        />
-        <textarea
-          name="message"
-          placeholder="Message (Optional)"
-          value={formData.message}
-          onChange={handleChange}
-          rows={3}
-        />
+
+      <form className="donation-form" onSubmit={handleSubmit}>
+        <label>
+          Donor Name <span style={{ color: "red" }}>*</span>
+          <input
+            type="text"
+            name="donorName"
+            value={formData.donorName}
+            onChange={handleChange}
+          />
+          {errors.donorName && <p className="error">{errors.donorName}</p>}
+        </label>
+
+        <label>
+          Email Address
+          <input
+            type="email"
+            name="donorEmail"
+            value={formData.donorEmail}
+            onChange={handleChange}
+          />
+          {errors.donorEmail && <p className="error">{errors.donorEmail}</p>}
+        </label>
+
+        <label>
+          Phone Number
+          <input
+            type="text"
+            name="donorPhone"
+            maxLength={10}
+            value={formData.donorPhone}
+            onChange={handleChange}
+          />
+          {errors.donorPhone && <p className="error">{errors.donorPhone}</p>}
+        </label>
+
+        <label>
+          Amount (in Rupees) <span style={{ color: "red" }}>*</span>
+          <input
+            type="number"
+            name="amount"
+            min="1"
+            step="any"
+            value={formData.amount}
+            onChange={handleChange}
+          />
+          {errors.amount && <p className="error">{errors.amount}</p>}
+        </label>
+
+        <label>
+          Cause ID (Optional)
+          <input
+            type="number"
+            name="causeId"
+            value={formData.causeId}
+            onChange={handleChange}
+          />
+        </label>
+
+        <label>
+          Currency <span style={{ color: "red" }}>*</span>
+          <input
+            type="text"
+            name="currency"
+            value={formData.currency}
+            onChange={handleChange}
+          />
+          {errors.currency && <p className="error">{errors.currency}</p>}
+        </label>
+
+        <label>
+          Payment Method <span style={{ color: "red" }}>*</span>
+          <input
+            type="text"
+            name="paymentMethod"
+            value={formData.paymentMethod}
+            onChange={handleChange}
+          />
+          {errors.paymentMethod && <p className="error">{errors.paymentMethod}</p>}
+        </label>
+
+        <label>
+          Message (Optional)
+          <textarea
+            name="message"
+            value={formData.message}
+            onChange={handleChange}
+            rows={3}
+          />
+        </label>
+
         <button type="submit">Add Donation</button>
       </form>
+
 
       <div className="donations-list"> {/* ⭐ Renamed class for specific styling */}
         {Array.isArray(donations) && donations.length > 0 ? (
@@ -193,7 +249,7 @@ const ManageDonations = () => {
                 {d.orderId && <p><strong>Order ID:</strong> {d.orderId}</p>} {/* Display order ID */}
               </div>
               <div className="donation-actions"> {/* Optional: Wrapper for buttons if you add more */}
-                <button className="delete-btn" onClick={() => handleDelete(d.id || d._id)}>Delete</button>
+                {/* <button className="delete-btn" onClick={() => handleDelete(d.id || d._id)}>Delete</button> */}
               </div>
             </div>
           ))

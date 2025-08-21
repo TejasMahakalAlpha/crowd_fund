@@ -206,101 +206,127 @@ const ManageEvents = () => {
       <h2>Manage Events</h2>
 
       <form className="blog-form" onSubmit={handleSubmit} noValidate>
-        <input
-          type="text"
-          name="title"
-          placeholder="Title"
-          value={formData.title}
-          onChange={handleChange}
-        />
-        {errors.title && <p style={{ color: "red" }}>{errors.title}</p>}
+        <label>
+          Title:
+          <input
+            type="text"
+            name="title"
+            placeholder="Title"
+            value={formData.title}
+            onChange={handleChange}
+          />
+          {errors.title && <p style={{ color: "red" }}>{errors.title}</p>}
+        </label>
 
-        <input
-          type="text"
-          name="shortDescription"
-          placeholder="Short Description"
-          value={formData.shortDescription}
-          onChange={handleChange}
-        />
-        {errors.shortDescription && (
-          <p style={{ color: "red" }}>{errors.shortDescription}</p>
-        )}
+        <label>
+          Short Description:
+          <input
+            type="text"
+            name="shortDescription"
+            placeholder="Short Description"
+            value={formData.shortDescription}
+            onChange={handleChange}
+          />
+          {errors.shortDescription && <p style={{ color: "red" }}>{errors.shortDescription}</p>}
+        </label>
 
-        <textarea
-          name="description"
-          placeholder="Description"
-          value={formData.description}
-          onChange={handleChange}
-          rows={3}
-        />
-        {errors.description && <p style={{ color: "red" }}>{errors.description}</p>}
+        <label>
+          Description:
+          <textarea
+            name="description"
+            placeholder="Description"
+            value={formData.description}
+            onChange={handleChange}
+            rows={3}
+          />
+          {errors.description && <p style={{ color: "red" }}>{errors.description}</p>}
+        </label>
 
-        <input
-          type="datetime-local"
-          name="eventDate"
-          value={formData.eventDate}
-          onChange={handleChange}
-        />
-        {errors.eventDate && <p style={{ color: "red" }}>{errors.eventDate}</p>}
+        <label>
+          Event Date:
+          <input
+            type="datetime-local"
+            name="eventDate"
+            value={formData.eventDate}
+            onChange={handleChange}
+          />
+          {errors.eventDate && <p style={{ color: "red" }}>{errors.eventDate}</p>}
+        </label>
 
-        <input
-          type="text"
-          name="location"
-          placeholder="Location"
-          value={formData.location}
-          onChange={handleChange}
-        />
-        {errors.location && <p style={{ color: "red" }}>{errors.location}</p>}
+        <label>
+          Location:
+          <input
+            type="text"
+            name="location"
+            placeholder="Location"
+            value={formData.location}
+            onChange={handleChange}
+          />
+          {errors.location && <p style={{ color: "red" }}>{errors.location}</p>}
+        </label>
 
-        <select name="status" value={formData.status} onChange={handleChange}>
-          <option value="">Select Status</option>
-          <option value="UPCOMING">UPCOMING</option>
-          <option value="ONGOING">ONGOING</option>
-          <option value="COMPLETED">COMPLETED</option>
-          <option value="CANCELLED">CANCELLED</option>
-        </select>
-        {errors.status && <p style={{ color: "red" }}>{errors.status}</p>}
+        <label>
+          Status:
+          <select name="status" value={formData.status} onChange={handleChange}>
+            <option value="">Select Status</option>
+            <option value="UPCOMING">UPCOMING</option>
+            <option value="ONGOING">ONGOING</option>
+            <option value="COMPLETED">COMPLETED</option>
+            <option value="CANCELLED">CANCELLED</option>
+          </select>
+          {errors.status && <p style={{ color: "red" }}>{errors.status}</p>}
+        </label>
 
-        <input
-          type="number"
-          name="maxParticipants"
-          placeholder="Max Participants"
-          value={formData.maxParticipants}
-          onChange={handleChange}
-        />
-        {errors.maxParticipants && (
-          <p style={{ color: "red" }}>{errors.maxParticipants}</p>
-        )}
+        <label>
+          Max Participants:
+          <input
+            type="number"
+            name="maxParticipants"
+            placeholder="Max Participants"
+            value={formData.maxParticipants}
+            onChange={handleChange}
+          />
+          {errors.maxParticipants && <p style={{ color: "red" }}>{errors.maxParticipants}</p>}
+        </label>
 
-        <input
-          type="number"
-          name="currentParticipants"
-          placeholder="Current Participants"
-          value={formData.currentParticipants}
-          onChange={handleChange}
-        />
-        {errors.currentParticipants && (
-          <p style={{ color: "red" }}>{errors.currentParticipants}</p>
-        )}
-        <input
-          type="file"
-          name="image"
-          accept=".png,.jpg,.jpeg,.gif,.webp"
-          onChange={(e) => {
-            const file = e.target.files[0];
-            const allowedTypes = ["image/png", "image/jpeg", "image/jpg", "image/gif", "image/webp"];
+        <label>
+          Current Participants:
+          <input
+            type="number"
+            name="currentParticipants"
+            placeholder="Current Participants"
+            value={formData.currentParticipants}
+            onChange={handleChange}
+          />
+          {errors.currentParticipants && <p style={{ color: "red" }}>{errors.currentParticipants}</p>}
+        </label>
 
-            if (file && !allowedTypes.includes(file.type)) {
-              Swal.fire("Invalid File", "Only PNG, JPEG, JPG, GIF, and WEBP formats are allowed.", "error");
-              e.target.value = null;
-              setImageFile(null);
-              setImagePreview(null);
-            } else {
-              setImageFile(file);
-              setImagePreview(URL.createObjectURL(file)); // 🔥 preview
-            }
-          }}
-        />
+        <label>
+          Event Image:
+          <input
+            type="file"
+            name="image"
+            accept=".png,.jpg,.jpeg,.gif,.webp"
+            onChange={(e) => {
+              const file = e.target.files[0];
+              const allowedTypes = ["image/png", "image/jpeg", "image/jpg", "image/gif", "image/webp"];
+
+              if (file && !allowedTypes.includes(file.type)) {
+                Swal.fire(
+                  "Invalid File",
+                  "Only PNG, JPEG, JPG, GIF, and WEBP formats are allowed.",
+                  "error"
+                );
+                e.target.value = null;
+                setImageFile(null);
+                setImagePreview(null);
+              } else {
+                setImageFile(file);
+                setImagePreview(URL.createObjectURL(file));
+              }
+            }}
+          />
+        </label>
 
         {imagePreview && (
           <img
@@ -310,11 +336,9 @@ const ManageEvents = () => {
           />
         )}
 
-
-
         <button type="submit">{isEditing ? "Update Event" : "Add Event"}</button>
-
       </form>
+
 
       <div className="blog-list">
         {events.length > 0 ? (

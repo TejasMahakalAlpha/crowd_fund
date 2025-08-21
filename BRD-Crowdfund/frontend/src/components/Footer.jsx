@@ -25,16 +25,16 @@ const Footer = () => {
               Empowering communities to fund, support, and scale meaningful environmental projects across India.
             </p>
             <div className="footer-social">
-              <a href="#" aria-label="Facebook"><FaFacebookF /></a>
+              <a href="https://www.facebook.com/share/g/1D2BJ2ENwJ/?mibextid=wwXIfr" aria-label="Facebook"><FaFacebookF /></a>
               <a href="#" aria-label="Twitter"><FaTwitter /></a>
-              <a href="#" aria-label="Instagram"><FaInstagram /></a>
+              <a href="https://www.instagram.com/greendharti?igsh=NjN0bDF4NGh6M3R2" aria-label="Instagram"><FaInstagram /></a>
               <a href="#" aria-label="LinkedIn"><FaLinkedinIn /></a>
             </div>
           </div>
 
           {/* Column 2: Quick Links */}
           <div className="footer-col links-col">
-            <h3 className="footer-heading">Quick Links</h3>
+            <h3 className="footer-heading footer-quick-link">Quick Links</h3>
             <ul>
               <li><Link to="/about">About Us</Link></li>
               <li><Link to="/causes">Our Causes</Link></li>

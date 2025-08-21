@@ -3,159 +3,170 @@
 .manage-causes {
   padding: 20px;
   font-family: 'Poppins', sans-serif;
-  max-width: 1200px; /* Optional: Constrain width for better readability */
-  margin: 0 auto; /* Center the content */
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .manage-causes h2 {
-  font-size: 1.8rem; /* Slightly larger heading */
+  font-size: 1.8rem;
   color: #004d40;
   margin-bottom: 25px;
   text-align: center;
 }
 
 .back-button {
-    padding: 10px 20px;
-    background: #4CAF50; /* Green color, common for back buttons */
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: 600;
-    margin-bottom: 20px;
-    transition: background 0.3s ease;
+  padding: 10px 20px;
+  background: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  transition: background 0.3s ease;
 }
 
 .back-button:hover {
-    background: #45a049;
+  background: #45a049;
 }
 
-
 /* Form Styling */
-.cause-form { /* ⭐ Changed from blog-form to cause-form */
+.cause-form {
   display: flex;
   flex-direction: column;
   gap: 15px;
   background: #ffffff;
-  padding: 30px; /* Increased padding */
+  padding: 30px;
   border-radius: 10px;
   margin-bottom: 40px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* Slightly more prominent shadow */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 .cause-form input,
 .cause-form textarea,
-.cause-form select { /* Added select for completeness if you use it */
-  padding: 12px; /* Increased padding */
-  border: 1px solid #ddd; /* Lighter border */
+.cause-form select {
+  padding: 12px;
+  border: 1px solid #ddd;
   border-radius: 8px;
   font-size: 1rem;
-  width: 100%; /* Ensure full width */
-  box-sizing: border-box; /* Include padding in width */
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.cause-form button[type="submit"] { /* Targeted submit button specifically */
+.cause-form button[type="submit"] {
   padding: 12px 20px;
-  background: #00796b; /* Slightly brighter green */
+  background: #00796b;
   color: white;
   border: none;
   font-weight: 600;
   border-radius: 8px;
   cursor: pointer;
   transition: background 0.3s ease;
-  font-size: 1.1rem; /* Slightly larger font */
-  align-self: flex-end; /* Align button to the right */
-  width: auto; /* Allow button to size itself */
+  font-size: 1.1rem;
+  align-self: flex-end;
+  width: auto;
 }
 
 .cause-form button[type="submit"]:hover {
   background: #004d40;
 }
 
+.cause-form button[type="reset"] {
+  padding: 12px 20px;
+  background: #263432;
+  color: white;
+  border: none;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  font-size: 1.1rem;
+  align-self: flex-end;
+  width: auto;
+}
+
+.cause-form button[type="reset"]:hover {
+  background: #273f3b;
+}
 /* Cause List */
-.cause-list { /* ⭐ Changed from blog-list to cause-list */
+.cause-list {
   display: flex;
   flex-direction: column;
-  gap: 25px; /* Increased gap between items */
+  gap: 25px;
 }
 
 .cause-item {
   background: #ffffff;
-  padding: 25px; /* Increased padding */
+  padding: 25px;
   border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.08); /* More defined shadow */
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
   display: flex;
   justify-content: space-between;
-  align-items: flex-start; /* ⭐ Align items to the top */
-  flex-wrap: wrap; /* ⭐ Allow wrapping on smaller screens */
-  gap: 20px; /* ⭐ Gap between content and action buttons */
-  position: relative; /* For image positioning or other absolute elements */
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 20px;
+  position: relative;
 }
 
-.cause-item > div:first-child { /* Targets the div containing all text and image */
-    flex-grow: 1; /* Allows content to take up available space */
-    min-width: 250px; /* Ensures content doesn't get too squeezed */
+.cause-item > div:first-child {
+  flex-grow: 1;
+  min-width: 250px;
 }
-
 
 .cause-item h3 {
-  margin: 0 0 8px; /* Slightly more margin below title */
+  margin: 0 0 8px;
   color: #004d40;
   font-size: 1.3rem;
 }
 
 .cause-item p {
-  margin: 0 0 4px; /* Adjust spacing for paragraphs */
+  margin: 0 0 4px;
   line-height: 1.5;
   color: #555;
 }
 
 .cause-item p strong {
-  color: #00796b; /* Keep strong tags green */
+  color: #00796b;
 }
 
 .cause-item img {
-    /* Existing style for images. Ensure it works well. */
-    width: 100%;
-    max-width: 300px;
-    height: auto;
-    object-fit: cover;
-    margin-top: 15px; /* Increased margin top */
-    border-radius: 8px;
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  object-fit: cover;
+  margin-top: 15px;
+  border-radius: 8px;
 }
 
-/* ⭐ NEW: Styles for the div wrapping Edit/Delete buttons */
+/* Actions */
 .cause-actions {
   display: flex;
-  flex-direction: column; /* Stack buttons vertically */
-  gap: 10px; /* Space between Edit and Delete buttons */
-  align-items: flex-end; /* Align buttons to the right within their container */
-  /* margin-left: auto; Removed this as flex-direction column doesn't need it the same way */
-  flex-shrink: 0; /* Prevent buttons from shrinking if space is tight */
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-end;
+  flex-shrink: 0;
 }
 
-/* ⭐ NEW: Specific style for Edit button */
 .edit-button {
-  background: #2196F3; /* Blue color for Edit */
+  background: #2196F3;
   color: white;
   border: none;
-  padding: 8px 16px; /* Good padding */
+  padding: 8px 16px;
   border-radius: 6px;
   cursor: pointer;
   transition: background 0.3s;
   font-weight: 500;
-  width: 100px; /* Fixed width for consistency */
+  width: 100px;
   text-align: center;
 }
 
 .edit-button:hover {
-  background: #1976D2; /* Darker blue on hover */
+  background: #1976D2;
 }
 
-/* ⭐ MODIFIED: Style for Delete button */
 .delete-button {
-  background: #c62828; /* Red color for Delete */
+  background: #c62828;
   color: white;
   border: none;
   padding: 8px 16px;
@@ -163,14 +174,16 @@
   cursor: pointer;
   transition: background 0.3s;
   font-weight: 500;
-  width: 100px; /* Fixed width for consistency */
+  width: 100px;
   text-align: center;
 }
+
 .delete-button:hover {
   background: #b71c1c;
 }
-.copy-button{
-background: #c6c328; /* Red color for Delete */
+
+.copy-button {
+  background: #c6c328;
   color: white;
   border: none;
   padding: 8px 16px;
@@ -178,56 +191,70 @@ background: #c6c328; /* Red color for Delete */
   cursor: pointer;
   transition: background 0.3s;
   font-weight: 500;
-  width: 100px; /* Fixed width for consistency */
+  width: 100px;
   text-align: center;
 }
-.copy-button:hover{
-  background:hsl(from #c6c328);
+
+.copy-button:hover {
+  background: #a5a121; /* Darker shade of yellow-green */
 }
 
-/* Optional: Responsive adjustments for smaller screens */
+/* Responsive */
 @media (max-width: 768px) {
-    .cause-item {
-        flex-direction: column; /* Stack content and buttons vertically */
-        align-items: stretch; /* Stretch items to full width */
-        padding: 15px;
-    }
-    .cause-item > div:first-child {
-        min-width: auto;
-    }
-    .cause-actions {
-        flex-direction: row; /* Buttons side-by-side on small screens */
-        width: 100%; /* Buttons take full width */
-        justify-content: space-around; /* Distribute buttons horizontally */
-        margin-top: 15px; /* Add some space above buttons when stacked */
-        align-items: center; /* Center them */
-    }
-    .edit-button,
-    .delete-button {
-        flex-grow: 1; /* Allow buttons to grow and fill space */
-        width: auto; /* Let flex-grow control width */
-    }
+  .cause-item {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 15px;
+  }
+  .cause-item > div:first-child {
+    min-width: auto;
+  }
+  .cause-actions {
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-around;
+    margin-top: 15px;
+    align-items: center;
+  }
+  .edit-button,
+  .delete-button,
+  .copy-button {
+    flex-grow: 1;
+    width: auto;
+  }
 }
 
 @media (max-width: 480px) {
-    .manage-causes h2 {
-        font-size: 1.5rem;
-    }
-    .cause-form {
-        padding: 20px;
-    }
-    .cause-form input,
-    .cause-form textarea {
-        font-size: 0.9rem;
-    }
-    .cause-form button[type="submit"] {
-        font-size: 1rem;
-        padding: 10px 15px;
-    }
-    .cause-item h3 {
-        font-size: 1.1rem;
-    }
-    .cause-item p {
-        font-size: 0.9rem;
-    }
+  .manage-causes h2 {
+    font-size: 1.5rem;
+  }
+  .cause-form {
+    padding: 20px;
+  }
+  .cause-form input,
+  .cause-form textarea {
+    font-size: 0.9rem;
+  }
+  .cause-form button[type="submit"] {
+    font-size: 1rem;
+    padding: 10px 15px;
+  }
+  .cause-item h3 {
+    font-size: 1.1rem;
+  }
+  .cause-item p {
+    font-size: 0.9rem;
+  }
+}
+
+/* Remove number input spinner - Chrome, Safari, Edge */
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Remove number input spinner - Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
 }

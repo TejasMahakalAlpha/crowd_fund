@@ -37,9 +37,7 @@ const Dashboard = () => {
         // AdminApi.getAllContacts(), // Uncomment if you have this API endpoint
       ]);
 
-      // --- DEBUGGING CONSOLE LOGS START ---
-      console.log("--- Dashboard Data Fetch Results (allSettled) ---");
-      console.log("All Settled Results:", results);
+
       // --- DEBUGGING CONSOLE LOGS END ---
 
       const newSummary = { ...summary }; // Create a copy to update
