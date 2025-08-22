@@ -16,8 +16,7 @@ const slugify = (text) => {
 const Causes = () => {
   const [causes, setCauses] = useState([]);
   const [isPageLoading, setIsPageLoading] = useState(true);
-  const [causeToView, setCauseToView] = useState(null);
-
+  const [selectedCause, setSelectedCause] = useState(null);
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);
   const [isPaymentProcessing, setIsPaymentProcessing] = useState(false);
 
@@ -211,119 +210,115 @@ const Causes = () => {
 
   return (
     <div className="causes-page">
-      {causeToView ? (
-        <div className="single-cause-view-full-page">
-          <button onClick={() => setCauseToView(null)} className="back-button">
-            ← Back to All Causes
-          </button>
-          <h2 className="modal-title">{causeToView.title}</h2>
+      {isPageLoading && <div className="loading-state">Loading Causes...</div>}
 
-          {causeToView.mediaType === 'VIDEO' ? (
-            <video
-              src={getImageUrl(causeToView.videoUrl)}
-              className="modal-image"
-              autoPlay
-              loop
-              muted
-              playsInline
-              onContextMenu={(e) => e.preventDefault()} // Disable right-click
-              controlsList="nodownload" // Disable download in some browsers
-            />
-          ) : (
-            <img
-              src={getImageUrl(causeToView.imageUrl)}
-              alt={causeToView.title}
-              className="modal-image"
-            />
-          )}
+      <section className="causes-hero">
+        <h1>Our Causes</h1>
+        <p>Explore ongoing initiatives and support the ones that matter to you most.</p>
+      </section>
 
-          <div className="modal-details">
-            <p><strong>Description:</strong> {causeToView.description}</p>
-            <p><strong>Category:</strong> {causeToView.category}</p>
-            <p><strong>Location:</strong> {causeToView.location}</p>
-            <p><strong>Status:</strong> {causeToView.status}</p>
-            <p><strong>End Date:</strong> {causeToView.endDate ? new Date(causeToView.endDate).toLocaleDateString() : "N/A"}</p>
-            <p><strong>Raised:</strong> ₹{Number(causeToView.currentAmount).toLocaleString()} of ₹{Number(causeToView.targetAmount).toLocaleString()}</p>
-          </div>
-          <button
-            className="donate-btn"
-            style={{ marginTop: '1.5rem', width: '100%' }}
-            onClick={() => handleDonate(causeToView)}
-            disabled={isPaymentProcessing || !isScriptLoaded}
-          >
-            {isPaymentProcessing ? 'Processing...' : 'Donate to this Cause'}
-          </button>
-        </div>
-      ) : (
-        <>
-          <section className="causes-hero">
-            <h1>Our Causes</h1>
-            <p>Explore ongoing initiatives and support the ones that matter to you most.</p>
-          </section>
-          <div className="causes-grid">
-            {causes.map((cause) => {
-              const raised = Number(cause.currentAmount) || 0;
-              const goal = Number(cause.targetAmount) || 1;
-              const percentage = Math.min(Math.round((raised / goal) * 100, 100));
-              const causeId = cause.id || cause._id;
-              return (
-                <div className="cause-box" key={causeId}>
-                  {/* --- UPDATED: onClick handler and style removed from this div --- */}
-                  <div>
-                    {cause.mediaType === 'VIDEO' ? (
-                      <video
-                        src={getImageUrl(cause.videoUrl)}
-                        className="modal-image" // You can use the same class for consistent styling
-                        autoPlay
-                        loop
-                        muted
-                        playsInline
-                        onContextMenu={(e) => e.preventDefault()} // Disable right-click
-                        controlsList="nodownload" // Disable download in some browsers
+      <div className="causes-grid">
+        {causes.map((cause) => {
+          const raised = Number(cause.currentAmount) || 0;
+          const goal = Number(cause.targetAmount) || 1;
+          const percentage = Math.min(Math.round((raised / goal) * 100, 100));
+          const causeId = cause.id || cause._id;
+          return (
+            <div className="cause-box" key={causeId}>
+              <div onClick={() => setSelectedCause(cause)} style={{ cursor: "pointer" }}>
+                {cause.mediaType === "VIDEO" ? (
+                  <video
+                    src={getImageUrl(cause.videoUrl)}
+                    className="modal-image"
+                    autoPlay loop muted playsInline
+                    onContextMenu={(e) => e.preventDefault()}
+                    controlsList="nodownload"
+                  />
+                ) : (
+                  <img
+                    src={getImageUrl(cause.imageUrl)}
+                    alt={cause.title}
+                    className="modal-image"
+                    onError={(e) => {
+                      e.currentTarget.src = "/crowdfund_logo.png";
+                      e.currentTarget.onerror = null;
+                    }}
+                  />
+                )}
 
-                      />
-                    ) : (
-                      <img
-                        src={getImageUrl(cause.imageUrl)}
-                        alt={cause.title}
-                        className="modal-image"
-                        onError={(e) => {
-                          e.currentTarget.src = "/crowdfund_logo.png"; // fallback if 404 or broken
-                          e.currentTarget.onerror = null; // prevent infinite loop if default also missing
-                        }}
-                      />
-                    )}
-
-                    <h3>{cause.title}</h3>
-                    <div className="progress-bar">
-                      <div className="progress" style={{ width: `${percentage}%` }}></div>
-                    </div>
-                    <p className="donation-amount">
-                      ₹{raised.toLocaleString()} raised of ₹{goal.toLocaleString()} goal
-                    </p>
-                    <p>{cause.shortDescription}</p>
-                  </div>
-                  <div className="btn-container">
-                    <button
-                      className="donate-btn"
-                      onClick={() => handleDonate(cause)}
-                      disabled={isPaymentProcessing || !isScriptLoaded}
-                    >
-                      {isPaymentProcessing ? 'Processing...' : 'Donate Now'}
-                    </button>
-                    <button
-                      className="share-btn"
-                      title="Share this cause"
-                      onClick={() => handleShare(cause)}
-                    >
-                      Share  <FaShareAlt />
-                    </button>
-                  </div>
+                <h3>{cause.title}</h3>
+                <div className="progress-bar">
+                  <div className="progress" style={{ width: `${percentage}%` }}></div>
                 </div>
-              );
-            })}
+                <p className="donation-amount">
+                  ₹{raised.toLocaleString()} raised of ₹{goal.toLocaleString()} goal
+                </p>
+                <p className="description">{
+                  cause.description?.length > 200
+                    ? cause.description.slice(0, 200) + "..."
+                    : cause.description
+                }</p>
+              </div>
+
+              <div className="btn-container">
+                <button
+                  className="donate-btn"
+                  onClick={() => handleDonate(cause)}
+                  disabled={isPaymentProcessing || !isScriptLoaded}
+                >
+                  {isPaymentProcessing ? "Processing..." : "Donate Now"}
+                </button>
+                <button className="share-btn" onClick={() => handleShare(cause)}>
+                  Share <FaShareAlt />
+                </button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* 🔥 Modal */}
+      {selectedCause && (
+        <div className="modal-overlay" onClick={() => setSelectedCause(null)}>
+          <div className="modal-box" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close" onClick={() => setSelectedCause(null)}>×</button>
+            <h2>{selectedCause.title}</h2>
+
+            {selectedCause.mediaType === "VIDEO" ? (
+              <video
+                src={getImageUrl(selectedCause.videoUrl)}
+                className="modal-image"
+                autoPlay loop muted playsInline
+                onContextMenu={(e) => e.preventDefault()}
+                controlsList="nodownload"
+              />
+            ) : (
+              <img
+                src={getImageUrl(selectedCause.imageUrl)}
+                alt={selectedCause.title}
+                className="modal-image"
+              />
+            )}
+
+            <div className="modal-details">
+              <p><strong>Description:</strong> {selectedCause.description}</p>
+              <p><strong>Category:</strong> {selectedCause.category}</p>
+              <p><strong>Location:</strong> {selectedCause.location}</p>
+              <p><strong>Status:</strong> {selectedCause.status}</p>
+              <p><strong>End Date:</strong> {selectedCause.endDate ? new Date(selectedCause.endDate).toLocaleDateString() : "N/A"}</p>
+              <p><strong>Raised:</strong> ₹{Number(selectedCause.currentAmount).toLocaleString()} of ₹{Number(selectedCause.targetAmount).toLocaleString()}</p>
+            </div>
+
+            <button
+              className="donate-btn"
+              onClick={() => handleDonate(selectedCause)}
+              disabled={isPaymentProcessing || !isScriptLoaded}
+              style={{ marginTop: "1rem", width: "100%" }}
+            >
+              {isPaymentProcessing ? "Processing..." : "Donate to this Cause"}
+            </button>
           </div>
-        </>
+        </div>
       )}
     </div>
   );

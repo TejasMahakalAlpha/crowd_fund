@@ -145,29 +145,32 @@ const ManageDonations = () => {
             name="donorName"
             value={formData.donorName}
             onChange={handleChange}
+            placeholder="Enter your full name"
           />
           {errors.donorName && <p className="error">{errors.donorName}</p>}
         </label>
 
         <label>
-          Email Address
+          Email Address <span style={{ color: "red" }}>*</span>
           <input
             type="email"
             name="donorEmail"
             value={formData.donorEmail}
             onChange={handleChange}
+            placeholder="Enter your email address"
           />
           {errors.donorEmail && <p className="error">{errors.donorEmail}</p>}
         </label>
 
         <label>
-          Phone Number
+          Phone Number <span style={{ color: "red" }}>*</span>
           <input
             type="text"
             name="donorPhone"
             maxLength={10}
             value={formData.donorPhone}
             onChange={handleChange}
+            placeholder="Enter 10-digit phone number"
           />
           {errors.donorPhone && <p className="error">{errors.donorPhone}</p>}
         </label>
@@ -181,6 +184,7 @@ const ManageDonations = () => {
             step="any"
             value={formData.amount}
             onChange={handleChange}
+            placeholder="Enter donation amount"
           />
           {errors.amount && <p className="error">{errors.amount}</p>}
         </label>
@@ -192,6 +196,7 @@ const ManageDonations = () => {
             name="causeId"
             value={formData.causeId}
             onChange={handleChange}
+            placeholder="Enter cause ID (optional)"
           />
         </label>
 
@@ -202,6 +207,7 @@ const ManageDonations = () => {
             name="currency"
             value={formData.currency}
             onChange={handleChange}
+            placeholder="Enter currency (e.g., INR)"
           />
           {errors.currency && <p className="error">{errors.currency}</p>}
         </label>
@@ -213,6 +219,7 @@ const ManageDonations = () => {
             name="paymentMethod"
             value={formData.paymentMethod}
             onChange={handleChange}
+            placeholder="Enter payment method (e.g., UPI, Card)"
           />
           {errors.paymentMethod && <p className="error">{errors.paymentMethod}</p>}
         </label>
@@ -224,11 +231,13 @@ const ManageDonations = () => {
             value={formData.message}
             onChange={handleChange}
             rows={3}
+            placeholder="Write a message (optional)"
           />
         </label>
 
         <button type="submit">Add Donation</button>
       </form>
+
 
 
       <div className="donations-list"> {/* ⭐ Renamed class for specific styling */}

@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { PublicApi } from "../services/api";
 import "./Events.css";
-import { FaShareAlt } from 'react-icons/fa';
-import Swal from 'sweetalert2'; // ✨ 1. Swal इम्पोर्ट किया गया
+import { FaShareAlt } from "react-icons/fa";
+import Swal from "sweetalert2";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 const slugify = (text) => {
-  if (!text) return '';
+  if (!text) return "";
   return text
     .toString()
     .toLowerCase()
     .trim()
-    .replace(/\s+/g, '-')
-    .replace(/[^\w\-]+/g, '')
-    .replace(/\-\-+/g, '-');
+    .replace(/\s+/g, "-")
+    .replace(/[^\w\-]+/g, "")
+    .replace(/\-\-+/g, "-");
 };
 
 const Events = () => {
@@ -22,12 +22,14 @@ const Events = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
+  // 🔥 For Modal
+  const [selectedEvent, setSelectedEvent] = useState(null);
+
   const getImageUrl = (relativePath) => {
     if (!relativePath) return "";
     return `${API_BASE}/api/images/${relativePath}`;
   };
 
-  // ✨ 2. handleShare फंक्शन को CausesSection जैसा बनाया गया
   const handleShare = async (event) => {
     const eventSlug = slugify(event.title);
     const shareData = {
@@ -40,8 +42,7 @@ const Events = () => {
       try {
         await navigator.share(shareData);
       } catch (error) {
-        if (error.name !== 'AbortError') {
-          console.error("Error sharing:", error);
+        if (error.name !== "AbortError") {
           Swal.fire("Error", "Could not share this event.", "error");
         }
       }
@@ -50,14 +51,13 @@ const Events = () => {
         await navigator.clipboard.writeText(shareData.url);
         Swal.fire({
           toast: true,
-          position: 'top-end',
-          icon: 'success',
-          title: 'Link copied to clipboard!',
+          position: "top-end",
+          icon: "success",
+          title: "Link copied to clipboard!",
           showConfirmButton: false,
-          timer: 2000
+          timer: 2000,
         });
       } catch (err) {
-        console.error("Failed to copy link: ", err);
         Swal.fire("Error", "Could not copy link.", "error");
       }
     }
@@ -70,11 +70,9 @@ const Events = () => {
         if (Array.isArray(res.data)) {
           setEvents(res.data);
         } else {
-          console.warn("Unexpected response:", res.data);
           setError("Unexpected response format");
         }
       } catch (err) {
-        console.error("Failed to fetch events", err);
         setError("Failed to fetch events");
       } finally {
         setLoading(false);
@@ -110,45 +108,33 @@ const Events = () => {
                 minute: "2-digit",
                 hour12: true,
               });
-              const endTime = "";
-              const fullTimeRange = `${dayOfWeek} ${time}${endTime ? ' - ' + endTime : ''}`;
 
               return (
-                <div className="event-card" key={event._id || event.id || index}>
+                <div
+                  className="event-card"
+                  key={event._id || event.id || index}
+
+                >
                   <div className="event-date-col">
                     <span className="month-day">{month} {day}</span>
                     <span className="year">{year}</span>
                   </div>
 
                   <div className="event-details-col">
-                    <p className="event-datetime">{fullTimeRange}</p>
-                    <h3 className="event-title">{event.title}</h3>
-                    <p className="event-description">{event.description}</p>
-
-                    {event.imageUrl && (
-                      <div className="event-image-container">
-                        <img
-                          src={getImageUrl(event.imageUrl)}
-                          alt={event.title}
-                          className="event-main-image"
-                          onError={(e) => {
-                            e.currentTarget.src = "/crowdfund_logo.png"; // fallback if 404 or broken
-                            e.currentTarget.onerror = null; // prevent infinite loop if default also missing
-                          }}
-                        />
-                      </div>
-                    )}
-                    <div className="share-container">
-                      <button
-                        // ✨ 3. onClick को सरल बनाया गया
-                        onClick={() => handleShare(event)}
-                        className="share-button"
-                        title="Share this event"
-                      >
-                        Share <FaShareAlt />
-                      </button>
-                    </div>
-
+                    <p className="event-datetime">{dayOfWeek} {time}</p>
+                    <h3 className="event-title" >{event.title}</h3>
+                    <p className="description" onClick={() => setSelectedEvent(event)} // 🔥 Open modal on click
+                      style={{ cursor: "pointer" }}>{
+                        event.description?.length > 200
+                          ? event.description.slice(0, 200) + "..."
+                          : event.description
+                      }</p>
+                    <button
+                      className="share-button"
+                      onClick={() => handleShare(selectedEvent)}
+                    >
+                      Share <FaShareAlt />
+                    </button>
                   </div>
                 </div>
               );
@@ -156,6 +142,35 @@ const Events = () => {
           </div>
         )}
       </div>
+
+      {/* 🔥 Event Details Modal */}
+      {selectedEvent && (
+        <div className="modal-overlay" onClick={() => setSelectedEvent(null)}>
+          <div
+            className="modal-content"
+            onClick={(e) => e.stopPropagation()} // prevent closing when clicking inside modal
+          >
+            <button className="close-btn" onClick={() => setSelectedEvent(null)}>
+              ✖
+            </button>
+            {selectedEvent.imageUrl && (
+              <img
+                src={getImageUrl(selectedEvent.imageUrl)}
+                alt={selectedEvent.title}
+                className="modal-image"
+              />
+            )}
+            <h2>{selectedEvent.title}</h2>
+            <p>{selectedEvent.description}</p>
+            <button
+              className="share-button"
+              onClick={() => handleShare(selectedEvent)}
+            >
+              Share <FaShareAlt />
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

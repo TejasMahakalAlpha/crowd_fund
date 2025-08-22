@@ -316,9 +316,14 @@ const ManagePersonalCauses = () => {
 
                           if (pdfExtensions.includes(ext)) {
                             return (
-                              <a href={docUrl} target="_blank" rel="noopener noreferrer" className="download-link">
-                                Open PDF
-                              </a>
+                              <iframe
+                                src={pdfUrl}
+                                width="100%"
+                                height="600px"
+                                style={{ border: "none" }}
+                                title="PDF Viewer"
+                              />
+
                             );
                           } else if (docExtensions.includes(ext)) {
                             return (

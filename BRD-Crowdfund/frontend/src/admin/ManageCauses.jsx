@@ -186,7 +186,12 @@ const ManageCauses = () => {
           <div className="cause-item">
             <h3>{causeToView.title}</h3>
             <p><strong>Description:</strong> {causeToView.description}</p>
+            <p><strong>Short Description:</strong> {causeToView.shortDescription}</p>
             <p><strong>Target Amount:</strong> ₹{causeToView.targetAmount?.toLocaleString()}</p>
+            <p><strong>Description:</strong> {causeToView.endDate}</p>
+            <p><strong>Category:</strong> {causeToView.category}</p>
+            <p><strong>Location:</strong> {causeToView.location}</p>
+            <p><strong>End date:</strong> {causeToView.endDate}</p>
             {(causeToView.imageUrl || causeToView.videoUrl) && (
               <div className="media-container" style={{ marginTop: "10px" }}>
                 {causeToView.mediaType === "VIDEO" ? (
@@ -214,39 +219,73 @@ const ManageCauses = () => {
           <form className="cause-form" onSubmit={handleSubmit} noValidate>
             <label>
               Cause Title: <span style={{ color: "red" }}>*</span>
-              <input type="text" name="title" value={formData.title} onChange={handleChange} />
+              <input
+                type="text"
+                name="title"
+                value={formData.title}
+                onChange={handleChange}
+                placeholder="Enter cause title"
+              />
               {errors.title && <p className="error">{errors.title}</p>}
             </label>
 
             <label>
               Short Description: <span style={{ color: "red" }}>*</span>
-              <input type="text" name="shortDescription" value={formData.shortDescription} onChange={handleChange} />
+              <input
+                type="text"
+                name="shortDescription"
+                value={formData.shortDescription}
+                onChange={handleChange}
+                placeholder="Enter short description"
+              />
               {errors.shortDescription && <p className="error">{errors.shortDescription}</p>}
             </label>
 
             <label>
               Description: <span style={{ color: "red" }}>*</span>
-              <textarea name="description" value={formData.description} onChange={handleChange} rows={3} />
+              <textarea
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+                rows={3}
+                placeholder="Enter detailed description"
+              />
               {errors.description && <p className="error">{errors.description}</p>}
             </label>
 
             <label>
               Target Amount: <span style={{ color: "red" }}>*</span>
-              <input type="number" name="targetAmount" value={formData.targetAmount} onChange={handleChange} min="1" />
+              <input
+                type="number"
+                name="targetAmount"
+                value={formData.targetAmount}
+                onChange={handleChange}
+                min="1"
+                placeholder="Enter target amount"
+              />
               {errors.targetAmount && <p className="error">{errors.targetAmount}</p>}
             </label>
 
-
-
-
             <label>
               Category:
-              <input type="text" name="category" value={formData.category} onChange={handleChange} />
+              <input
+                type="text"
+                name="category"
+                value={formData.category}
+                onChange={handleChange}
+                placeholder="Enter category"
+              />
             </label>
 
             <label>
               Location:
-              <input type="text" name="location" value={formData.location} onChange={handleChange} />
+              <input
+                type="text"
+                name="location"
+                value={formData.location}
+                onChange={handleChange}
+                placeholder="Enter location"
+              />
             </label>
 
             <label>
@@ -257,22 +296,26 @@ const ManageCauses = () => {
                 value={formData.endDate}
                 onChange={handleChange}
                 min={new Date().toISOString().split("T")[0]} // sets today as minimum
+                placeholder="Select end date"
               />
               {errors.endDate && <p className="error">{errors.endDate}</p>}
             </label>
 
-
             <label>
               Display Image or Video:
-              <input type="file" accept="image/*,video/*" onChange={handleImageChange} key={imageFile || ''} />
+              <input
+                type="file"
+                accept="image/*,video/*"
+                onChange={handleImageChange}
+                key={imageFile || ""}
+                placeholder="Upload image or video"
+              />
             </label>
 
             {imagePreview && (
               <div className="preview-container">
-                {displayFileType === 'image' && (
-                  <img src={imagePreview} alt="Preview" />
-                )}
-                {displayFileType === 'video' && (
+                {displayFileType === "image" && <img src={imagePreview} alt="Preview" />}
+                {displayFileType === "video" && (
                   <video src={imagePreview} controls autoPlay muted loop />
                 )}
               </div>
@@ -287,9 +330,18 @@ const ManageCauses = () => {
                   onClick={() => {
                     setIsEditing(false);
                     setEditId(null);
-                    setFormData({ title: "", shortDescription: "", description: "", category: "", location: "", targetAmount: "", endDate: "", status: "ACTIVE" });
+                    setFormData({
+                      title: "",
+                      shortDescription: "",
+                      description: "",
+                      category: "",
+                      location: "",
+                      targetAmount: "",
+                      endDate: "",
+                      status: "ACTIVE",
+                    });
                     setImagePreview(null);
-                    setDisplayFileType('');
+                    setDisplayFileType("");
                   }}
                 >
                   Cancel Edit
@@ -297,7 +349,6 @@ const ManageCauses = () => {
               )}
             </div>
           </form>
-
 
           <div className="cause-list">
             {causes.map((cause) => (

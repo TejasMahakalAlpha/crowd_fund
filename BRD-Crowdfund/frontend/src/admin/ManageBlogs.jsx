@@ -24,6 +24,7 @@ const ManageBlogs = () => {
   const [formData, setFormData] = useState(initialFormData);
   const [editingBlogId, setEditingBlogId] = useState(null);
   const [errors, setErrors] = useState({});
+  const [imagePreview, setImagePreview] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -77,6 +78,7 @@ const ManageBlogs = () => {
     } else if (type === 'file') {
       const file = files[0];
       setFormData({ ...formData, image: file });
+      setImagePreview(URL.createObjectURL(file));
     } else {
       setFormData({ ...formData, [name]: value });
     }
@@ -329,7 +331,11 @@ const ManageBlogs = () => {
           onChange={handleChange}
         />
         {errors.image && <p className="error">{errors.image}</p>}
-
+        {imagePreview && (
+          <div className="preview-container">
+            <img src={imagePreview} alt="Preview" style={{ maxWidth: "200px", marginTop: "10px" }} />
+          </div>
+        )}
         <button type="submit">{editingBlogId ? "Update Blog" : "Add Blog"}</button>
       </form>
 

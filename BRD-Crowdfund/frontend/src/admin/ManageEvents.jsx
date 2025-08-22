@@ -57,9 +57,7 @@ const ManageEvents = () => {
       newErrors.maxParticipants = "Max Participants must be a positive number";
     }
 
-    if (currentParticipants === "") {
-      newErrors.currentParticipants = "Current Participants is required";
-    } else if (
+    if (
       isNaN(currentParticipants) ||
       Number(currentParticipants) < 0
     ) {
@@ -113,8 +111,9 @@ const ManageEvents = () => {
     setImagePreview(
       eventToEdit.imageUrl?.startsWith("http")
         ? eventToEdit.imageUrl
-        : `${API}/${eventToEdit.imageUrl}`
+        : getImageUrl(eventToEdit.imageUrl)
     );
+
 
     setEditId(id);
     setIsEditing(true);
@@ -133,9 +132,10 @@ const ManageEvents = () => {
       form.append("description", formData.description);
       form.append("eventDate", formData.eventDate);
       form.append("location", formData.location);
-      form.append("status", formData.status);
-      form.append("maxParticipants", formData.maxParticipants);
-      form.append("currentParticipants", formData.currentParticipants);
+      form.append("status", formData.status.toUpperCase()); // ensure enum matches backend
+      form.append("maxParticipants", String(formData.maxParticipants));
+      form.append("currentParticipants", String(formData.currentParticipants));
+
 
       if (imageFile) {
         form.append("image", imageFile); // 🔥 include image file
@@ -207,7 +207,7 @@ const ManageEvents = () => {
 
       <form className="blog-form" onSubmit={handleSubmit} noValidate>
         <label>
-          Title:
+          Title: <span style={{ color: "red" }}>*</span>
           <input
             type="text"
             name="title"
@@ -219,7 +219,7 @@ const ManageEvents = () => {
         </label>
 
         <label>
-          Short Description:
+          Short Description: <span style={{ color: "red" }}>*</span>
           <input
             type="text"
             name="shortDescription"
@@ -231,7 +231,7 @@ const ManageEvents = () => {
         </label>
 
         <label>
-          Description:
+          Description: <span style={{ color: "red" }}>*</span>
           <textarea
             name="description"
             placeholder="Description"
@@ -243,7 +243,7 @@ const ManageEvents = () => {
         </label>
 
         <label>
-          Event Date:
+          Event Date: <span style={{ color: "red" }}>*</span>
           <input
             type="datetime-local"
             name="eventDate"
@@ -254,7 +254,7 @@ const ManageEvents = () => {
         </label>
 
         <label>
-          Location:
+          Location: <span style={{ color: "red" }}>*</span>
           <input
             type="text"
             name="location"
@@ -278,7 +278,7 @@ const ManageEvents = () => {
         </label>
 
         <label>
-          Max Participants:
+          Max Participants: <span style={{ color: "red" }}>*</span>
           <input
             type="number"
             name="maxParticipants"

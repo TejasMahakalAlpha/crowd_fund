@@ -26,7 +26,7 @@
   overflow: hidden;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
   transition: transform 0.3s ease;
-  cursor: pointer;
+
 }
 
 .event-card:hover {
@@ -57,15 +57,12 @@
 .event-info {
   padding: 20px;
   text-align: left;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  flex-grow: 1;
 }
 
 .event-info h3 {
   font-size: 1.3rem;
   color: #00796b;
+   
 }
 
 .event-info .time,
@@ -77,6 +74,7 @@
 .event-info .description {
   color: #555;
   font-size: 0.95rem;
+   cursor: pointer;
 }
 
 .event-image {
@@ -106,12 +104,17 @@
   background: #fff;
   width: 90%;
   max-width: 700px;
+  max-height: 90vh; /* prevent it from exceeding viewport height */
   border-radius: 12px;
-  overflow: hidden;
+  overflow-y: auto; /* enable vertical scrolling */
   position: relative;
+  padding: 15px;
   animation: fadeIn 0.3s ease-in-out;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  padding-bottom: 20px; /* optional for spacing at bottom */
+   scroll-behavior: smooth;
 }
+
 
 .modal-close {
   position: absolute;
@@ -147,6 +150,7 @@
   font-size: 1rem;
   color: #444;
   margin-bottom: 15px;
+  text-align: left;
 }
 
 .modal-details p {
@@ -154,6 +158,13 @@
   margin: 5px 0;
   color: #333;
 }
+
+.modal-close {
+  top: 15px;
+  right: 15px;
+  z-index: 10;
+}
+
 
 @keyframes fadeIn {
   from {

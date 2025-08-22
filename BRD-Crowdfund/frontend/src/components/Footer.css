@@ -167,9 +167,7 @@
   border-radius: 8px;
   cursor: pointer;
 }
-.close-btn:hover {
-  background: #379a9a;
-}
+
 
 /* --- Popup Overlay --- */
 .terms-popup-overlay {
@@ -224,9 +222,6 @@
   margin-top: 20px;
   cursor: pointer;
   font-size: 14px;
-}
-.close-btn:hover {
-  background: #3aa3a3;
 }
 
 /* --- Terms Link Button --- */
