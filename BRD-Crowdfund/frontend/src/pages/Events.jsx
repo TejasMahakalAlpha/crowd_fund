@@ -131,7 +131,7 @@ const Events = () => {
                       }</p>
                     <button
                       className="share-button"
-                      onClick={() => handleShare(selectedEvent)}
+                      onClick={() => handleShare(event)}
                     >
                       Share <FaShareAlt />
                     </button>
