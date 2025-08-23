@@ -297,6 +297,10 @@ const Causes = () => {
                 src={getImageUrl(selectedCause.imageUrl)}
                 alt={selectedCause.title}
                 className="modal-image"
+                onError={(e) => {
+                  e.currentTarget.src = "/crowdfund_logo.png";
+                  e.currentTarget.onerror = null;
+                }}
               />
             )}
 

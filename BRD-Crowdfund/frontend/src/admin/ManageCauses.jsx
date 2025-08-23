@@ -53,7 +53,7 @@ const ManageCauses = () => {
       category: causeToEdit.category || "",
       location: causeToEdit.location || "",
       targetAmount: causeToEdit.targetAmount || "",
-      endDate: causeToEdit.endDate ? new Date(causeToEdit.endDate).toISOString().slice(0, 10) : "",
+      endDate: causeToEdit.endDate ? causeToEdit.endDate.slice(0, 16) : "",
       status: causeToEdit.status || "ACTIVE",
     });
 
@@ -188,7 +188,6 @@ const ManageCauses = () => {
             <p><strong>Description:</strong> {causeToView.description}</p>
             <p><strong>Short Description:</strong> {causeToView.shortDescription}</p>
             <p><strong>Target Amount:</strong> ₹{causeToView.targetAmount?.toLocaleString()}</p>
-            <p><strong>Description:</strong> {causeToView.endDate}</p>
             <p><strong>Category:</strong> {causeToView.category}</p>
             <p><strong>Location:</strong> {causeToView.location}</p>
             <p><strong>End date:</strong> {causeToView.endDate}</p>
@@ -289,9 +288,9 @@ const ManageCauses = () => {
             </label>
 
             <label>
-              End Date: <span style={{ color: "red" }}>*</span>
+              End Date Time: <span style={{ color: "red" }}>*</span>
               <input
-                type="date"
+                type="datetime-local"
                 name="endDate"
                 value={formData.endDate}
                 onChange={handleChange}
@@ -355,7 +354,8 @@ const ManageCauses = () => {
               <div className="cause-item" key={cause.id || cause._id}>
                 <div>
                   <h3>{cause.title}</h3>
-                  <p><strong>Status:</strong> {cause.status}</p>
+
+                  <p><strong>End date:</strong> {new Date(cause.endDate).toLocaleString()}</p>
                 </div>
                 <div className="cause-actions">
                   <button className="edit-button" onClick={() => handleUpdate(cause)}>Edit</button>

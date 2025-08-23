@@ -269,9 +269,7 @@ const ManagePersonalCauses = () => {
                       controls
                       className="detail-video-preview"
                     />
-                    <a href={getFileUrl(selectedSubmission.videoUrl)} target="_blank" rel="noopener noreferrer" className="download-link">
-                      View Video
-                    </a>
+
                     <a href={`${getFileUrl(selectedSubmission.videoUrl)}/download`} className="download-link">
                       Download Video
                     </a>
@@ -283,9 +281,7 @@ const ManagePersonalCauses = () => {
                       alt="Cause Media"
                       className="detail-image-preview"
                     />
-                    <a href={getFileUrl(selectedSubmission.imageUrl)} target="_blank" rel="noopener noreferrer" className="download-link">
-                      View Image
-                    </a>
+
                     <a href={`${getFileUrl(selectedSubmission.imageUrl)}/download`} className="download-link">
                       Download Image
                     </a>
@@ -317,9 +313,9 @@ const ManagePersonalCauses = () => {
                           if (pdfExtensions.includes(ext)) {
                             return (
                               <iframe
-                                src={pdfUrl}
+                                src={docUrl}
                                 width="100%"
-                                height="600px"
+                                height="300px"
                                 style={{ border: "none" }}
                                 title="PDF Viewer"
                               />
@@ -327,9 +323,13 @@ const ManagePersonalCauses = () => {
                             );
                           } else if (docExtensions.includes(ext)) {
                             return (
-                              <a href={docUrl} target="_blank" rel="noopener noreferrer" className="download-link">
-                                Open DOC
-                              </a>
+                              <iframe
+                                src={`https://docs.google.com/viewer?url=${docUrl}&embedded=true`}
+                                width="100%"
+                                height="300px"
+                                style={{ border: "none" }}
+                              ></iframe>
+
                             );
                           } else if (imageExtensions.includes(ext)) {
                             return <img src={docUrl} alt="Proof Document" className="detail-image-preview" />;

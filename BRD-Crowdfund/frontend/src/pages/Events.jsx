@@ -97,7 +97,7 @@ const Events = () => {
           <p className="no-events-text">Currently, there are no events available.</p>
         ) : (
           <div className="events-list">
-            {events.map((event, index) => {
+            {events.sort((a, b) => new Date(a.date || a.eventDate) - new Date(b.date || b.eventDate)).map((event, index) => {
               const dateObj = new Date(event.date || event.eventDate);
               const day = dateObj.getDate();
               const month = dateObj.toLocaleString("default", { month: "short" });
@@ -158,9 +158,17 @@ const Events = () => {
                 src={getImageUrl(selectedEvent.imageUrl)}
                 alt={selectedEvent.title}
                 className="modal-image"
+                onError={(e) => {
+                  e.currentTarget.src = "/crowdfund_logo.png";
+                  e.currentTarget.onerror = null;
+                }}
               />
             )}
             <h2>{selectedEvent.title}</h2>
+            <p className={`status ${selectedEvent.status?.toLowerCase()}`}>
+              {selectedEvent.status}
+            </p>
+
             <p>{selectedEvent.description}</p>
             <button
               className="share-button"

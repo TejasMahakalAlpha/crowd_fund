@@ -31,7 +31,7 @@
 /* This is the key for the new layout */
 /* =================================== */
 .event-card-details {
-  display: flex; /* Activates Flexbox */
+  /* display: flex; Activates Flexbox */
   flex-direction: row; /* Arranges items side-by-side */
   gap: 2.5rem; /* Creates space between image and text */
   background-color: #ffffff;
@@ -48,7 +48,7 @@
   flex: 1 1 40%; /* Column will take up 40% of the space */
   width: 100%; /* Ensures image is contained */
   height: 200px; /* Fixed height for a consistent look */
-  object-fit: cover; /* Best way to fit images without distortion */
+  object-fit: contain; /* Best way to fit images without distortion */
   border-radius: 8px;
   align-self: flex-start; /* Aligns image to the top of the container */
 }

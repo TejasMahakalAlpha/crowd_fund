@@ -38,10 +38,10 @@ const BlogDetails = () => {
     if (!blog) return <p style={{ textAlign: "center" }}>Blog not found</p>;
 
     const blogDescription = blog.subtitle || blog.title;
-    
+
     // ❌ Old dynamic image line is removed.
     // ✅ New static image line added below.
-    const blogImage = `${SITE_URL}/crowdfund_logo.png`; 
+    const blogImage = `${SITE_URL}/crowdfund_logo.png`;
 
     const blogUrl = `${SITE_URL}/blog/${slug}`;
 
@@ -74,7 +74,10 @@ const BlogDetails = () => {
                 <img
                     src={getImageUrl(blog.featuredImage)}
                     alt={blog.title}
-                    onError={(e) => { e.target.src = "default.jpeg"; }}
+                    onError={(e) => {
+                        e.target.src = "/crowdfund_logo.png";
+                        e.target.onerror = null;
+                    }}
                     className="blog-image"
                 />
             )}

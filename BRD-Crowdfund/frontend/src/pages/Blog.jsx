@@ -15,7 +15,7 @@ const Blog = () => {
   // ✅ Function to handle sharing
   const handleShare = async (e, title, url, summary) => {
     // This stops the click from navigating to the blog page
-    e.stopPropagation(); 
+    e.stopPropagation();
 
     const shareData = {
       title: title,
@@ -75,7 +75,7 @@ const Blog = () => {
         {blogs.map((blog) => {
           // Define the full URL for sharing
           const blogUrl = `${window.location.origin}/blog/${blog.slug || blog.id}`;
-          
+
           return (
             <div
               key={blog.id}
@@ -86,7 +86,10 @@ const Blog = () => {
                 <img
                   src={getImageUrl(blog.featuredImage)}
                   alt={blog.title}
-                  onError={(e) => { e.target.src = "/default.jpeg"; }}
+                  onError={(e) => {
+                    e.currentTarget.src = "/crowdfund_logo.png";
+                    e.currentTarget.onerror = null;
+                  }}
                   className="blog-image"
                 />
               )}
@@ -96,16 +99,16 @@ const Blog = () => {
                   {new Date(blog.createdAt).toLocaleDateString()}
                 </p>
                 <p className="blog-slug">{blog.slug}</p>
-                
+
                 {/* ✅ Add the Share Button JSX here */}
                 <div className="share-container">
-                  <button 
+                  <button
                     // ✅ THIS IS THE ONLY LINE THAT CHANGED
-                    onClick={(e) => handleShare(e, blog.title, blogUrl, blog.content ? blog.content.slice(0, 150) + '...' : 'Check out this article!')} 
-                    className="share-button" 
+                    onClick={(e) => handleShare(e, blog.title, blogUrl, blog.content ? blog.content.slice(0, 150) + '...' : 'Check out this article!')}
+                    className="share-button"
                     title="Share this blog"
                   >
-                   Share <FaShareAlt /> 
+                    Share <FaShareAlt />
                   </button>
                 </div>
               </div>

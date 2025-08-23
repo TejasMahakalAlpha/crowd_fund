@@ -322,7 +322,7 @@ const CausesSection = () => {
             <div className="modal-details">
               <p><strong>Category:</strong> {selectedCause.category}</p>
               <p><strong>Location:</strong> {selectedCause.location}</p>
-              <p><strong>Description:</strong> {selectedCause.description}</p>
+              <p className="modal-description"><strong>Description:</strong> {selectedCause.description}</p>
               <p><strong>Raised:</strong> ₹{Number(selectedCause.currentAmount).toLocaleString()} of ₹{Number(selectedCause.targetAmount).toLocaleString()}</p>
               <p><strong>Status:</strong> {selectedCause.status}</p>
               <p><strong>End Date:</strong> {selectedCause.endDate ? new Date(selectedCause.endDate).toLocaleDateString() : "N/A"}</p>
