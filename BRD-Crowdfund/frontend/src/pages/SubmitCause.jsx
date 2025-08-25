@@ -33,10 +33,14 @@ const SubmitCause = () => {
     submitterMessage: "",
   });
 
-  const [mediaFile, setMediaFile] = useState(null);
-  const [mediaPreview, setMediaPreview] = useState(null);
-  const [proofDocumentFile, setProofDocumentFile] = useState(null);
-  const [proofDocumentPreview, setProofDocumentPreview] = useState(null);
+  // File states
+  const [imageFiles, setImageFiles] = useState([]);
+  const [imagePreviews, setImagePreviews] = useState([]);
+  const [videoFiles, setVideoFiles] = useState([]);
+  const [videoPreviews, setVideoPreviews] = useState([]);
+  const [documentFiles, setDocumentFiles] = useState([]);
+  const [documentPreviews, setDocumentPreviews] = useState([]);
+
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -102,78 +106,96 @@ const SubmitCause = () => {
   // Handle file input change
   const handleFileChange = (e) => {
     const { name, files } = e.target;
-    const file = files[0];
     const newErrors = { ...errors };
 
-    if (!file) {
-      if (name === "media") {
-        setMediaFile(null);
-        setMediaPreview(null);
+    if (!files || files.length === 0) {
+      if (name === "images") {
+        setImageFiles([]); setImagePreviews([]);
       }
-      if (name === "proofDocument") {
-        setProofDocumentFile(null);
-        setProofDocumentPreview(null);
+      if (name === "videos") {
+        setVideoFiles([]); setVideoPreviews([]);
+      }
+      if (name === "documents") {
+        setDocumentFiles([]); setDocumentPreviews([]);
       }
       newErrors[name] = "";
       setErrors(newErrors);
       return;
     }
 
-    if (name === "media") {
-      const allowedImageTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
-      const allowedVideoTypes = ["video/mp4", "video/webm", "video/ogg"];
-      if (allowedImageTypes.includes(file.type)) {
-        if (file.size > 5 * 1024 * 1024) {
-          newErrors.media = "Image must be <5MB";
-          setMediaFile(null);
-          setMediaPreview(null);
+    if (name === "images") {
+      const allowed = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+      const valid = [], previews = [];
+      let hasError = false;
+
+      Array.from(files).forEach((file, i) => {
+        if (allowed.includes(file.type)) {
+          if (file.size > 5 * 1024 * 1024) {
+            newErrors.images = `Image ${i + 1} must be <5MB`; hasError = true;
+          } else {
+            valid.push(file);
+            previews.push(URL.createObjectURL(file));
+          }
         } else {
-          setMediaFile(file);
-          setMediaPreview(URL.createObjectURL(file));
-          newErrors.media = "";
+          newErrors.images = `File ${i + 1} must be JPG, PNG, GIF, WEBP`; hasError = true;
         }
-      } else if (allowedVideoTypes.includes(file.type)) {
-        if (file.size > 20 * 1024 * 1024) {
-          newErrors.media = "Video must be <20MB";
-          setMediaFile(null);
-          setMediaPreview(null);
-        } else {
-          setMediaFile(file);
-          setMediaPreview(URL.createObjectURL(file));
-          newErrors.media = "";
-        }
-      } else {
-        newErrors.media = "File must be an image or video";
-        setMediaFile(null);
-        setMediaPreview(null);
-      }
+      });
+
+      if (hasError) { setImageFiles([]); setImagePreviews([]); }
+      else { setImageFiles(valid); setImagePreviews(previews); newErrors.images = ""; }
     }
 
-    if (name === "proofDocument") {
-      const docTypes = [
+    if (name === "videos") {
+      const allowed = ["video/mp4", "video/webm", "video/ogg", "video/avi", "video/mov"];
+      const valid = [], previews = [];
+      let hasError = false;
+
+      Array.from(files).forEach((file, i) => {
+        if (allowed.includes(file.type)) {
+          if (file.size > 20 * 1024 * 1024) {
+            newErrors.videos = `Video ${i + 1} must be <20MB`; hasError = true;
+          } else {
+            valid.push(file);
+            previews.push(URL.createObjectURL(file));
+          }
+        } else {
+          newErrors.videos = `File ${i + 1} must be MP4, WEBM, OGG, AVI, MOV`; hasError = true;
+        }
+      });
+
+      if (hasError) { setVideoFiles([]); setVideoPreviews([]); }
+      else { setVideoFiles(valid); setVideoPreviews(previews); newErrors.videos = ""; }
+    }
+
+    if (name === "documents") {
+      const allowed = [
         "application/pdf",
         "application/msword",
         "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "text/plain",
         "image/jpeg",
         "image/png",
+        "application/zip"
       ];
-      if (!docTypes.includes(file.type)) {
-        newErrors.proofDocument = "Document must be PDF, DOC, DOCX, JPG, or PNG";
-        setProofDocumentFile(null);
-        setProofDocumentPreview(null);
-      } else if (file.size > 10 * 1024 * 1024) {
-        newErrors.proofDocument = "Document must be <10MB";
-        setProofDocumentFile(null);
-        setProofDocumentPreview(null);
-      } else {
-        setProofDocumentFile(file);
-        if (file.type === "application/pdf" || file.type.startsWith("image/")) {
-          setProofDocumentPreview(URL.createObjectURL(file));
+      const valid = [], previews = [];
+      let hasError = false;
+
+      Array.from(files).forEach((file, i) => {
+        if (allowed.includes(file.type) || file.name.endsWith(".zip")) {
+          if (file.size > 10 * 1024 * 1024) {
+            newErrors.documents = `Document ${i + 1} must be <10MB`; hasError = true;
+          } else {
+            valid.push(file);
+            previews.push(URL.createObjectURL(file));
+          }
         } else {
-          setProofDocumentPreview(null);
+          newErrors.documents = `File ${i + 1} must be PDF, DOC, DOCX, TXT, JPG, PNG, ZIP`;
+          hasError = true;
         }
-        newErrors.proofDocument = "";
-      }
+      });
+
+      if (hasError) { setDocumentFiles([]); setDocumentPreviews([]); }
+      else { setDocumentFiles(valid); setDocumentPreviews(previews); newErrors.documents = ""; }
     }
 
     setErrors(newErrors);
@@ -187,8 +209,10 @@ const SubmitCause = () => {
       if (error) newErrors[key] = error;
     });
 
-    if (!mediaFile) newErrors.media = "One image or video is required";
-    if (!proofDocumentFile) newErrors.proofDocument = "One proof document is required";
+    if (imageFiles.length === 0 && videoFiles.length === 0)
+      newErrors.media = "At least one image or video is required";
+    if (documentFiles.length === 0)
+      newErrors.documents = "At least one proof document is required";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -198,11 +222,7 @@ const SubmitCause = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) {
-      Swal.fire(
-        "Validation Error",
-        "Please fill all required fields and correct the errors.",
-        "error"
-      );
+      Swal.fire("Validation Error", "Please fill all required fields and correct the errors.", "error");
       return;
     }
 
@@ -211,15 +231,17 @@ const SubmitCause = () => {
     Object.entries(formData).forEach(([key, value]) => {
       if (value) form.append(key, key === "targetAmount" ? Number(value) : value);
     });
-    if (mediaFile) form.append("media", mediaFile);
-    if (proofDocumentFile) form.append("proofDocument", proofDocumentFile);
+
+    imageFiles.forEach((file) => form.append("images", file));
+    videoFiles.forEach((file) => form.append("videos", file));
+    documentFiles.forEach((file) => form.append("documents", file));
 
     try {
       Swal.fire({ title: "Sending...", allowOutsideClick: false, didOpen: () => Swal.showLoading() });
       await submitPersonalCauseApi(form);
       Swal.fire("Success", "Your cause has been submitted for review!", "success");
 
-      // Reset form
+      // Reset all
       setFormData({
         title: "",
         description: "",
@@ -233,13 +255,13 @@ const SubmitCause = () => {
         submitterPhone: "",
         submitterMessage: "",
       });
-      setMediaFile(null);
-      setMediaPreview(null);
-      setProofDocumentFile(null);
-      setProofDocumentPreview(null);
+      setImageFiles([]); setImagePreviews([]);
+      setVideoFiles([]); setVideoPreviews([]);
+      setDocumentFiles([]); setDocumentPreviews([]);
       setErrors({});
-      document.getElementById("media").value = "";
-      document.getElementById("proofDocument").value = "";
+      document.getElementById("images").value = "";
+      document.getElementById("videos").value = "";
+      document.getElementById("documents").value = "";
     } catch (error) {
       Swal.fire("Submission Failed", error.message || "Something went wrong.", "error");
     } finally {
@@ -248,18 +270,16 @@ const SubmitCause = () => {
   };
 
   return (
-
-
     <div className="submit-cause-container">
       <h2>Submit Your Personal Cause</h2>
-
       <p className="intro-text">
         Do you have a cause close to your heart that needs support?
         Fill out this form to submit your personal cause for our admin review.
         Once approved, it can be listed on our platform for donations and support.
       </p>
-
       <form className="cause-submission-form" onSubmit={handleSubmit} noValidate>
+        {/* --- Form Fields (title, desc, etc.) --- */}
+
         <h3>Cause Details</h3>
         <div className="form-group">
           <label htmlFor="title">Cause Title <span className="required-star">*</span></label>
@@ -325,117 +345,96 @@ const SubmitCause = () => {
           <label htmlFor="submitterMessage">Additional Message to Admin</label>
           <textarea id="submitterMessage" name="submitterMessage" value={formData.submitterMessage} onChange={handleChange} placeholder="Any extra notes or requests for the admin." rows="3" ></textarea>
         </div>
-        {/* --- Add other input fields here like Title, Description, etc --- */}
 
         <h3>Supporting Files</h3>
 
-        {/* Media Upload */}
+        {/* Images */}
         <div className="form-group file-upload-group">
-          <label htmlFor="media">
-            Cause Display Image or Video <span className="required-star">*</span>
-          </label>
+          <label htmlFor="images">Upload Images</label>
           <input
             type="file"
-            id="media"
-            name="media"
-            accept="image/jpeg,image/png,image/gif,image/webp,video/mp4,video/webm,video/ogg"
+            id="images"
+            name="images"
+            multiple
+            accept="image/jpeg,image/png,image/gif,image/webp"
             onChange={handleFileChange}
           />
-          {errors.media && <p className="error-message">{errors.media}</p>}
-          {mediaFile && (
-            <div style={{ position: "relative", marginTop: "10px" }}>
-              {mediaFile.type.startsWith("image/") ? (
-                <img
-                  src={mediaPreview}
-                  alt="Cause Preview"
-                  style={{ width: "150px", borderRadius: "8px" }}
-                />
+          {errors.images && <p className="error-message">{errors.images}</p>}
+          {imagePreviews.map((src, i) => (
+            <div key={i}>
+              <img src={src} alt="preview" width="100" />
+              <button type="button" onClick={() => {
+                setImageFiles(imageFiles.filter((_, idx) => idx !== i));
+                setImagePreviews(imagePreviews.filter((_, idx) => idx !== i));
+              }}>X</button>
+            </div>
+          ))}
+        </div>
+
+        {/* Videos */}
+        <div className="form-group file-upload-group">
+          <label htmlFor="videos">Upload Videos</label>
+          <input
+            type="file"
+            id="videos"
+            name="videos"
+            multiple
+            accept="video/mp4,video/webm,video/ogg,video/avi,video/mov"
+            onChange={handleFileChange}
+          />
+          {errors.videos && <p className="error-message">{errors.videos}</p>}
+          {videoPreviews.map((src, i) => (
+            <div key={i}>
+              <video src={src} width="100" controls />
+              <button type="button" onClick={() => {
+                setVideoFiles(videoFiles.filter((_, idx) => idx !== i));
+                setVideoPreviews(videoPreviews.filter((_, idx) => idx !== i));
+              }}>X</button>
+            </div>
+          ))}
+        </div>
+
+        {/* Documents */}
+        <div className="form-group file-upload-group">
+          <label htmlFor="documents">Upload Documents (PDF/DOC/TXT/IMG/ZIP)</label>
+          <input
+            type="file"
+            id="documents"
+            name="documents"
+            multiple
+            accept=".pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain,image/jpeg,image/png,.zip"
+            onChange={handleFileChange}
+          />
+          {errors.documents && <p className="error-message">{errors.documents}</p>}
+          {documentFiles.map((file, i) => (
+            <div key={i} style={{ position: "relative", marginTop: "10px" }}>
+              {file.type === "application/pdf" ? (
+                <iframe src={documentPreviews[i]} width="100" height="120" />
+              ) : file.type.startsWith("image/") ? (
+                <img src={documentPreviews[i]} width="100" alt="doc" />
               ) : (
-                <video
-                  src={mediaPreview}
-                  controls
-                  width="150"
-                  height="100"
-                  style={{ borderRadius: "8px" }}
-                />
+                <p>{file.name}</p>
               )}
-              <button
-                type="button"
-                onClick={() => {
-                  setMediaFile(null);
-                  setMediaPreview(null);
-                  document.getElementById("media").value = "";
-                }}
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  right: 0,
-                  background: "red",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "50%",
-                  width: "24px",
-                  height: "24px",
-                  cursor: "pointer",
-                }}
-              >
-                X
-              </button>
+              <button type="button" style={{
+                position: "absolute",
+                top: 0,
+                right: 0,
+                background: "red",
+                color: "white",
+                border: "none",
+                borderRadius: "50%",
+                width: "24px",
+                height: "24px",
+                cursor: "pointer",
+              }} onClick={() => {
+                setDocumentFiles(documentFiles.filter((_, idx) => idx !== i));
+                setDocumentPreviews(documentPreviews.filter((_, idx) => idx !== i));
+              }}>X</button>
             </div>
-          )}
+          ))}
         </div>
 
-        {/* Proof Document Upload */}
-        <div className="form-group file-upload-group">
-          <label htmlFor="proofDocument">
-            Proof Document <span className="required-star">*</span>
-          </label>
-          <input
-            type="file"
-            id="proofDocument"
-            name="proofDocument"
-            accept=".pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/jpeg,image/png"
-            onChange={handleFileChange}
-          />
-          {errors.proofDocument && (
-            <p className="error-message">{errors.proofDocument}</p>
-          )}
-          {proofDocumentFile && (
-            <div style={{ position: "relative", marginTop: "10px", maxWidth: "150px" }}>
-              {proofDocumentPreview && proofDocumentFile.type === "application/pdf" && (
-                <iframe src={proofDocumentPreview} title="PDF Preview" width="150" height="200" />
-              )}
-              {proofDocumentPreview && proofDocumentFile.type.startsWith("image/") && (
-                <img src={proofDocumentPreview} alt="Doc Preview" style={{ maxHeight: "200px" }} />
-              )}
-              {!proofDocumentPreview && <p>{proofDocumentFile.name}</p>}
-              <button
-                type="button"
-                onClick={() => {
-                  setProofDocumentFile(null);
-                  setProofDocumentPreview(null);
-                  document.getElementById("proofDocument").value = "";
-                }}
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  right: 0,
-                  background: "red",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "50%",
-                  width: "24px",
-                  height: "24px",
-                  cursor: "pointer",
-                }}
-              >
-                X
-              </button>
-            </div>
-          )}
-        </div>
-
-        <button type="submit" className="submit-cause-btn" disabled={isSubmitting}>
+        <button type="submit" disabled={isSubmitting}>
           {isSubmitting ? "Submitting..." : "Submit Cause for Review"}
         </button>
       </form>

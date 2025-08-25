@@ -282,7 +282,7 @@ const Causes = () => {
         <div className="modal-overlay" onClick={() => setSelectedCause(null)}>
           <div className="modal-box" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close" onClick={() => setSelectedCause(null)}>×</button>
-            <h2>{selectedCause.title}</h2>
+            <h2 className="modal-header">{selectedCause.title}</h2>
 
             {selectedCause.mediaType === "VIDEO" ? (
               <video

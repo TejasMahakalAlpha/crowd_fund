@@ -1,7 +1,7 @@
 // src/components/BlogDetails.jsx
 
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { PublicApi } from "../services/api";
 import "./BlogDetails.css";
 import { FaEye } from "react-icons/fa";
@@ -14,6 +14,7 @@ const BlogDetails = () => {
     const [blog, setBlog] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const navigate = useNavigate();
 
     // This function is no longer used for the share image, but can stay for the <img> tag
     const getImageUrl = (relativePath) => `${API_BASE}/api/images/${relativePath}`;
@@ -63,7 +64,9 @@ const BlogDetails = () => {
             <meta name="twitter:title" content={`${blog.title} | Green Dharti`} />
             <meta name="twitter:description" content={blogDescription} />
             <meta name="twitter:image" content={blogImage} />
-
+            <button onClick={() => navigate('/blog')} className="back-button" style={{ marginBottom: '1.5rem' }}>
+                ← Back to All Blogs
+            </button>
             {/* Rest of your component */}
             <h1 className="blog-title">{blog.title}</h1>
             {blog.subtitle && <h3 className="blog-subtitle">{blog.subtitle}</h3>}

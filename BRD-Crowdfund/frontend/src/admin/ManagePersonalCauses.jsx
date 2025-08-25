@@ -260,95 +260,130 @@ const ManagePersonalCauses = () => {
               <h4>Attached Files:</h4>
 
               {/* Single Image or Video */}
-              <div className="file-item">
-                <strong>Cause Image/Video:</strong>
-                {selectedSubmission.videoUrl ? (
-                  <div className="media-preview-item" style={{ marginBottom: "1rem" }}>
-                    <video
-                      src={getFileUrl(selectedSubmission.videoUrl)}
-                      controls
-                      className="detail-video-preview"
-                    />
-
-                    <a href={`${getFileUrl(selectedSubmission.videoUrl)}/download`} className="download-link">
-                      Download Video
-                    </a>
-                  </div>
-                ) : selectedSubmission.imageUrl ? (
-                  <div className="media-preview-item" style={{ marginBottom: "1rem" }}>
-                    <img
-                      src={getFileUrl(selectedSubmission.imageUrl)}
-                      alt="Cause Media"
-                      className="detail-image-preview"
-                    />
-
-                    <a href={`${getFileUrl(selectedSubmission.imageUrl)}/download`} className="download-link">
-                      Download Image
-                    </a>
-                  </div>
-                ) : (
-                  <p>No Cause Image/Video provided.</p>
-                )}
-              </div>
-
-
-              {/* Single Proof Document */}
-              <div className="file-item">
-                <strong>Proof Document:</strong>
-                {selectedSubmission.proofDocumentUrl ? (
-                  (() => {
-                    const docUrl = getFileUrl(selectedSubmission.proofDocumentUrl);
-                    const ext = selectedSubmission.proofDocumentUrl.split('.').pop().toLowerCase();
-                    const docName = selectedSubmission.proofDocumentName || selectedSubmission.proofDocumentUrl.split('/').pop();
-
-                    return (
-                      <div className="proof-document-item" style={{ marginBottom: "1rem" }}>
-                        <p>{docName}</p>
-
-                        {(() => {
-                          const imageExtensions = ["jpg", "jpeg", "png", "webp"];
-                          const pdfExtensions = ["pdf"];
-                          const docExtensions = ["doc", "docx"];
-
-                          if (pdfExtensions.includes(ext)) {
-                            return (
+              <div className="files-section">
+                <h4>Attached Files:</h4>
+                {/* Multiple Images */}
+                <div className="file-item">
+                  <strong>Cause Images:</strong>
+                  {selectedSubmission.imageUrls && selectedSubmission.imageUrls.length > 0 ? (
+                    <div className="media-preview-grid" style={{
+                      display: "grid",
+                      gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem",
+                      marginBottom: "1rem"
+                    }}>
+                      {selectedSubmission.imageUrls.map((imageUrl, index) => (
+                        <div key={index} className="media-preview-item">
+                          <img
+                            src={getFileUrl(imageUrl)}
+                            alt={`Cause Image ${index + 1}`}
+                            className="detail-image-preview"
+                            style={{ width: "100%", height: "auto", borderRadius: "8px" }}
+                          />
+                          <a href={`${getFileUrl(imageUrl)}/download`} className="download-link">
+                            Download Image {index + 1}
+                          </a>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p>No Cause Images provided.</p>
+                  )}
+                </div>
+                {/* Multiple Videos */}
+                <div className="file-item">
+                  <strong>Cause Videos:</strong>
+                  {selectedSubmission.videoUrls && selectedSubmission.videoUrls.length > 0 ? (
+                    <div className="media-preview-grid" style={{
+                      display: "grid",
+                      gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "1rem",
+                      marginBottom: "1rem"
+                    }}>
+                      {selectedSubmission.videoUrls.map((videoUrl, index) => (
+                        <div key={index} className="media-preview-item">
+                          <video
+                            src={getFileUrl(videoUrl)}
+                            controls
+                            className="detail-video-preview"
+                            style={{ width: "100%", borderRadius: "8px" }}
+                          />
+                          <a href={`${getFileUrl(videoUrl)}/download`} className="download-link">
+                            Download Video {index + 1}
+                          </a>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p>No Cause Videos provided.</p>
+                  )}
+                </div>
+                {/* Multiple Proof Documents */}
+                <div className="file-item">
+                  <strong>Proof Documents:</strong>
+                  {selectedSubmission.proofDocumentUrls &&
+                    selectedSubmission.proofDocumentUrls.length > 0 ? (
+                    <div className="document-preview-grid" style={{
+                      display: "grid",
+                      gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "1rem",
+                      marginBottom: "1rem"
+                    }}>
+                      {selectedSubmission.proofDocumentUrls.map((docUrl, index) => {
+                        const ext = docUrl.split('.').pop().toLowerCase();
+                        const docName = docUrl.split('/').pop();
+                        const imageExtensions = ["jpg", "jpeg", "png", "webp"];
+                        const pdfExtensions = ["pdf"];
+                        const docExtensions = ["doc", "docx"];
+                        return (
+                          <div key={index} className="proof-document-item" style={{
+                            border: "1px solid #ddd", borderRadius: "8px", padding: "1rem"
+                          }}>
+                            <h5 style={{ margin: "0 0 0.5rem 0" }
+                            } > {docName}</h5>
+                            {pdfExtensions.includes(ext) ? (
                               <iframe
-                                src={docUrl}
+                                src={getFileUrl(docUrl)}
                                 width="100%"
                                 height="300px"
-                                style={{ border: "none" }}
-                                title="PDF Viewer"
+                                style={{ border: "none", borderRadius: "4px" }}
+                                title={`PDF Viewer ${index + 1}`}
                               />
-
-                            );
-                          } else if (docExtensions.includes(ext)) {
-                            return (
+                            ) : docExtensions.includes(ext) ? (
                               <iframe
-                                src={`https://docs.google.com/viewer?url=${docUrl}&embedded=true`}
+
+                                src={`https://docs.google.com/viewer?url=${getFileUrl(docUrl)}&embedded=true`}
                                 width="100%"
                                 height="300px"
-                                style={{ border: "none" }}
-                              ></iframe>
-
-                            );
-                          } else if (imageExtensions.includes(ext)) {
-                            return <img src={docUrl} alt="Proof Document" className="detail-image-preview" />;
-                          } else {
-                            return <p>Unsupported document format.</p>;
-                          }
-                        })()}
-
-                        <a href={`${docUrl}/download`} className="download-link">Download Document</a>
-                      </div>
-
-                    );
-                  })()
-                ) : (
-                  <p>No Proof Document provided.</p>
-                )}
+                                style={{ border: "none", borderRadius: "4px" }}
+                                title={`Document Viewer ${index + 1}`}
+                              />
+                            ) : imageExtensions.includes(ext) ? (
+                              <img
+                                src={getFileUrl(docUrl)}
+                                alt={`Proof Document ${index + 1}`}
+                                className="detail-image-preview"
+                                style={{ width: "100%", height: "auto", borderRadius: "4px" }}
+                              />
+                            ) : (
+                              <div style={{
+                                padding: "2rem", textAlign: "center", backgroundColor:
+                                  "#f8f9fa", borderRadius: "4px"
+                              }}>
+                                <p style={{ margin: 0 }}>Unsupported document format: {ext}</p>
+                              </div>
+                            )}
+                            <a href={`${getFileUrl(docUrl)}/download`} className="download-link">
+                              Download Document {index + 1}
+                            </a>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <p>No Proof Documents provided.</p>
+                  )}
+                </div>
               </div>
-            </div>
 
+            </div>
             {(selectedSubmission.status === 'PENDING' || selectedSubmission.status === 'UNDER_REVIEW') && (
               <div className="modification-section">
                 <h4>Modify Details Before Approval (Optional)</h4>
@@ -374,7 +409,7 @@ const ManagePersonalCauses = () => {
                 </div>
               </div>
             )}
-            <div className="modal-actions">
+            <div className="modal-action">
               {(selectedSubmission.status === 'PENDING' || selectedSubmission.status === 'UNDER_REVIEW') && (
                 <>
                   <button className="approve-btn" onClick={handleApprove}>Approve</button>
@@ -384,8 +419,9 @@ const ManagePersonalCauses = () => {
             </div>
           </div>
         </div>
-      )}
-    </div>
+      )
+      }
+    </div >
   );
 };
 

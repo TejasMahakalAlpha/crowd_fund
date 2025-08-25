@@ -161,12 +161,11 @@ const EventsSection = () => {
               <img
                 src={getImageUrl(selectedEvent.imageUrl)}
                 alt={selectedEvent.title}
-                className="cause-image"
+                className="modal-image"
                 onError={(e) => {
                   e.currentTarget.src = "/crowdfund_logo.png"; // fallback if 404 or broken
                   e.currentTarget.onerror = null; // prevent infinite loop if default also missing
                 }}
-                style={{ width: "100%", borderRadius: "8px", objectFit: "cover", maxHeight: "200px" }}
               />
             </div>
             <div className="modal-body">

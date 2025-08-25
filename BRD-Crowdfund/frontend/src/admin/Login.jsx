@@ -68,7 +68,7 @@ const Login = () => {
           required
           disabled={loading}
           autoComplete="username" // Corrected DOM property
-          style={{ width: "100%", padding: "10px", border: "1px solid #ccc", borderRadius: "4px" }}
+          style={{ padding: "10px", border: "1px solid #ccc", borderRadius: "4px" }}
         />
         <input
           type="password"
@@ -79,7 +79,7 @@ const Login = () => {
           required
           disabled={loading}
           autoComplete="current-password" // Corrected DOM property
-          style={{ width: "100%", padding: "10px", border: "1px solid #ccc", borderRadius: "4px" }}
+          style={{ padding: "10px", border: "1px solid #ccc", borderRadius: "4px" }}
         />
         <button type="submit" disabled={loading} style={{ padding: "10px 20px", backgroundColor: "#007bff", color: "white", border: "none", borderRadius: "4px", cursor: loading ? "not-allowed" : "pointer" }}>
           {loading ? "Logging in..." : "Login"}
