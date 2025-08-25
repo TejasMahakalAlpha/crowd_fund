@@ -107,6 +107,10 @@
 .event-card:hover {
   transform: translateY(-5px);
 }
+.modal-details, .modal-header
+{
+  text-align: center;
+}
 
 .event-date-col {
   background: #004d40;

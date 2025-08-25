@@ -56,16 +56,16 @@ const EventDetailPage = () => {
     }
   }, [eventSlug]);
 
-  const handleShare = async () => {
-    if (!event) return;
-    const shareData = { title: event.title, text: event.description, url: window.location.href };
-    if (navigator.share) {
-      await navigator.share(shareData).catch(err => console.log("Share error:", err));
-    } else {
-      await navigator.clipboard.writeText(shareData.url);
-      Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Link copied!', showConfirmButton: false, timer: 2000 });
-    }
-  };
+  // const handleShare = async () => {
+  //   if (!event) return;
+  //   const shareData = { title: event.title, text: event.description, url: window.location.href };
+  //   if (navigator.share) {
+  //     await navigator.share(shareData).catch(err => console.log("Share error:", err));
+  //   } else {
+  //     await navigator.clipboard.writeText(shareData.url);
+  //     Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Link copied!', showConfirmButton: false, timer: 2000 });
+  //   }
+  // };
 
   if (loading) return <p className="loading-text">Loading event...</p>;
   if (error) return <p className="error-text">{error}</p>;
@@ -121,10 +121,13 @@ const EventDetailPage = () => {
         <div className="event-details-content">
           <p className="event-datetime-details">{month} {day}, {year} • {fullTimeRange}</p>
           <h1 className="event-title-details">{event.title}</h1>
+          <p className={`status ${event.status?.toLowerCase()}`}>{event.status}</p>
           <p className="event-description-details">{event.description}</p>
-          <button onClick={handleShare} className="share-button" title="Share this event" style={{ marginTop: '20px' }}>
+          <p><strong>Location : </strong>{event.location}</p>
+          <p><strong>Max Participant : </strong>{event.maxParticipants}</p>
+          {/* <button onClick={handleShare} className="share-button" title="Share this event" style={{ marginTop: '20px' }}>
             Share Event <FaShareAlt />
-          </button>
+          </button> */}
         </div>
       </div>
     </div>

@@ -67,7 +67,6 @@
   font-size: 1.3rem;
   color: #004d40;
   margin-bottom: 15px;
-  cursor: pointer;
   font-weight: 600;
 }
 
@@ -99,6 +98,7 @@
   line-height: 1.6;
   margin-bottom: 20px;
   flex-grow: 1;
+   cursor: pointer;
 }
 
 /* === Action Bar === */

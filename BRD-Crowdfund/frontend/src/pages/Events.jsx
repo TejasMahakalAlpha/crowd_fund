@@ -164,12 +164,23 @@ const Events = () => {
                 }}
               />
             )}
-            <h2>{selectedEvent.title}</h2>
-            <p className={`status ${selectedEvent.status?.toLowerCase()}`}>
-              {selectedEvent.status}
-            </p>
-
+            <div className="modal-header">
+              <h2>{selectedEvent.title}</h2>
+              <p className={`status ${selectedEvent.status?.toLowerCase()}`}>
+                {selectedEvent.status}
+              </p>
+            </div>
             <p>{selectedEvent.description}</p>
+            <div className="modal-details">
+              <p><strong>Date:</strong> {new Date(selectedEvent.date || selectedEvent.eventDate).toLocaleDateString()}</p>
+              <p><strong>Time:</strong> {new Date(selectedEvent.date || selectedEvent.eventDate).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: true
+              })}</p>
+              <p><strong>Location:</strong> {selectedEvent.location}</p>
+              <p><strong>Max participant :</strong> {selectedEvent.maxParticipants}</p>
+            </div>
             <button
               className="share-button"
               onClick={() => handleShare(selectedEvent)}

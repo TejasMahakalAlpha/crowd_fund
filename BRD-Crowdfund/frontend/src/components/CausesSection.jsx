@@ -249,10 +249,7 @@ const CausesSection = () => {
 
                 <h3
                   className="cause-title"
-                  onClick={() => {
-                    setSelectedCause(cause);
-                    setModalOpen(true);
-                  }}
+
                 >
                   {cause.title}
                 </h3>
@@ -262,11 +259,15 @@ const CausesSection = () => {
                 <p className="donation-info">
                   ₹{raised.toLocaleString()} donated of ₹{goal.toLocaleString()} goal
                 </p>
-                <p className="description">{
-                  cause.description?.length > 200
-                    ? cause.description.slice(0, 200) + "..."
-                    : cause.description
-                }</p>
+                <p className="description" onClick={() => {
+                  setSelectedCause(cause);
+                  setModalOpen(true);
+                }}
+                >{
+                    cause.description?.length > 200
+                      ? cause.description.slice(0, 200) + "..."
+                      : cause.description
+                  }</p>
 
                 <div className="cause-actions">
                   <button

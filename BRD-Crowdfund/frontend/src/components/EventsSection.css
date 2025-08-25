@@ -150,7 +150,7 @@
   font-size: 1rem;
   color: #444;
   margin-bottom: 15px;
-  text-align: left;
+  /* text-align: left; */
 }
 
 .modal-details p {
