@@ -4,6 +4,11 @@ import { PublicApi, PaymentApi } from "../services/api";
 import Swal from "sweetalert2";
 import { FaShareAlt } from "react-icons/fa";
 
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import { Navigation, Pagination } from "swiper/modules";
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 const slugify = (text) => {
@@ -225,26 +230,43 @@ const Causes = () => {
           const causeId = cause.id || cause._id;
           return (
             <div className="cause-box" key={causeId}>
-              <div onClick={() => setSelectedCause(cause)} style={{ cursor: "pointer" }}>
-                {cause.mediaType === "VIDEO" ? (
-                  <video
-                    src={getImageUrl(cause.videoUrl)}
-                    className="modal-image"
-                    autoPlay loop muted playsInline
-                    onContextMenu={(e) => e.preventDefault()}
-                    controlsList="nodownload"
-                  />
-                ) : (
-                  <img
-                    src={getImageUrl(cause.imageUrl)}
-                    alt={cause.title}
-                    className="modal-image"
-                    onError={(e) => {
-                      e.currentTarget.src = "/crowdfund_logo.png";
-                      e.currentTarget.onerror = null;
-                    }}
-                  />
-                )}
+              <div >
+                <Swiper
+                  modules={[Navigation, Pagination]}
+                  navigation
+                  pagination={{ clickable: true }}
+                  className="media-carousel"
+                >
+                  {cause.imageUrls?.map((img, idx) => (
+                    <SwiperSlide key={`img-${idx}`}>
+                      <img
+                        src={getImageUrl(img)}
+                        alt={`${cause.title}-${idx}`}
+                        className="modal-image"
+                        onError={(e) => {
+                          e.currentTarget.src = "/crowdfund_logo.png";
+                          e.currentTarget.onerror = null;
+                        }}
+                      />
+                    </SwiperSlide>
+                  ))}
+
+                  {cause.videoUrls?.map((vid, idx) => (
+                    <SwiperSlide key={`vid-${idx}`}>
+                      <video
+                        src={getImageUrl(vid)}
+                        className="modal-image"
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        onContextMenu={(e) => e.preventDefault()}
+                        controlsList="nodownload"
+                        controls
+                      />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
 
                 <h3>{cause.title}</h3>
                 <div className="progress-bar">
@@ -253,7 +275,7 @@ const Causes = () => {
                 <p className="donation-amount">
                   ₹{raised.toLocaleString()} raised of ₹{goal.toLocaleString()} goal
                 </p>
-                <p className="description">{
+                <p className="description" onClick={() => setSelectedCause(cause)} style={{ cursor: "pointer" }}>{
                   cause.description?.length > 200
                     ? cause.description.slice(0, 200) + "..."
                     : cause.description
@@ -284,25 +306,42 @@ const Causes = () => {
             <button className="modal-close" onClick={() => setSelectedCause(null)}>×</button>
             <h2 className="modal-header">{selectedCause.title}</h2>
 
-            {selectedCause.mediaType === "VIDEO" ? (
-              <video
-                src={getImageUrl(selectedCause.videoUrl)}
-                className="modal-image"
-                autoPlay loop muted playsInline
-                onContextMenu={(e) => e.preventDefault()}
-                controlsList="nodownload"
-              />
-            ) : (
-              <img
-                src={getImageUrl(selectedCause.imageUrl)}
-                alt={selectedCause.title}
-                className="modal-image"
-                onError={(e) => {
-                  e.currentTarget.src = "/crowdfund_logo.png";
-                  e.currentTarget.onerror = null;
-                }}
-              />
-            )}
+            <Swiper
+              modules={[Navigation, Pagination]}
+              navigation
+              pagination={{ clickable: true }}
+              className="media-carousel"
+            >
+              {selectedCause.imageUrls?.map((img, idx) => (
+                <SwiperSlide key={`img-${idx}`}>
+                  <img
+                    src={getImageUrl(img)}
+                    alt={`${selectedCause.title}-${idx}`}
+                    className="modal-image"
+                    onError={(e) => {
+                      e.currentTarget.src = "/crowdfund_logo.png";
+                      e.currentTarget.onerror = null;
+                    }}
+                  />
+                </SwiperSlide>
+              ))}
+
+              {selectedCause.videoUrls?.map((vid, idx) => (
+                <SwiperSlide key={`vid-${idx}`}>
+                  <video
+                    src={getImageUrl(vid)}
+                    className="modal-image"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    onContextMenu={(e) => e.preventDefault()}
+                    controlsList="nodownload"
+                    controls
+                  />
+                </SwiperSlide>
+              ))}
+            </Swiper>
 
             <div className="modal-details">
               <p><strong>Description:</strong> {selectedCause.description}</p>

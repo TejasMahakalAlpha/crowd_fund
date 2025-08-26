@@ -150,7 +150,7 @@ const Events = () => {
             className="modal-content"
             onClick={(e) => e.stopPropagation()} // prevent closing when clicking inside modal
           >
-            <button className="close-btn" onClick={() => setSelectedEvent(null)}>
+            <button className="modal-close" onClick={() => setSelectedEvent(null)}>
               ✖
             </button>
             {selectedEvent.imageUrl && (

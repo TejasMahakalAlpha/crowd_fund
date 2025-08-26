@@ -210,7 +210,7 @@ const SubmitCause = () => {
     });
 
     if (imageFiles.length === 0 && videoFiles.length === 0)
-      newErrors.media = "At least one image or video is required";
+      newErrors.images = "At least one image or video is required";
     if (documentFiles.length === 0)
       newErrors.documents = "At least one proof document is required";
 
@@ -360,15 +360,17 @@ const SubmitCause = () => {
             onChange={handleFileChange}
           />
           {errors.images && <p className="error-message">{errors.images}</p>}
-          {imagePreviews.map((src, i) => (
-            <div key={i}>
-              <img src={src} alt="preview" width="100" />
-              <button type="button" onClick={() => {
-                setImageFiles(imageFiles.filter((_, idx) => idx !== i));
-                setImagePreviews(imagePreviews.filter((_, idx) => idx !== i));
-              }}>X</button>
-            </div>
-          ))}
+          <div className="previews">
+            {imagePreviews.map((src, i) => (
+              <div key={i} className="submit-cause-preview">
+                <img src={src} alt="preview" width="100" />
+                <button type="button" onClick={() => {
+                  setImageFiles(imageFiles.filter((_, idx) => idx !== i));
+                  setImagePreviews(imagePreviews.filter((_, idx) => idx !== i));
+                }}>X</button>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Videos */}
@@ -383,15 +385,17 @@ const SubmitCause = () => {
             onChange={handleFileChange}
           />
           {errors.videos && <p className="error-message">{errors.videos}</p>}
-          {videoPreviews.map((src, i) => (
-            <div key={i}>
-              <video src={src} width="100" controls />
-              <button type="button" onClick={() => {
-                setVideoFiles(videoFiles.filter((_, idx) => idx !== i));
-                setVideoPreviews(videoPreviews.filter((_, idx) => idx !== i));
-              }}>X</button>
-            </div>
-          ))}
+          <div className="previews">
+            {videoPreviews.map((src, i) => (
+              <div key={i} className="submit-cause-preview">
+                <video src={src} width="100" controls />
+                <button type="button" onClick={() => {
+                  setVideoFiles(videoFiles.filter((_, idx) => idx !== i));
+                  setVideoPreviews(videoPreviews.filter((_, idx) => idx !== i));
+                }}>X</button>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Documents */}
@@ -406,35 +410,37 @@ const SubmitCause = () => {
             onChange={handleFileChange}
           />
           {errors.documents && <p className="error-message">{errors.documents}</p>}
-          {documentFiles.map((file, i) => (
-            <div key={i} style={{ position: "relative", marginTop: "10px" }}>
-              {file.type === "application/pdf" ? (
-                <iframe src={documentPreviews[i]} width="100" height="120" />
-              ) : file.type.startsWith("image/") ? (
-                <img src={documentPreviews[i]} width="100" alt="doc" />
-              ) : (
-                <p>{file.name}</p>
-              )}
-              <button type="button" style={{
-                position: "absolute",
-                top: 0,
-                right: 0,
-                background: "red",
-                color: "white",
-                border: "none",
-                borderRadius: "50%",
-                width: "24px",
-                height: "24px",
-                cursor: "pointer",
-              }} onClick={() => {
-                setDocumentFiles(documentFiles.filter((_, idx) => idx !== i));
-                setDocumentPreviews(documentPreviews.filter((_, idx) => idx !== i));
-              }}>X</button>
-            </div>
-          ))}
+          <div className="previews">
+            {documentFiles.map((file, i) => (
+              <div key={i} className="submit-cause-preview">
+                {file.type === "application/pdf" ? (
+                  <iframe src={documentPreviews[i]} width="100" height="120" />
+                ) : file.type.startsWith("image/") ? (
+                  <img src={documentPreviews[i]} width="100" alt="doc" />
+                ) : (
+                  <p>{file.name}</p>
+                )}
+                <button type="button" style={{
+                  position: "absolute",
+                  top: 0,
+                  right: 0,
+                  background: "red",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "50%",
+                  width: "24px",
+                  height: "24px",
+                  cursor: "pointer",
+                }} onClick={() => {
+                  setDocumentFiles(documentFiles.filter((_, idx) => idx !== i));
+                  setDocumentPreviews(documentPreviews.filter((_, idx) => idx !== i));
+                }}>X</button>
+              </div>
+            ))}
+          </div>
         </div>
 
-        <button type="submit" disabled={isSubmitting}>
+        <button type="submit" disabled={isSubmitting} className="submit-cause-btn">
           {isSubmitting ? "Submitting..." : "Submit Cause for Review"}
         </button>
       </form>

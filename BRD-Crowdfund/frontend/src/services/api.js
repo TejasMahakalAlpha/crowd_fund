@@ -79,11 +79,17 @@ export const AdminApi = {
   // updateCauses: (id, data) => AdminApiInstance.put(`causes/${id}/with-image`, data, { headers: AdminApi._authHeader() }),
   // PURANE WALE KO IN NAYE FUNCTIONS SE BADAL DEIN
 
-  createCauseWithImage: (data) => AdminApiInstance.post(`causes/with-image`, data, { headers: { ...AdminApi._authHeader(), 'Content-Type': 'multipart/form-data' } }),
-  createCauseWithVideo: (data) => AdminApiInstance.post(`causes/with-video`, data, { headers: { ...AdminApi._authHeader(), 'Content-Type': 'multipart/form-data' } }),
 
-  updateCauseWithImage: (id, data) => AdminApiInstance.put(`causes/${id}/with-image`, data, { headers: { ...AdminApi._authHeader(), 'Content-Type': 'multipart/form-data' } }),
-  updateCauseWithVideo: (id, data) => AdminApiInstance.put(`causes/${id}/with-video`, data, { headers: { ...AdminApi._authHeader(), 'Content-Type': 'multipart/form-data' } }),
+  createCauseWithMedia: (data) => AdminApiInstance.post(`causes/with-media`, data, {
+    headers: {
+      ...AdminApi._authHeader(),
+      // Don't set Content-Type for multipart/form-data, let axios set it automatically with boundary
+    }
+  }),
+
+  updateCauseWithImage: (id, data) => AdminApiInstance.put(`causes/${id}/with-image`, data, { headers: AdminApi._authHeader() }),
+  updateCauseWithVideo: (id, data) => AdminApiInstance.put(`causes/${id}/with-video`, data, { headers: AdminApi._authHeader() }),
+  updateCauseWithMedia: (id, data) => AdminApiInstance.put(`causes/${id}/with-media`, data, { headers: AdminApi._authHeader() }),
   deleteCauses: (id) => AdminApiInstance.delete(`causes/${id}`, { headers: AdminApi._authHeader() }),
 
   // Volunteers

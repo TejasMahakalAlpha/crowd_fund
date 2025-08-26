@@ -5,8 +5,14 @@ import Swal from "sweetalert2";
 import { FaShareAlt } from "react-icons/fa";
 import "./CauseDetails.css";
 
+
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import { Navigation, Pagination } from "swiper/modules";
+
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
-const SITE_URL = "https://crowd-fun.netlify.app";
 
 // ✅ slugify
 const slugify = (text) => {
@@ -283,28 +289,44 @@ const CauseDetails = () => {
 
             <div className="cause-card-details">
                 <div className="cause-image-container">
-                    {cause.mediaType === 'VIDEO' ? (
-                        <video
-                            src={getImageUrl(cause.videoUrl)}
-                            className="modal-image"
-                            autoPlay
-                            loop
-                            muted
-                            playsInline
-                            onContextMenu={(e) => e.preventDefault()}
-                            controlsList="nodownload"
-                        />
-                    ) : (
-                        <img
-                            src={getImageUrl(cause.imageUrl)}
-                            alt={cause.title}
-                            className="modal-image"
-                            onError={(e) => {
-                                e.currentTarget.src = "/crowdfund_logo.png"; // fallback if 404 or broken
-                                e.currentTarget.onerror = null; // prevent infinite loop if default also missing
-                            }}
-                        />
-                    )}
+                    <div >
+                        <Swiper
+                            modules={[Navigation, Pagination]}
+                            navigation
+                            pagination={{ clickable: true }}
+                            className="media-carousel"
+                        >
+                            {cause.imageUrls?.map((img, idx) => (
+                                <SwiperSlide key={`img-${idx}`}>
+                                    <img
+                                        src={getImageUrl(img)}
+                                        alt={`${cause.title}-${idx}`}
+                                        className="modal-image"
+                                        onError={(e) => {
+                                            e.currentTarget.src = "/crowdfund_logo.png";
+                                            e.currentTarget.onerror = null;
+                                        }}
+                                    />
+                                </SwiperSlide>
+                            ))}
+
+                            {cause.videoUrls?.map((vid, idx) => (
+                                <SwiperSlide key={`vid-${idx}`}>
+                                    <video
+                                        src={getImageUrl(vid)}
+                                        className="modal-image"
+                                        autoPlay
+                                        loop
+                                        muted
+                                        playsInline
+                                        onContextMenu={(e) => e.preventDefault()}
+                                        controlsList="nodownload"
+                                        controls
+                                    />
+                                </SwiperSlide>
+                            ))}
+                        </Swiper>
+                    </div>
 
                 </div>
                 <div className="cause-details-content">
