@@ -37,16 +37,16 @@ body {
   color: var(--text-body);
 }
 
-/* --- (Other styles remain the same) --- */
-
+/* --- Page container --- */
 .cause-details-page {
   max-width: 950px;
   margin: 2rem auto;
   padding: 0 1rem;
 }
+
 .cause-card-details {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   gap: 2.5rem;
   background-color: var(--surface-bg);
   padding: 2.5rem;
@@ -56,20 +56,50 @@ body {
     0 2px 4px -1px rgba(0, 0, 0, 0.04);
   transition: box-shadow 0.3s ease;
 }
+
 .cause-image-container {
   flex: 1 1 40%;
 }
-.cause-details-image {
+
+/* ✅ Swiper + Image Fix */
+.media-carousel {
   width: 100%;
-  height: 420px;
-  object-fit: cover;
+  height: 100%;
+  min-height: 350px; /* ensures images show on desktop */
   border-radius: var(--border-radius-md);
+  overflow: hidden;
 }
+
+.media-carousel img,
+.modal-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* crop nicely */
+  border-radius: var(--border-radius-md);
+  display: block;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .media-carousel {
+    min-height: 220px;
+  }
+
+  .media-carousel img,
+  .modal-image {
+    height: auto;
+    max-height: 250px;
+    object-fit: contain; /* full image visible */
+  }
+}
+
+/* --- Content --- */
 .cause-details-content {
   flex: 1 1 60%;
   display: flex;
   flex-direction: column;
 }
+
 .cause-meta-details {
   font-size: 0.9rem;
   font-weight: 600;
@@ -78,6 +108,7 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
+
 .cause-title-details {
   font-size: 2.5rem;
   color: var(--text-dark);
@@ -85,6 +116,7 @@ body {
   margin-bottom: 1rem;
   line-height: 1.2;
 }
+
 .cause-description-details {
   font-size: 1.1rem;
   line-height: 1.7;
@@ -92,27 +124,7 @@ body {
   margin-bottom: 1.5rem;
 }
 
-.cause-details-image {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  border-radius: var(--border-radius-md);
-}
-
-@media (max-width: 768px) {
-  .cause-details-image {
-    height: auto;
-    max-height: 250px;
-    object-fit: contain;
-  }
-}
-
-/*
- * ===================================
- * Fundraising Progress Bar (UPDATED)
- * ===================================
- */
-
+/* --- Fundraising Progress Bar --- */
 .fundraising-progress {
   width: 100%;
   margin: 1.25rem 0;
@@ -158,14 +170,14 @@ body {
   line-height: 1;
 }
 
-/* --- (Remaining styles are the same) --- */
-
+/* --- Buttons --- */
 .action-buttons-container {
   margin-top: auto;
   padding-top: 1rem;
   display: flex;
   gap: 1rem;
 }
+
 .back-button, .donate-button, .share-button {
   padding: 0.8rem 1.5rem;
   border-radius: var(--border-radius-md);
@@ -179,29 +191,30 @@ body {
   justify-content: center;
   gap: 0.5rem;
 }
+
 .back-button:hover, .donate-button:hover, .share-button:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
 .donate-button {
   flex-grow: 1;
   background-color: var(--primary-color);
   color: white;
 }
+
 .share-button {
   background-color: var(--surface-subtle-bg);
   border-color: var(--surface-border);
   color: var(--text-body);
 }
 
+/* --- Mobile adjustments --- */
 @media (max-width: 768px) {
   .cause-card-details {
     flex-direction: column;
     padding: 1.5rem;
     gap: 1.5rem;
-  }
-  .cause-details-image, .cause-details-image-placeholder {
-    height: 250px;
   }
   .cause-title-details {
     font-size: 2rem;
@@ -212,12 +225,7 @@ body {
   }
 }
 
-
-/*
- * ===================================
- * Share Link Button (Naya Style)
- * ===================================
-*/
+/* --- Share Link Button --- */
 .share-link-button {
   background-color: transparent;
   border: none;
@@ -230,7 +238,7 @@ body {
   align-items: center;
   align-self: flex-start;
   margin-top: 1rem;
-  margin-bottom: 1rem; /* Added margin to push progress bar down */
+  margin-bottom: 1rem;
   transition: color 0.2s ease;
 }
 
