@@ -332,6 +332,9 @@ const CauseDetails = () => {
                 <div className="cause-details-content">
                     <h1 className="cause-title-details">{cause.title}</h1>
                     <p className="cause-description-details">{cause.description}</p>
+                    <p><strong>Category:</strong> {cause.category}</p>
+                    <p><strong>Location:</strong> {cause.location}</p>
+                    <p><strong>End Date:</strong> {cause.endDate ? new Date(cause.endDate).toLocaleDateString() : "N/A"}</p>
 
                     <div className="fundraising-progress">
                         <span>
