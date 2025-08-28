@@ -181,7 +181,7 @@
     padding: 10px;
     border-radius: 8px;
     width: fit-content;
-    max-width: 100%; /* Ensure it doesn't overflow on small screens */
+    max-width: 100px; /* Ensure it doesn't overflow on small screens */
 }
 
 .previews{
