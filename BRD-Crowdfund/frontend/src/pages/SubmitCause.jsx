@@ -172,16 +172,15 @@ const SubmitCause = () => {
         "application/pdf",
         "application/msword",
         "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        "text/plain",
         "image/jpeg",
         "image/png",
-        "application/zip"
+
       ];
       const valid = [], previews = [];
       let hasError = false;
 
       Array.from(files).forEach((file, i) => {
-        if (allowed.includes(file.type) || file.name.endsWith(".zip")) {
+        if (allowed.includes(file.type)) {
           if (file.size > 10 * 1024 * 1024) {
             newErrors.documents = `Document ${i + 1} must be <10MB`; hasError = true;
           } else {
@@ -400,13 +399,13 @@ const SubmitCause = () => {
 
         {/* Documents */}
         <div className="form-group file-upload-group">
-          <label htmlFor="documents">Upload Documents (PDF/DOC/TXT/IMG/ZIP)</label>
+          <label htmlFor="documents">Upload Documents (PDF/DOC/IMG)</label>
           <input
             type="file"
             id="documents"
             name="documents"
             multiple
-            accept=".pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain,image/jpeg,image/png,.zip"
+            accept=".pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/jpeg,image/png"
             onChange={handleFileChange}
           />
           {errors.documents && <p className="error-message">{errors.documents}</p>}
